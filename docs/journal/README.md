@@ -11,4 +11,5 @@ and next step.
 
 ## Entries
 
-- [2026-07-27](2026-07-27.md)
+- [2026-07-28 (Tuesday)](2026-07-28.md) · [Kanban snapshot](../week01-1-tue-kanban.html)
+- [2026-07-27 (Monday)](2026-07-27.md)

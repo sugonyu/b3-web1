@@ -20,7 +20,7 @@ scope remain subject to simulated client quote confirmation.
 
 - [Development Journal](docs/journal/README.md)
 - [Current Project Dashboard](index.html)
-- [Current Weekly Board](docs/project-board.html)
+- [Current Project Weekly Kanban Board](docs/project-weekly-kanban-board.html)
 - [MVP v0.1 — Project Definition](milestones/01-mvp-v0.1-definition/README.md)
 
 ## Repository Boundary

@@ -2,7 +2,7 @@
 
 Official checkpoint: Deliverable 1
 Review date: July 30, 2026
-Status: In progress — BookLoop definition drafted; quote confirmation pending
+Status: In progress — HTML/CSS evidence allowed; BookLoop review scheduled for D1
 
 ## Goal
 
@@ -42,8 +42,9 @@ application architecture before implementation begins.
 - **Working stack:** React + Flask JSON API + Flask-SQLAlchemy + SQLite
 - **Optional later feature:** completed-transaction trust history and rating
 
-The quote is currently a student draft. The final project direction will be
-confirmed after the instructor reviews the quote and scope.
+The instructor confirmed during class on July 28, 2026 that HTML/CSS may be used
+to present the required design-system evidence. BookLoop is being prepared as
+the Deliverable 1 proposal and will be reviewed during Thursday's presentation.
 
 ## Snapshot Status
 
@@ -52,8 +53,10 @@ project scaffold is completed and verified during this milestone.
 
 ## Current Blocker
 
-The exact client quote and final scope still need instructor confirmation. Until
-then, do not expand the public implementation or add Docker/React complexity.
+No blocker prevents preparation. Instructor review of the BookLoop quote and
+scope remains scheduled for Thursday's Deliverable 1 presentation. Before then,
+finalize model fields, relationships, 5–8 core endpoints, and the HTML/CSS
+design-system evidence.
 
 ## Next MVP
 
