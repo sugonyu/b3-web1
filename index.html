@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Web Project 1</title>
+    <style>
+      body {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 0 16px;
+        color: #222;
+        font-family: Arial, sans-serif;
+        line-height: 1.5;
+      }
+
+      section {
+        margin: 24px 0;
+        padding-top: 8px;
+        border-top: 1px solid #aaa;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      nav {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin: 20px 0;
+      }
+
+      th,
+      td {
+        padding: 8px;
+        border: 1px solid #aaa;
+        text-align: left;
+      }
+
+      th {
+        background: #eee;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Web Project 1</h1>
+      <p>Project dashboard for course 582-32W-VA.</p>
+      <p><strong>Week 1 focus:</strong> define the project before expanding implementation.</p>
+    </header>
+
+    <nav aria-label="Project navigation">
+      <a href="docs/project-board.html">Current weekly project board</a>
+      <a href="docs/journal/2026-07-27.md">Current journal entry</a>
+      <a href="milestones/01-mvp-v0.1-definition/README.md">Current milestone</a>
+    </nav>
+
+    <main>
+      <section>
+        <h2>Current status</h2>
+        <ul>
+          <li>Current week: Week 1</li>
+          <li>Current milestone: MVP v0.1 — Project Definition</li>
+          <li>Official checkpoint: Deliverable 1</li>
+          <li>Status: Partial — definition and planning in progress</li>
+          <li>Application: Private Flask health prototype; public implementation pending scope confirmation</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Today — Monday, July 27</h2>
+        <ul>
+          <li>Reviewed the teacher requirements and Week 1 Deliverable 1.</li>
+          <li>Defined the BookLoop problem, target user, and privacy-first approval workflow.</li>
+          <li>Separated must-have features from optional trust-rating features.</li>
+          <li>Selected React + Flask JSON API + SQLAlchemy + SQLite as the working stack.</li>
+          <li>Prepared and tested a private Flask health API with Vanilla/Jinja comparison clients.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Next — Tuesday, July 28</h2>
+        <ol>
+          <li>Confirm whether the BookLoop simulated client quote is acceptable.</li>
+          <li>Finalize the target user, problem statement, and primary workflow.</li>
+          <li>Prepare the quote, scope, stack rationale, data model, and screen flow for drop-in support.</li>
+        </ol>
+        <p>
+          React and Docker expansion remain deferred until the quote and Deliverable 1
+          scope are confirmed.
+        </p>
+      </section>
+
+      <section>
+        <h2>Milestones</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Week</th>
+              <th>MVP</th>
+              <th>Official checkpoint</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><a href="milestones/01-mvp-v0.1-definition/README.md">v0.1 Definition</a></td>
+              <td>Deliverable 1</td>
+              <td>In progress</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>v0.2 Vertical Slice</td>
+              <td>Deliverable 2</td>
+              <td>Upcoming</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>v0.3 Integrated Prototype</td>
+              <td>Deliverable 3</td>
+              <td>Upcoming</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>v0.4 Feature-Complete Beta</td>
+              <td>Deliverable 4</td>
+              <td>Upcoming</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>v1.0 Stable Release</td>
+              <td>Final Presentation</td>
+              <td>Upcoming</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Update schedule</h2>
+        <ul>
+          <li>Project board: update daily.</li>
+          <li>Journal: add one entry from Monday to Thursday.</li>
+          <li>Milestone: update throughout the week and review on Thursday.</li>
+          <li>This index: update when the current week or project status changes.</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>
