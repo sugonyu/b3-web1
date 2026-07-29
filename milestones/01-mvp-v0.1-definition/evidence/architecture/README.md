@@ -25,6 +25,14 @@ Current direction:
   authentication boundary; Flask-Login implementation is planned for
   🗄️ Deliverable 2 — Backend and Database.
 
-Status: the stack, three-model boundary, and seven-endpoint contract are
-confirmed and privately verified with 24 passing tests. The proposed project
-tree and five-week schedule remain Wednesday work.
+Public presentation evidence:
+
+- [Frontend and backend choice](../../presentation.html#stack)
+- [Seven-endpoint contract](../../presentation.html#api)
+- [Project tree and data flow](../../presentation.html#architecture)
+- [Five-week milestone plan](../../presentation.html#plan)
+
+Status: the stack, three-model boundary, seven-endpoint contract, proposed
+project tree and five-week plan are included in the public presentation
+candidate. The private implementation was previously verified with 24 passing
+tests. Tony's browser review and Thursday instructor feedback remain pending.

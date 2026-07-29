@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BookLoop Deliverable 1 definition and design presentation">
+    <title>BookLoop — Deliverable 1 Presentation</title>
+    <style>
+      :root {
+        --ink: #243029;
+        --muted: #5d665f;
+        --paper: #f6f1e7;
+        --surface: #ffffff;
+        --brand: #315c43;
+        --brand-soft: #e4eee7;
+        --accent: #c66a2b;
+        --border: #b8b8ae;
+        --space-1: 0.5rem;
+        --space-2: 1rem;
+        --space-3: 1.5rem;
+        --space-4: 2.5rem;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+        font-family: Arial, sans-serif;
+        font-size: 18px;
+        line-height: 1.55;
+      }
+      a { color: var(--brand); }
+      code { overflow-wrap: anywhere; }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-bottom: 1px solid var(--border);
+        background: rgba(246, 241, 231, 0.97);
+      }
+      .nav {
+        display: flex;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0.7rem 1rem;
+        gap: 1rem;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+      .nav a { font-size: 0.86rem; text-decoration: none; }
+      .nav a:hover, .nav a:focus { text-decoration: underline; }
+
+      main { max-width: 1180px; margin: 0 auto; padding: 0 1rem 4rem; }
+      .slide {
+        min-height: 78vh;
+        padding: 5rem 0 3rem;
+        border-bottom: 1px solid var(--border);
+        scroll-margin-top: 3rem;
+      }
+      .title-slide { display: grid; align-content: center; min-height: 88vh; }
+      .eyebrow {
+        margin: 0 0 var(--space-1);
+        color: var(--brand);
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      h1 { max-width: 850px; margin: 0; font-size: clamp(3rem, 8vw, 6.5rem); line-height: 0.98; }
+      h2 { margin: 0 0 var(--space-3); font-size: clamp(2rem, 5vw, 3.7rem); line-height: 1.08; }
+      h3 { margin-top: 0; font-size: 1.15rem; }
+      .lede { max-width: 820px; font-size: clamp(1.2rem, 2.5vw, 1.65rem); }
+      .meta { color: var(--muted); }
+      .status {
+        display: inline-block;
+        width: fit-content;
+        padding: 0.35rem 0.7rem;
+        border: 1px solid var(--brand);
+        background: var(--brand-soft);
+        color: var(--brand);
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+
+      .grid-2, .grid-3, .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--space-2);
+      }
+      .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .card {
+        padding: var(--space-3);
+        border: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .card p:last-child, .card ul:last-child { margin-bottom: 0; }
+      .callout {
+        max-width: 900px;
+        padding: var(--space-3);
+        border-left: 6px solid var(--brand);
+        background: var(--surface);
+        font-size: 1.2rem;
+      }
+      .flow {
+        display: flex;
+        align-items: stretch;
+        margin: 2rem 0;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+      }
+      .flow span {
+        flex: 1 1 150px;
+        padding: 1rem;
+        border: 1px solid var(--brand);
+        background: var(--surface);
+        text-align: center;
+        font-weight: 700;
+      }
+
+      .scope-must { border-top: 5px solid var(--brand); }
+      .scope-later { border-top: 5px solid var(--accent); }
+      .swatches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; }
+      .swatch { min-height: 90px; padding: 0.6rem; border: 1px solid var(--border); font-size: 0.8rem; }
+      .ink { color: white; background: var(--ink); }
+      .paper { background: var(--paper); }
+      .surface { background: var(--surface); }
+      .brand { color: white; background: var(--brand); }
+      .accent { color: white; background: var(--accent); }
+      .component-row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+      .button { padding: 0.7rem 1rem; border: 1px solid var(--brand); font: inherit; font-weight: 700; }
+      .button-primary { color: white; background: var(--brand); }
+      .button-secondary { color: var(--brand); background: white; }
+      .badge { padding: 0.25rem 0.55rem; border: 1px solid var(--border); background: var(--brand-soft); font-size: 0.85rem; }
+      .state-error { border-left: 5px solid #9e3d32; }
+      .state-success { border-left: 5px solid var(--brand); }
+
+      table { width: 100%; border-collapse: collapse; background: var(--surface); }
+      th, td { padding: 0.75rem; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+      th { background: var(--brand-soft); }
+      pre {
+        overflow-x: auto;
+        padding: var(--space-3);
+        border: 1px solid var(--border);
+        background: var(--surface);
+        font-size: 0.86rem;
+        line-height: 1.45;
+      }
+      .week { border-top: 5px solid var(--brand); }
+      .week strong { color: var(--brand); }
+      .question { border-left: 5px solid var(--accent); }
+      .source-links { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+      .page-controls {
+        position: fixed;
+        right: 1rem;
+        bottom: 1rem;
+        display: flex;
+        gap: 0.5rem;
+      }
+      .page-controls a {
+        width: 2.7rem;
+        height: 2.7rem;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--brand);
+        background: var(--surface);
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      @media (max-width: 800px) {
+        body { font-size: 16px; }
+        .slide { min-height: auto; padding-top: 4rem; }
+        .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+        .swatches { grid-template-columns: repeat(2, 1fr); }
+        table, thead, tbody, tr, th, td { display: block; }
+        thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+        tr { border: 1px solid var(--border); }
+        td { border: 0; border-bottom: 1px solid #ddd; }
+      }
+
+      @media print {
+        .topbar, .page-controls { display: none; }
+        body { background: white; font-size: 12pt; }
+        .slide { min-height: auto; break-after: page; padding: 2rem 0; }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="topbar" aria-label="Presentation sections">
+      <div class="nav">
+        <a href="#start">Start</a><a href="#quote">Client</a><a href="#users">Users</a>
+        <a href="#scope">Scope</a><a href="#workflow">Workflow</a><a href="#stack">Stack</a>
+        <a href="#design">Design</a><a href="#data">Data</a><a href="#api">API</a>
+        <a href="#architecture">Architecture</a><a href="#plan">Plan</a><a href="#review">Review</a>
+      </div>
+    </nav>
+
+    <main>
+      <section id="start" class="slide title-slide">
+        <p class="eyebrow">582-32W-VA · 🧩 Deliverable 1</p>
+        <h1>BookLoop</h1>
+        <p class="lede">A privacy-conscious community for sharing Korean-language books in Montreal.</p>
+        <p class="meta">Definition and Design · MVP v0.1 · July 30, 2026 · Tony Yu</p>
+        <span class="status">Presentation candidate · browser review pending</span>
+      </section>
+
+      <section id="quote" class="slide">
+        <p class="eyebrow">01 · Simulated client quote</p>
+        <h2>Make scarce Korean books easier to share locally.</h2>
+        <div class="callout">
+          “Our Montreal community needs a simple way to discover and share Korean-language books without publicly exposing exact addresses or personal contact details.”
+        </div>
+        <div class="grid-2" style="margin-top: 1rem;">
+          <article class="card"><h3>Client need</h3><p>A searchable local directory and a controlled request workflow.</p></article>
+          <article class="card"><h3>Product boundary</h3><p>Show a general area publicly; connect members only after owner approval.</p></article>
+        </div>
+      </section>
+
+      <section id="users" class="slide">
+        <p class="eyebrow">02 · Target user and problem</p>
+        <h2>Useful books exist, but they are hard to discover safely.</h2>
+        <div class="grid-3">
+          <article class="card"><h3>Target user</h3><p>Korean-speaking adults in Montreal who want to lend or borrow Korean books.</p></article>
+          <article class="card"><h3>Problem</h3><p>Local Korean books are scarce, while informal sharing depends on scattered personal contacts.</p></article>
+          <article class="card"><h3>Privacy risk</h3><p>Publishing email, phone number, or a precise address creates unnecessary exposure.</p></article>
+        </div>
+      </section>
+
+      <section id="scope" class="slide">
+        <p class="eyebrow">03 · Controlled scope</p>
+        <h2>One complete workflow before extra features.</h2>
+        <div class="grid-2">
+          <article class="card scope-must">
+            <h3>Must-have for the project</h3>
+            <ul>
+              <li>Member, book listing, and borrow-request data</li>
+              <li>BookListing CRUD</li>
+              <li>Borrow request creation and status changes</li>
+              <li>Owner information boundary and general area</li>
+              <li>Relational persistence and validation</li>
+            </ul>
+          </article>
+          <article class="card scope-later">
+            <h3>Optional after the core works</h3>
+            <ul>
+              <li>Trust rating based on completed exchanges</li>
+              <li>Private notes about a book or request</li>
+              <li>Hide one listing or a member's full listing set</li>
+              <li>Realtime notifications</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="workflow" class="slide">
+        <p class="eyebrow">04 · Primary workflow</p>
+        <h2>Discovery becomes a recorded, owner-approved exchange.</h2>
+        <div class="flow">
+          <span>Browse books</span><span>View details</span><span>Request book</span>
+          <span>Owner decides</span><span>Limited connection</span><span>Return recorded</span>
+        </div>
+        <p class="lede">The BorrowRequest record turns a directory into a real application and creates the future foundation for trust history.</p>
+      </section>
+
+      <section id="stack" class="slide">
+        <p class="eyebrow">05 · Frontend track and backend</p>
+        <h2>React client + Flask JSON API</h2>
+        <div class="grid-3">
+          <article class="card"><h3>React</h3><p>A modern component-based client that can later connect to another backend such as Supabase.</p></article>
+          <article class="card"><h3>Flask JSON API</h3><p>A course-aligned Python backend with an explicit frontend/backend boundary.</p></article>
+          <article class="card"><h3>SQLAlchemy + SQLite</h3><p>A small relational foundation for models, foreign keys, CRUD, and persistence.</p></article>
+        </div>
+        <p class="meta">Authentication is designed here and implemented in Deliverable 2. The current private prototype uses temporary user IDs.</p>
+      </section>
+
+      <section id="design" class="slide">
+        <p class="eyebrow">06 · Design System MVP v0.1</p>
+        <h2>Warm paper, clear surfaces, and community green.</h2>
+        <div class="swatches" aria-label="BookLoop colour tokens">
+          <div class="swatch ink"><strong>Ink</strong><br>#243029</div>
+          <div class="swatch paper"><strong>Paper</strong><br>#f6f1e7</div>
+          <div class="swatch surface"><strong>Surface</strong><br>#ffffff</div>
+          <div class="swatch brand"><strong>Community green</strong><br>#315c43</div>
+          <div class="swatch accent"><strong>Bookmark orange</strong><br>#c66a2b</div>
+        </div>
+        <div class="grid-2" style="margin-top: 1rem;">
+          <article class="card">
+            <h3>Reusable components</h3>
+            <div class="component-row">
+              <button class="button button-primary" type="button">Request this book</button>
+              <button class="button button-secondary" type="button">View details</button>
+              <span class="badge">Available</span>
+            </div>
+          </article>
+          <article class="card">
+            <h3>Visible states</h3>
+            <div class="grid-2">
+              <div class="card state-success"><strong>Success</strong><br>Request sent</div>
+              <div class="card state-error"><strong>Error</strong><br>Try again</div>
+            </div>
+            <p>Loading, empty, success, error, hover, and disabled states are part of the system.</p>
+          </article>
+        </div>
+        <div class="grid-3" style="margin-top: 1rem;">
+          <article class="card"><h3>60 / 30 / 10</h3><p>Paper dominates, surfaces organize content, and accent colours carry actions and meaning.</p></article>
+          <article class="card"><h3>Gestalt proximity</h3><p>Cover, title, author, area, status, and action stay together as one listing.</p></article>
+          <article class="card"><h3>Responsive rule</h3><p>Multi-column desktop layouts become a single readable mobile column.</p></article>
+        </div>
+        <p class="meta">HTML/CSS evidence was confirmed as acceptable in class. This is an Agile baseline, not a frozen final design.</p>
+      </section>
+
+      <section id="data" class="slide">
+        <p class="eyebrow">07 · Proposed data model</p>
+        <h2>Three models support one complete exchange.</h2>
+        <div class="grid-3">
+          <article class="card"><h3>User</h3><p><code>id</code>, <code>username</code>, <code>email</code>, <code>password_hash</code>, <code>general_area</code></p></article>
+          <article class="card"><h3>BookListing</h3><p><code>id</code>, <code>title</code>, <code>author</code>, <code>availability</code>, <code>owner_id</code></p></article>
+          <article class="card"><h3>BorrowRequest</h3><p><code>id</code>, <code>status</code>, <code>listing_id</code>, <code>borrower_id</code></p></article>
+        </div>
+        <pre><code>User (owner)       1 ─────────── many BookListing
+User (borrower)    1 ─────────── many BorrowRequest
+BookListing        1 ─────────── many BorrowRequest</code></pre>
+        <p>Public listing responses expose a username and general area, but not email, password data, phone number, or a precise address.</p>
+      </section>
+
+      <section id="api" class="slide">
+        <p class="eyebrow">08 · Proposed endpoint contract</p>
+        <h2>Seven endpoints cover CRUD and the request workflow.</h2>
+        <table>
+          <thead><tr><th>#</th><th>Method and path</th><th>Purpose</th><th>Boundary</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td><code>GET /api/listings</code></td><td>Browse listings</td><td>Public</td></tr>
+            <tr><td>2</td><td><code>POST /api/listings</code></td><td>Create a listing</td><td>Authenticated</td></tr>
+            <tr><td>3</td><td><code>GET /api/listings/:id</code></td><td>View one listing</td><td>Public</td></tr>
+            <tr><td>4</td><td><code>PATCH /api/listings/:id</code></td><td>Update one listing</td><td>Owner</td></tr>
+            <tr><td>5</td><td><code>DELETE /api/listings/:id</code></td><td>Delete one listing</td><td>Owner</td></tr>
+            <tr><td>6</td><td><code>POST /api/listings/:id/requests</code></td><td>Create a borrow request</td><td>Borrower</td></tr>
+            <tr><td>7</td><td><code>PATCH /api/requests/:id</code></td><td>Approve, reject, or return</td><td>Workflow rule</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="architecture" class="slide">
+        <p class="eyebrow">09 · Proposed project structure</p>
+        <h2>Separate client and API, keep one clear data boundary.</h2>
+        <div class="grid-2">
+          <pre><code>app/
+├── frontend-react/
+│   ├── src/components/
+│   ├── src/pages/
+│   └── src/services/api.js
+└── backend/
+    ├── bookloop/
+    │   ├── models.py
+    │   ├── api.py
+    │   └── extensions.py
+    ├── tests/
+    ├── requirements.txt
+    └── run.py</code></pre>
+          <div>
+            <div class="flow">
+              <span>React UI</span><span>Fetch JSON</span><span>Flask API</span><span>SQLAlchemy</span><span>SQLite</span>
+            </div>
+            <p>React never accesses the database directly. Flask validates requests, applies ownership rules, and returns privacy-safe JSON.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="plan" class="slide">
+        <p class="eyebrow">10 · Five-week milestone plan</p>
+        <h2>Each Thursday produces a reviewable MVP.</h2>
+        <div class="grid-3">
+          <article class="card week"><strong>Week 1 · v0.1</strong><h3>Definition and Design</h3><p>Scope, design system, models, endpoints, architecture.</p></article>
+          <article class="card week"><strong>Week 2 · v0.2</strong><h3>Backend Vertical Slice</h3><p>Environment, database, authentication, first create/read workflow.</p></article>
+          <article class="card week"><strong>Week 3 · v0.3</strong><h3>Integrated Prototype</h3><p>React connects to Flask and displays real database data.</p></article>
+          <article class="card week"><strong>Week 4 · v0.4</strong><h3>Feature-Complete Beta</h3><p>Core workflow, validation, errors, accessibility, and documentation.</p></article>
+          <article class="card week"><strong>Week 5 · v1.0</strong><h3>Stable Release</h3><p>Stabilization, evidence, rehearsal, and final presentation.</p></article>
+        </div>
+      </section>
+
+      <section id="review" class="slide">
+        <p class="eyebrow">11 · Thursday review</p>
+        <h2>What I want to confirm before Deliverable 2</h2>
+        <div class="grid-2">
+          <article class="card question"><h3>Scope check</h3><p>Is the BookLoop workflow controlled enough for the five-week project?</p></article>
+          <article class="card question"><h3>Architecture check</h3><p>Is React + Flask JSON API acceptable as the chosen frontend track and backend boundary?</p></article>
+          <article class="card question"><h3>Model check</h3><p>Are User, BookListing, and BorrowRequest the right three-model boundary?</p></article>
+          <article class="card question"><h3>Next checkpoint</h3><p>May authentication and the first vertical slice become the Deliverable 2 focus?</p></article>
+        </div>
+        <p class="lede">Next: 🗄️ Deliverable 2 — Backend Foundation and First Vertical Slice.</p>
+        <div class="source-links">
+          <a href="README.md">D1 README</a>
+          <a href="evidence/design/README.md">Design evidence</a>
+          <a href="evidence/data-model/README.md">Data-model evidence</a>
+          <a href="evidence/architecture/README.md">Architecture evidence</a>
+          <a href="../../index.html">Project dashboard</a>
+          <a href="https://github.com/sugonyu/b3-web1">GitHub repository</a>
+        </div>
+      </section>
+    </main>
+
+    <div class="page-controls" aria-label="Page controls">
+      <a href="#start" title="Back to start">↑</a>
+      <a href="#review" title="Review questions">✓</a>
+    </div>
+  </body>
+</html>

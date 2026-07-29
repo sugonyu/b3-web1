@@ -2,7 +2,7 @@
 
 Official checkpoint: 🧩 Deliverable 1 — Definition and Design
 Review date: July 30, 2026
-Status: In progress — planning and API boundary complete; design evidence and presentation package pending
+Status: Presentation candidate prepared — browser review and Thursday instructor feedback pending
 
 ## Goal
 
@@ -19,19 +19,38 @@ application architecture before implementation begins.
 - [x] Must-have features
 - [x] Optional features
 - [x] Approved frontend and backend approach
-- [ ] Refined design evidence
-- [ ] Design rationale
+- [x] Refined design evidence
+- [x] Design rationale
 - [x] Proposed database models and relationships
 - [x] Proposed routes or data operations
-- [ ] Project structure
+- [x] Project structure
 - [x] Initial Git repository
-- [ ] Five-week implementation schedule
+- [x] Five-week implementation schedule
 
 ## Evidence
 
+- [Deliverable 1 Presentation](presentation.html)
 - [Design](evidence/design/README.md)
 - [Data Model](evidence/data-model/README.md)
 - [Architecture](evidence/architecture/README.md)
+
+## Presentation Format
+
+Deliverable 1 does not use a separate presentation project or slide folder.
+`presentation.html` lives inside this milestone and presents the same reviewed
+content linked from this README and `evidence/`.
+
+```text
+milestones/01-mvp-v0.1-definition/
+├── README.md          # checkpoint, status and evidence index
+├── presentation.html  # browser-based Thursday presentation
+└── evidence/          # reviewed supporting evidence
+```
+
+The HTML presentation is a view of the Deliverable 1 package, not a second
+source of truth. Detailed evidence remains under `evidence/`; the presentation
+summarizes and links to it. Future corrections must keep the README,
+presentation and evidence consistent.
 
 ## Current direction
 
@@ -60,12 +79,13 @@ The runnable implementation remains in the private lab. Its three models and
 seven product endpoints were verified with 24 passing tests on July 28. Only
 validated Deliverable 1 evidence will be transferred to this public milestone.
 
-## Current Blocker
+## Review Gate
 
-No blocker prevents preparation. Instructor review of the BookLoop quote and
-scope remains scheduled for Thursday's Deliverable 1 presentation. Remaining
-work is the HTML/CSS design-system evidence and rationale, model diagram,
-project structure, five-week schedule, and presentation package.
+The presentation package and required evidence are prepared. Deliverable 1 is
+not complete yet: Tony must review `presentation.html` in a desktop and narrow
+browser viewport, and the instructor must review the BookLoop quote, scope and
+architecture during Thursday's presentation. Feedback will be recorded before
+the Week 1 milestone is frozen.
 
 ## Next MVP
 

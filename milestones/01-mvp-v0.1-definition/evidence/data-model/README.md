@@ -23,5 +23,13 @@ Current direction:
 - `owner_id`, `listing_id`, and `borrower_id` preserve these relationships.
 - Trust rating remains optional and is based on completed request history.
 
-Status: the fields and relationships are confirmed and privately verified. The
-public visual relationship diagram remains Wednesday work.
+Public presentation evidence:
+
+- [Data model and relationship diagram](../../presentation.html#data)
+- model fields and foreign-key roles
+- one-to-many relationship cardinality
+- privacy-safe public data boundary
+
+Status: the fields and relationships are confirmed, privately verified, and
+represented in the public presentation candidate. Instructor feedback remains
+pending for Thursday.

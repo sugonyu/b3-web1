@@ -20,6 +20,14 @@ Current direction:
 - Document desktop and mobile layouts, reusable components, and state changes.
 - Keep the public evidence aligned with the final BookLoop workflow.
 
-Status: the instructor confirmed that HTML/CSS evidence is allowed. The actual
-design-system page, responsive layouts, interface states, and rationale remain
-Wednesday work.
+Public presentation evidence:
+
+- [Design System section](../../presentation.html#design)
+- colour tokens and 60/30/10 rationale
+- reusable button and status components
+- responsive desktop-to-mobile rule
+- loading, empty, success, error, hover and disabled state plan
+
+Status: the instructor confirmed that HTML/CSS evidence is allowed. The
+presentation candidate now includes the refined design-system evidence and
+rationale. Tony's desktop and narrow-viewport browser review remains pending.
