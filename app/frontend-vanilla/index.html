@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLoop</title>
+    <link rel="icon" href="./vanilla-favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>
+    <main>
+      <h1>🟨 BookLoop</h1>
+      <p class="client-type">JavaScript / Vanilla client</p>
+
+      <section class="client-info" aria-labelledby="client-info-heading">
+        <h2 id="client-info-heading">About this client</h2>
+        <p>
+          Flask와 분리된 순수 HTML/CSS/JavaScript client다. 독립 static server에서
+          실행하고, 다른 port의 Flask JSON API를 fetch하므로 CORS 허용이 필요하다.
+        </p>
+        <ul>
+          <li><a href="http://127.0.0.1:5000/">🐍 Python / Jinja client</a></li>
+          <li>
+            <a href="http://127.0.0.1:3000/b3-web1/app/frontend-vanilla/">
+              🟨 Independent Vanilla client
+            </a>
+          </li>
+          <li>
+            <a href="http://127.0.0.1:5000/vanilla/">
+              🟨 Same Vanilla client served through Flask
+            </a>
+          </li>
+          <li><a href="http://127.0.0.1:5000/api/health">View JSON API</a></li>
+        </ul>
+      </section>
+
+      <section class="status-card" aria-labelledby="api-status-heading">
+        <h2 id="api-status-heading">Flask API</h2>
+        <p id="api-status" role="status">Not checked</p>
+        <p>
+          Endpoint:
+          <a id="api-url" href="/api/health">/api/health</a>
+        </p>
+        <button id="check-api" type="button">Check API</button>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
