@@ -2,7 +2,7 @@
 
 Official checkpoint: 🧩 Deliverable 1 — Definition and Design
 Review date: July 30, 2026
-Status: Presentation v1.0 frozen; live v1.1 candidate adds workflow screens — Thursday instructor feedback pending
+Status: Deliverable 1 presented; instructor feedback recorded — Week 1 complete
 
 ## Goal
 
@@ -77,8 +77,21 @@ that connect the design system to Browse, Detail/Request, and My Requests.
 - **Optional later feature:** completed-transaction trust history and rating
 
 The instructor confirmed during class on July 28, 2026 that HTML/CSS may be used
-to present the required design-system evidence. BookLoop is being prepared as
-the Deliverable 1 proposal and will be reviewed during Thursday's presentation.
+to present the required design-system evidence. BookLoop was presented for
+Deliverable 1 on July 30, 2026.
+
+## Instructor and Peer Feedback
+
+- Muhamed proposed deposit or card-based trust protection, a donation area,
+  Korean flag-inspired colors, and footer social links.
+- Kamyar recommended a reporting workflow and an Admin View alongside ratings,
+  with deeper focus on privacy, approval, and moderation boundaries.
+- Kamyar strongly recommended excluding payment integration from the course
+  implementation because of its complexity and risk.
+
+Decision: payment, card storage, deposits, refunds, and charging remain outside
+the Web1 scope. Deliverable 2 prioritizes the backend, relational persistence,
+validation, authentication where required, and one complete vertical slice.
 
 ## Snapshot Status
 
@@ -86,13 +99,12 @@ The runnable implementation remains in the private lab. Its three models and
 seven product endpoints were verified with 24 passing tests on July 28. Only
 validated Deliverable 1 evidence will be transferred to this public milestone.
 
-## Review Gate
+## Review Result
 
-The presentation package and required evidence are prepared, and the v1.0
-browser baseline was accepted on July 29. Deliverable 1 is not complete yet: the
-instructor must review the BookLoop quote, scope and architecture during
-Thursday's presentation. Feedback will be recorded before the Week 1 milestone
-is frozen. Presentation refinement continues iteratively after this baseline.
+The presentation package and required evidence were presented, and the feedback
+was recorded. Week 1 is complete. The design remains iterative; reporting and
+Admin View are important product directions, but they are not presented as
+implemented features.
 
 ## Next MVP
 

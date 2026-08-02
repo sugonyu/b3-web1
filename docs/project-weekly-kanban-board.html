@@ -5,179 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>BookLoop — Project Weekly Kanban Board</title>
     <style>
-      body {
-        margin: 20px;
-        color: #222;
-        font-family: Arial, sans-serif;
-      }
-
-      .board {
-        display: grid;
-        grid-template-columns: repeat(5, minmax(180px, 1fr));
-        gap: 10px;
-        overflow-x: auto;
-      }
-
-      .column,
-      li {
-        border: 1px solid #aaa;
-        padding: 10px;
-      }
-
-      .column {
-        min-width: 180px;
-        background: #f5f5f5;
-      }
-
-      ul {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-      }
-
-      li {
-        margin-bottom: 8px;
-        background: white;
-      }
-
-      small {
-        color: #555;
-      }
+      body { margin: 20px; color: #222; font-family: Arial, sans-serif; }
+      .board { display: grid; grid-template-columns: repeat(5, minmax(180px, 1fr)); gap: 10px; overflow-x: auto; }
+      .column, li { border: 1px solid #aaa; padding: 10px; }
+      .column { min-width: 180px; background: #f5f5f5; }
+      ul { margin: 0; padding: 0; list-style: none; }
+      li { margin-bottom: 8px; background: white; }
+      small { color: #555; }
     </style>
   </head>
   <body>
     <h1>BookLoop — Project Weekly Kanban Board</h1>
     <p>
-      <strong>Week 1:</strong> July 27–30, 2026<br />
-      <strong>Last updated:</strong> July 29, 2026
+      <strong>Week 2:</strong> August 3–6, 2026<br />
+      <strong>Last updated:</strong> August 2, 2026
     </p>
-    <p><strong>Current weekly board:</strong> 🧩 Deliverable 1 Thursday review preparation.</p>
-    <!--
-      Update this file manually each day. Move a complete
-      <li>...</li> block from one list to another as work progresses.
-    -->
+    <p><strong>Current weekly board:</strong> 🗄️ Deliverable 2 backend foundation and first vertical slice.</p>
 
     <main class="board">
       <section class="column">
         <h2>Backlog</h2>
         <ul>
-          <!-- Add new tasks here. -->
+          <li>
+            <strong>W2-07</strong><br />
+            Preserve reproducible Deliverable 2 evidence and snapshot<br />
+            <small>Thursday · After verification</small>
+          </li>
         </ul>
       </section>
 
       <section class="column">
         <h2>Ready</h2>
         <ul>
-          <!-- Move tasks here when they are ready to start. -->
           <li>
-            <strong>W1-08</strong><br />
-            Present Deliverable 1 and record instructor feedback<br />
-            <small>Thursday · High</small>
+            <strong>W2-01</strong><br />
+            Verify Flask startup and environment configuration<br />
+            <small>Monday · High</small>
+          </li>
+          <li>
+            <strong>W2-02</strong><br />
+            Verify database creation, models, and relationships<br />
+            <small>Monday · High</small>
+          </li>
+          <li>
+            <strong>W2-03</strong><br />
+            Select the borrow-request create/read vertical slice<br />
+            <small>Monday · High</small>
+          </li>
+          <li>
+            <strong>W2-04</strong><br />
+            Define authentication and authorization requirements<br />
+            <small>Monday · High</small>
+          </li>
+          <li>
+            <strong>W2-05</strong><br />
+            Demonstrate valid and invalid input behavior<br />
+            <small>Tuesday–Wednesday</small>
+          </li>
+          <li>
+            <strong>W2-06</strong><br />
+            Verify persisted data and meaningful Git progression<br />
+            <small>Wednesday–Thursday</small>
           </li>
         </ul>
       </section>
 
       <section class="column">
         <h2>In progress</h2>
-        <ul>
-          <!-- Keep only one or two active tasks here. -->
-          <!-- Move one Ready task here when Wednesday work begins. -->
-        </ul>
+        <ul></ul>
       </section>
 
       <section class="column">
         <h2>Testing</h2>
-        <ul>
-          <!-- Record the verification result before moving to Complete. -->
-          <li>
-            <strong>W1-14</strong><br />
-            Review live presentation v1.1 at desktop and narrow widths<br />
-            <small>Thursday preparation · Browser confirmation pending</small>
-          </li>
-        </ul>
+        <ul></ul>
       </section>
 
       <section class="column">
         <h2>Complete</h2>
         <ul>
-          <!-- Keep completed tasks here as project evidence. -->
           <li>
-            <strong>W1-01</strong><br />
-            Review teacher requirements and Week 1 brief<br />
-            <small>Monday · Evidence: journal</small>
-          </li>
-          <li>
-            <strong>W1-06</strong><br />
-            Create public dashboard, journal, and milestone structure<br />
-            <small>Monday · Check: Git</small>
-          </li>
-          <li>
-            <strong>W1-07</strong><br />
-            Draft BookLoop user, problem, and privacy workflow<br />
-            <small>Monday · Evidence: project direction</small>
-          </li>
-          <li>
-            <strong>W1-02</strong><br />
-            Confirm BookLoop quote with instructor<br />
-            <small>Tuesday · Confirmed during class</small>
-          </li>
-          <li>
-            <strong>W1-03</strong><br />
-            Finalize primary workflow and scope<br />
-            <small>Tuesday · Draft ready for Thursday review</small>
-          </li>
-          <li>
-            <strong>W1-04</strong><br />
-            Confirm HTML/CSS design-system evidence format<br />
-            <small>Tuesday · Confirmed during class</small>
-          </li>
-          <li>
-            <strong>W1-05</strong><br />
-            Review BookLoop problem statement wording<br />
-            <small>Tuesday · Wording ready for Thursday review</small>
-          </li>
-          <li>
-            <strong>W1-10</strong><br />
-            Finalize three model relationships and seven core API endpoints<br />
-            <small>Tuesday · Private implementation: 24 tests passed</small>
-          </li>
-          <li>
-            <strong>W1-11</strong><br />
-            Document the Deliverable 1 to Deliverable 2 login handoff<br />
-            <small>Tuesday · Authentication design recorded</small>
-          </li>
-          <li>
-            <strong>W1-09</strong><br />
-            Prepare and review HTML/CSS design-system evidence and rationale<br />
-            <small>Wednesday · Presentation v1.0 baseline accepted</small>
-          </li>
-          <li>
-            <strong>W1-12</strong><br />
-            Prepare and review data-model diagram and project structure<br />
-            <small>Wednesday · Included in presentation v1.0</small>
-          </li>
-          <li>
-            <strong>W1-13</strong><br />
-            Prepare five-week schedule and D1 presentation HTML<br />
-            <small>Wednesday · v1.0 snapshot preserved</small>
-          </li>
-          <li>
-            <strong>W1-15</strong><br />
-            Restore three low-fi workflow screens in the live presentation<br />
-            <small>Wednesday · v1.1 candidate prepared</small>
+            <strong>W1-D1</strong><br />
+            Present Deliverable 1 and record scope feedback<br />
+            <small>Week 1 complete · Payment excluded</small>
           </li>
         </ul>
       </section>
     </main>
 
-    <h2>Update cycle</h2>
+    <h2>Scope guardrails</h2>
     <ul>
-      <li>Daily: update task states and details.</li>
-      <li>Daily: write and finalize the journal entry.</li>
-      <li>Daily closeout: save the current board as <code>weekNN-N-day-kanban.html</code>.</li>
-      <li>Thursday closeout: also save the final weekly board as <code>weekNN-kanban.html</code>.</li>
-      <li>Next week: replace the live board tasks with the new weekly plan.</li>
-      <li>Archive completed work in journals, Kanban snapshots, and milestone evidence.</li>
+      <li>Complete one database-backed create/read workflow before adding breadth.</li>
+      <li>Keep private contact information behind an explicit approval boundary.</li>
+      <li>Do not implement payment, card storage, deposits, refunds, or charging.</li>
+      <li>Reporting and Admin View remain documented future scope until the backend foundation is verified.</li>
     </ul>
   </body>
 </html>
