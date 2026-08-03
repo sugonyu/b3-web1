@@ -126,6 +126,18 @@ validation, stores only a password hash, and starts the new user's session. Tony
 confirmed registration, login, refresh persistence, and logout in the browser.
 This completes W2-06 and the milestone authentication evidence.
 
+## W2-07 Shared BorrowRequest Service — August 3
+
+BorrowRequest create/read, business validation, read authorization, and SQLAlchemy
+transaction rules now live in `services/borrow_requests.py`. The JSON routes retain
+only HTTP input parsing, error conversion, serialization, and response status.
+The upcoming Python/Jinja product screen can therefore call the same service
+without duplicating the backend rules.
+
+Five direct service tests and the existing eleven BorrowRequest API tests passed
+together. The complete backend suite passed 52 tests, preserving the existing API
+response and privacy contract.
+
 ## Scope Boundary
 
 The Week 2 slice supports BookLoop's privacy direction but does not attempt to
