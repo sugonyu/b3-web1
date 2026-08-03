@@ -66,8 +66,8 @@
           <li>Current week: Week 2</li>
           <li>Current milestone: MVP v0.2 — Backend Foundation and First Vertical Slice</li>
           <li>Official checkpoint: <a href="milestones/02-mvp-v0.2-backend-foundation/README.md">🗄️ Deliverable 2</a> — Backend and Database</li>
-          <li>Status: Monday seed-data checkpoint complete — Week 2 remains in progress</li>
-          <li>Application baseline: Flask-Login protects request reads; the reproducible demo seed creates Tony, Mina, Alex, and Almond without a BorrowRequest; the full 40-test suite passed</li>
+          <li>Status: Monday login implementation verified by tests and HTTP; Tony browser confirmation pending</li>
+          <li>Application baseline: seeded login/logout maintains Flask-Login current_user; protected request reads and demo seed remain verified; the full 44-test suite passed</li>
         </ul>
       </section>
 
@@ -85,9 +85,9 @@
       <section>
         <h2>Next — Monday, August 3</h2>
         <ol>
-          <li>Connect the real browser register, login, and logout session.</li>
-          <li>Extract the shared BorrowRequest service.</li>
-          <li>Then connect the minimal Python/Jinja product UI.</li>
+          <li>Confirm Tony's browser login, refresh persistence, logout, and invalid-password state.</li>
+          <li>Add the bounded register flow.</li>
+          <li>Then extract the shared BorrowRequest service.</li>
         </ol>
         <p>Do not expand into payment or the full moderation system before the backend foundation is reproducible.</p>
       </section>

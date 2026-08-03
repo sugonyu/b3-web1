@@ -112,6 +112,19 @@ test databases. The command was then applied to the local development database;
 Raw SQLite inspection and the read-only `/dev/db/` screen confirmed 3 users,
 1 Almond listing, and 0 BorrowRequests.
 
+## W2-06 Seeded Browser Login — August 3
+
+The Python/Jinja client now provides `/login` and a POST `/logout` route. The login
+checks the stored password hash, starts a Flask-Login session, and shows the seeded
+Tony identity on the product home. Invalid credentials return one generic message,
+and logging out restores the protected API's JSON 401 boundary.
+
+Four focused authentication tests and the complete 44-test backend suite passed.
+The running Flask server also accepted the seeded Tony account and retained the
+session on the next HTTP request. Authentication remains pending until Tony confirms
+the complete login, refresh, invalid-password, and logout behavior in the browser;
+the register flow is the remaining part of W2-06.
+
 ## Scope Boundary
 
 The Week 2 slice supports BookLoop's privacy direction but does not attempt to
