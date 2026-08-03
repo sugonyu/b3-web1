@@ -2,7 +2,7 @@
 
 Official checkpoint: 🗄️ Deliverable 2 — Backend and Database
 Review date: August 6, 2026
-Status: Monday demo seed verified; Week 2 browser vertical slice remains in progress
+Status: W2-08 browser vertical slice verified; presentation evidence remains in progress
 
 Roadmap: [BookLoop Web1 Roadmap](../../docs/bookloop-web1-roadmap.md)
 
@@ -27,11 +27,11 @@ validation, and one complete database-backed create/read workflow.
 
 ## Monday Execution Order
 
-1. Create reproducible Tony, Mina, Alex, and Almond seed data without creating a
+1. Create reproducible Tony, Mina, Alex, and The Odyssey seed data without creating a
    BorrowRequest.
 2. Connect the real register, login, and logout browser session.
 3. Extract shared BorrowRequest create/read, validation, and authorization rules.
-4. Connect the minimal Python/Jinja flow: login → Almond → request → Pending →
+4. Connect the minimal Python/Jinja flow: login → The Odyssey → request → Pending →
    reopen the same request.
 
 ## Sunday Verification — August 2
@@ -100,8 +100,8 @@ and a real browser login session are not implemented yet.
 ## W2-05 Reproducible Demo Seed — August 3
 
 The private application now provides a `seed-demo` Flask CLI command. It creates
-Tony as the borrower, Mina as the Almond listing owner, Alex as an unrelated user,
-and Mina's available Almond BookListing. It deliberately creates no BorrowRequest,
+Tony as the borrower, Mina as The Odyssey listing owner, Alex as an unrelated user,
+and Mina's available The Odyssey BookListing. It deliberately creates no BorrowRequest,
 because that record must be produced through the live browser workflow.
 
 The password comes from the local `BOOKLOOP_DEMO_PASSWORD` environment variable
@@ -110,7 +110,7 @@ tests proved that running it twice creates no duplicate users or listing. The
 three focused tests and the complete 40-test backend suite passed using isolated
 test databases. The command was then applied to the local development database;
 Raw SQLite inspection and the read-only `/dev/db/` screen confirmed 3 users,
-1 Almond listing, and 0 BorrowRequests.
+1 The Odyssey listing, and 0 BorrowRequests.
 
 ## W2-06 Seeded Browser Login — August 3
 
@@ -137,6 +137,24 @@ without duplicating the backend rules.
 Five direct service tests and the existing eleven BorrowRequest API tests passed
 together. The complete backend suite passed 52 tests, preserving the existing API
 response and privacy contract.
+
+## W2-08 Python/Jinja Product Flow — August 3
+
+The product home now reads real BookListing rows and lets an authenticated user
+submit `Request this book`. The Jinja route calls the same shared service as the
+JSON API, saves one pending BorrowRequest, redirects to its stable request URL,
+and reads the same row again when that URL is reopened.
+
+Unauthenticated browser actions redirect to login while protected API requests
+retain their JSON 401 response. The service blocks the listing owner and duplicate
+active requests, and the result page excludes private user fields. Tony verified
+the complete login → The Odyssey → request → Pending → reopen flow in the running
+browser. The full backend suite passed 59 tests.
+
+The local DB Inspector was reordered for the verification workflow: Borrow
+Requests, Book Listings, then Users. It confirmed four local development users,
+one The Odyssey listing, and one persisted BorrowRequest. W2-08 is complete;
+W2-09 evidence selection and W2-10 restart/presentation proof remain next.
 
 ## Scope Boundary
 
