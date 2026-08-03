@@ -15,8 +15,18 @@ class JinjaClientTest(unittest.TestCase):
         )
         self.client = self.app.test_client()
 
-    def test_jinja_client_renders_shared_health_data(self):
+    def test_root_renders_independent_product_home(self):
         response = self.client.get("/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Hello BookLoop", response.data)
+        self.assertIn(b'href="/test/"', response.data)
+        self.assertIn(b'href="/jinja/"', response.data)
+        self.assertIn(b"/static/web/python-favicon.svg", response.data)
+        response.close()
+
+    def test_jinja_reference_renders_shared_health_data(self):
+        response = self.client.get("/jinja/")
 
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"BookLoop", response.data)

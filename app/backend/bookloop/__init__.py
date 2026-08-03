@@ -1,4 +1,11 @@
-"""BookLoop Flask application factory."""
+"""BookLoop Flask application factory.
+
+AWP 참조:
+- Flask app 설정과 db.init_app():
+  /home/sugonyu/jd/b2/test/test_py/b3-awp/classes/lia/app.py
+- Blueprint 등록 흐름:
+  /home/sugonyu/jd/b2/test/test_py/b3-awp/classes/class19-jul-07-tue-flask-blueprints/
+"""
 
 import os
 
@@ -7,10 +14,13 @@ from flask import Flask
 from flask_cors import CORS
 
 from .api import api
-from .auth import login_manager
+from .auth import auth, login_manager
 from .database import db
 from .client_jinja import jinja_client
+from .client_test import client_test
 from .client_vanilla import vanilla_client
+from .devtools.db_inspector import db_inspector
+from .devtools.seed import register_seed_commands
 
 
 def create_app(test_config=None):
@@ -25,6 +35,13 @@ def create_app(test_config=None):
             "sqlite:///bookloop.db",
         ),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
+        # 개발 DB Inspector는 명시적으로 true를 설정해야만 요청을 허용한다.
+        # DEBUG도 함께 검사하므로 운영 환경에서 실수로 내부 데이터가 노출되지 않는다.
+        ENABLE_DEV_DB_INSPECTOR=os.getenv(
+            "ENABLE_DEV_DB_INSPECTOR",
+            "false",
+        ).lower()
+        in {"1", "true", "yes", "on"},
     )
 
     if test_config:
@@ -36,7 +53,7 @@ def create_app(test_config=None):
     # db.create_all()이 세 model을 찾을 수 있도록 metadata에 등록한다.
     from . import models  # noqa: F401
 
-    # Allow the documented local static clients to call the Flask API.
+    # Private Stage B0: VS Code Live Preview(3000)에서 Flask API(5000) 호출 허용.
     CORS(
         app,
         resources={
@@ -52,8 +69,15 @@ def create_app(test_config=None):
     )
 
     app.register_blueprint(api)
+    app.register_blueprint(auth)
     app.register_blueprint(vanilla_client)
     app.register_blueprint(jinja_client)
+    app.register_blueprint(client_test)
+    # Blueprint는 항상 등록하고 route의 before_request에서 실행 시점 설정을 검사한다.
+    # app.run(debug=True)가 create_app() 뒤에 DEBUG를 켜기 때문에 이 순서가 필요하다.
+    app.register_blueprint(db_inspector)
+    # 데모 시작 데이터는 HTTP route가 아니라 명시적인 Flask CLI 명령으로만 만든다.
+    register_seed_commands(app)
 
     # SQLite 파일을 둘 instance 폴더가 항상 존재하도록 한다.
     os.makedirs(app.instance_path, exist_ok=True)

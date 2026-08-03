@@ -16,9 +16,43 @@ h1 {
   margin-bottom: 0.25rem;
 }
 
+.brand-badge {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid #2457a7;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.brand-badge:hover,
+.brand-badge:focus-visible {
+  color: #fff;
+  background: #2457a7;
+}
+
 .client-type {
   margin-top: 0;
   color: #555;
+}
+
+.toc-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  margin-top: 1rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  background: #fff;
+  font-size: 0.9rem;
+}
+
+.toc-nav a {
+  white-space: nowrap;
 }
 
 .client-link,

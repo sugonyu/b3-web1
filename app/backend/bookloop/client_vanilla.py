@@ -1,5 +1,8 @@
 """독립 Vanilla client 파일을 Flask 경로에서도 제공한다.
 
+AWP 참조:
+/home/sugonyu/jd/b2/test/test_py/b3-awp/classes/class19-jul-07-tue-flask-blueprints/
+
 이 파일은 Python으로 화면을 만드는 client가 아니다. 별도 폴더의 순수
 HTML/CSS/JavaScript를 찾아 Flask의 `/vanilla/` 경로로 전달하는 Blueprint다.
 Jinja 렌더링과 JSON API 처리도 담당하지 않는다.

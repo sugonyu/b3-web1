@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>BookLoop · Developer Database Inspector</title>
+    <link rel="icon" href="{{ url_for('static', filename='web/python-favicon.svg') }}" type="image/svg+xml">
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Arial, sans-serif;
+        color: #243029;
+        background: #f6f1e7;
+      }
+      body { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+      header { border-bottom: 1px solid #b8b8ae; margin-bottom: 2rem; }
+      .title-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+      .reload-link {
+        display: inline-block;
+        padding: 0.45rem 0.75rem;
+        border: 1px solid #315c43;
+        border-radius: 999px;
+        color: #315c43;
+        background: #fff;
+        font-weight: 700;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .reload-link:hover, .reload-link:focus { background: #e4eee7; }
+      .warning { padding: 0.75rem 1rem; border-left: 4px solid #c66a2b; background: #fff1df; }
+      section { margin-top: 2rem; }
+      table { width: 100%; border-collapse: collapse; background: #fff; }
+      th, td { padding: 0.65rem; border: 1px solid #b8b8ae; text-align: left; }
+      th { background: #e4eee7; }
+      .count { color: #5d665f; font-size: 0.9rem; }
+      .empty { padding: 1rem; border: 1px dashed #b8b8ae; background: #fff; }
+      code { font-size: 0.9em; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p><strong>BookLoop · Developer Tool</strong></p>
+      <div class="title-row">
+        <h1>Database Inspector</h1>
+        <a class="reload-link" href="{{ url_for('db_inspector.index') }}">↻ Reload</a>
+      </div>
+      <p class="warning">Read-only local debugging screen. Product Admin 기능이 아닙니다.</p>
+    </header>
+
+    <main>
+      <section aria-labelledby="users-heading">
+        <h2 id="users-heading">Users <span class="count">{{ users|length }} rows</span></h2>
+        {% if users %}
+          <table>
+            <thead><tr><th>ID</th><th>Username</th><th>General area</th></tr></thead>
+            <tbody>
+              {% for user in users %}
+                <tr><td>{{ user.id }}</td><td>{{ user.username }}</td><td>{{ user.general_area }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="empty">No User rows.</p>
+        {% endif %}
+      </section>
+
+      <section aria-labelledby="listings-heading">
+        <h2 id="listings-heading">Book Listings <span class="count">{{ listings|length }} rows</span></h2>
+        {% if listings %}
+          <table>
+            <thead><tr><th>ID</th><th>Title</th><th>Author</th><th>Available</th><th>Owner ID</th></tr></thead>
+            <tbody>
+              {% for listing in listings %}
+                <tr>
+                  <td>{{ listing.id }}</td><td>{{ listing.title }}</td><td>{{ listing.author }}</td>
+                  <td>{{ "yes" if listing.availability else "no" }}</td><td>{{ listing.owner_id }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="empty">No BookListing rows.</p>
+        {% endif %}
+      </section>
+
+      <section aria-labelledby="requests-heading">
+        <h2 id="requests-heading">Borrow Requests <span class="count">{{ borrow_requests|length }} rows</span></h2>
+        {% if borrow_requests %}
+          <table>
+            <thead><tr><th>ID</th><th>Status</th><th>Listing ID</th><th>Borrower ID</th></tr></thead>
+            <tbody>
+              {% for borrow_request in borrow_requests %}
+                <tr>
+                  <td>{{ borrow_request.id }}</td><td>{{ borrow_request.status }}</td>
+                  <td>{{ borrow_request.listing_id }}</td><td>{{ borrow_request.borrower_id }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="empty">No BorrowRequest rows.</p>
+        {% endif %}
+      </section>
+    </main>
+  </body>
+</html>

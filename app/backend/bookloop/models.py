@@ -1,4 +1,8 @@
-"""BookLoop의 세 핵심 SQLAlchemy model과 관계를 정의한다."""
+"""BookLoop의 세 핵심 SQLAlchemy model과 관계를 정의한다.
+
+AWP 참조:
+/home/sugonyu/jd/b2/test/test_py/b3-awp/classes/lia/models.py
+"""
 
 from flask_login import UserMixin
 

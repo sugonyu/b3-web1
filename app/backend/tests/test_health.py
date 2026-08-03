@@ -1,4 +1,4 @@
-"""Health endpoint tests."""
+"""Private Stage A-1 health endpoint test."""
 
 import unittest
 

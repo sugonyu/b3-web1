@@ -19,18 +19,8 @@
           browser에 보내는 server-rendered client다.
         </p>
         <ul>
-          <li><a href="/jinja/">🐍 Jinja client</a></li>
-          <li>
-            <a href="http://127.0.0.1:3000/b3-web1/app/frontend-vanilla/">
-              🟨 Independent JavaScript / Vanilla client
-            </a>
-          </li>
-          <li>
-            <a href="http://127.0.0.1:5000/vanilla/">
-              🟨 Vanilla client served through Flask
-            </a>
-          </li>
-          <li><a href="{{ url_for('api.health') }}">View JSON API</a></li>
+          <li><a href="{{ url_for('client_test.index') }}">🧪 Open Client Test Hub</a></li>
+          <li><a href="{{ url_for('api.health') }}">📤 View JSON API</a></li>
         </ul>
       </section>
 

@@ -33,9 +33,25 @@ python run.py
 
 Open:
 
-- `http://127.0.0.1:5000/` — Python/Jinja client
+- `http://127.0.0.1:5000/` — Python/Jinja product home
+- `http://127.0.0.1:5000/login` — seeded-user login
+- `http://127.0.0.1:5000/register` — registration
+- `http://127.0.0.1:5000/test/` — client, API and developer-tool index
 - `http://127.0.0.1:5000/vanilla/` — the same Vanilla source served by Flask
 - `http://127.0.0.1:5000/api/health` — JSON health endpoint
+
+## Reproducible Demo Start
+
+Create a local `.env` from `.env.example`, set a local-only
+`BOOKLOOP_DEMO_PASSWORD`, and run:
+
+```bash
+cd app/backend
+flask --app run seed-demo
+```
+
+The command creates Tony, Mina, Alex, and Mina's available Almond listing. It
+does not create a BorrowRequest; that record remains part of the browser demo.
 
 ## Test
 
@@ -53,9 +69,10 @@ user data.
 ## Current Boundary
 
 The current public source proves the backend foundation, relational models,
-BorrowRequest create/read behavior, protected request reads, privacy-safe JSON,
-Jinja rendering, and the Vanilla API/CORS connection.
+reproducible demo seed, register/login/logout session, protected request reads,
+privacy-safe JSON, and a shared BorrowRequest create/read service. The complete
+backend suite passes 52 tests.
 
-The reproducible demo seed command, real register/login/logout interface, shared
-BorrowRequest service extraction, and Jinja product workflow remain Deliverable 2
-work in progress.
+The next Deliverable 2 step is the minimal Jinja product workflow: show Almond,
+submit Tony's request through the shared service, display Pending, and reopen the
+same saved request.

@@ -1,4 +1,4 @@
-"""Core model and relationship tests."""
+"""Private Stage A-2 core model and relationship tests."""
 
 import unittest
 

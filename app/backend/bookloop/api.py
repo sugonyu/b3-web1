@@ -1,10 +1,22 @@
-"""BookLoop JSON API blueprint."""
+"""BookLoop JSON API의 첫 blueprint.
+
+AWP 참조:
+- Blueprint:
+  /home/sugonyu/jd/b2/test/test_py/b3-awp/classes/class19-jul-07-tue-flask-blueprints/
+- jsonify route:
+  /home/sugonyu/jd/b2/test/test_py/b3-awp/classes/class22-jul-15-wed-database-models-validation/ex/station_bike-1n-bi-nav-1.2-json-route.py
+"""
 
 from flask import Blueprint, jsonify, request
 from flask_login import current_user, login_required
 
 from .database import db
 from .models import BookListing, BorrowRequest, User
+from .services.borrow_requests import (
+    BorrowRequestServiceError,
+    create_borrow_request as create_borrow_request_service,
+    get_authorized_borrow_request,
+)
 from .services.health import get_health_status
 
 
@@ -188,44 +200,18 @@ def delete_listing(listing_id):
 @api.post("/listings/<int:listing_id>/requests")
 def create_borrow_request(listing_id):
     """대여 가능한 BookListing에 borrower의 pending 요청을 생성한다."""
-    listing = db.session.get(BookListing, listing_id)
-
-    if listing is None:
-        return jsonify({"error": "listing not found"}), 404
-
     data = request.get_json(silent=True)
 
     if not isinstance(data, dict):
         return jsonify({"error": "A JSON object is required"}), 400
 
-    borrower_id = data.get("borrower_id")
-
-    if isinstance(borrower_id, bool) or not isinstance(borrower_id, int):
-        return jsonify({"error": "borrower_id must be an integer"}), 400
-
-    borrower = db.session.get(User, borrower_id)
-
-    if borrower is None:
-        return jsonify({"error": "borrower not found"}), 404
-
-    if listing.owner_id == borrower_id:
-        return jsonify({"error": "owner cannot borrow own listing"}), 409
-
-    if not listing.availability:
-        return jsonify({"error": "listing is not available"}), 409
-
-    active_request = BorrowRequest.query.filter(
-        BorrowRequest.listing_id == listing.id,
-        BorrowRequest.borrower_id == borrower.id,
-        BorrowRequest.status.in_(("pending", "approved")),
-    ).first()
-
-    if active_request is not None:
-        return jsonify({"error": "active borrow request already exists"}), 409
-
-    borrow_request = BorrowRequest(listing=listing, borrower=borrower)
-    db.session.add(borrow_request)
-    db.session.commit()
+    try:
+        borrow_request = create_borrow_request_service(
+            listing_id,
+            data.get("borrower_id"),
+        )
+    except BorrowRequestServiceError as error:
+        return jsonify({"error": error.message}), error.status_code
 
     return jsonify({"request": borrow_request_to_dict(borrow_request)}), 201
 
@@ -234,18 +220,13 @@ def create_borrow_request(listing_id):
 @login_required
 def get_borrow_request(request_id):
     """요청자 본인 또는 listing owner에게 BorrowRequest 하나를 반환한다."""
-    borrow_request = db.session.get(BorrowRequest, request_id)
-
-    if borrow_request is None:
-        return jsonify({"error": "borrow request not found"}), 404
-
-    allowed_user_ids = {
-        borrow_request.borrower_id,
-        borrow_request.listing.owner_id,
-    }
-
-    if current_user.id not in allowed_user_ids:
-        return jsonify({"error": "borrow request access forbidden"}), 403
+    try:
+        borrow_request = get_authorized_borrow_request(
+            request_id,
+            current_user.id,
+        )
+    except BorrowRequestServiceError as error:
+        return jsonify({"error": error.message}), error.status_code
 
     return jsonify({"request": borrow_request_to_dict(borrow_request)})
 
