@@ -18,7 +18,7 @@ validation, and one complete database-backed create/read workflow.
 - [x] Database can be created reproducibly
 - [x] Core models exist
 - [x] Model relationships function
-- [ ] Authentication functions where the selected workflow requires it
+- [x] Authentication functions where the selected workflow requires it
 - [x] At least one create workflow works
 - [x] At least one read workflow works
 - [x] Validation success and failure are demonstrated
@@ -119,11 +119,12 @@ checks the stored password hash, starts a Flask-Login session, and shows the see
 Tony identity on the product home. Invalid credentials return one generic message,
 and logging out restores the protected API's JSON 401 boundary.
 
-Four focused authentication tests and the complete 44-test backend suite passed.
+Seven focused authentication tests and the complete 47-test backend suite passed.
 The running Flask server also accepted the seeded Tony account and retained the
-session on the next HTTP request. Authentication remains pending until Tony confirms
-the complete login, refresh, invalid-password, and logout behavior in the browser;
-the register flow is the remaining part of W2-06.
+session on the next HTTP request. Registration adds required-field and duplicate
+validation, stores only a password hash, and starts the new user's session. Tony
+confirmed registration, login, refresh persistence, and logout in the browser.
+This completes W2-06 and the milestone authentication evidence.
 
 ## Scope Boundary
 
