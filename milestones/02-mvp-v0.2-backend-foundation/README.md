@@ -2,7 +2,9 @@
 
 Official checkpoint: 🗄️ Deliverable 2 — Backend and Database
 Review date: August 6, 2026
-Status: Sunday verification complete; Week 2 browser vertical slice remains in progress
+Status: Monday demo seed verified; Week 2 browser vertical slice remains in progress
+
+Roadmap: [BookLoop Web1 Roadmap](../../docs/bookloop-web1-roadmap.md)
 
 ## Goal
 
@@ -95,10 +97,30 @@ passed 30 tests. This completes the protected read endpoint, but the milestone's
 full authentication item remains unchecked because register/login/logout endpoints
 and a real browser login session are not implemented yet.
 
+## W2-05 Reproducible Demo Seed — August 3
+
+The private application now provides a `seed-demo` Flask CLI command. It creates
+Tony as the borrower, Mina as the Almond listing owner, Alex as an unrelated user,
+and Mina's available Almond BookListing. It deliberately creates no BorrowRequest,
+because that record must be produced through the live browser workflow.
+
+The password comes from the local `BOOKLOOP_DEMO_PASSWORD` environment variable
+and only its hash is stored. The command does not delete or reset data. Focused
+tests proved that running it twice creates no duplicate users or listing. The
+three focused tests and the complete 40-test backend suite passed using isolated
+test databases. The command was then applied to the local development database;
+Raw SQLite inspection and the read-only `/dev/db/` screen confirmed 3 users,
+1 Almond listing, and 0 BorrowRequests.
+
 ## Scope Boundary
 
 The Week 2 slice supports BookLoop's privacy direction but does not attempt to
 finish the whole moderation system.
+
+The current authentication, authorization, privacy-safe response and automated
+test boundaries are the D2 foundation for Kamyar's verification, report-system
+and Admin View recommendations. Their bounded implementation order is preserved
+in the project roadmap rather than added prematurely to this vertical slice.
 
 Client strategy for this milestone:
 
