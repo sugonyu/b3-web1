@@ -153,8 +153,37 @@ browser. The full backend suite passed 59 tests.
 
 The local DB Inspector was reordered for the verification workflow: Borrow
 Requests, Book Listings, then Users. It confirmed four local development users,
-one The Odyssey listing, and one persisted BorrowRequest. W2-08 is complete;
-W2-09 evidence selection and W2-10 restart/presentation proof remain next.
+one The Odyssey listing, and one persisted BorrowRequest. W2-08 is complete. At
+this checkpoint, W2-09 evidence selection and W2-10 restart/presentation proof
+were the next tasks.
+
+## W2-09 Visible Identity and Access Evidence — August 3
+
+The Jinja product UI now exposes only the identifiers needed to explain and test
+the authorization boundary. The signed-in heading includes the current username
+and User ID. A duplicate request response includes the existing BorrowRequest ID
+and a protected `View Request #ID` link, allowing the same saved record to be
+reopened instead of leaving the user at an error message.
+
+Protected request error pages display the HTTP status beside the server message:
+
+```text
+403 · borrow request access forbidden
+404 · borrow request not found
+```
+
+When a logged-out user opens a protected request URL, Flask redirects to
+`/login?next=/requests/<id>`. A successful login returns the user to that same
+request, where authorization is checked again. Only local application paths are
+accepted as `next` values; external redirect targets are rejected. Protected API
+requests continue to return JSON 401 responses, and protected POST actions are
+not automatically replayed after login.
+
+The focused authentication, service, API, and Jinja tests passed, and the complete
+backend suite reached 62 passing tests. Direct HTTP checks confirmed the 403 and
+404 messages, duplicate request ID/link, login redirect, and return-to-request
+flow. Tony then confirmed the updated identity, duplicate-request link, access
+errors, and login-return flow in the browser. W2-09 is complete.
 
 ## Scope Boundary
 
