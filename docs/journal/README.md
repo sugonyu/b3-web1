@@ -9,6 +9,14 @@ YYYY-MM-DD.md
 Each entry records the goal, completed work, problems or decisions, verification
 and next step.
 
+## Voice rule
+
+Every journal entry uses Tony's first-person perspective without forcing every
+sentence to begin with `I`. Use natural working-note prose such as `Reviewed`,
+`Confirmed`, `Decided` and `Next:` rather than describing Tony from outside. Do not
+append workflow labels such as `Draft — pending Tony's review`; the entry itself
+should record the work, learning and next action.
+
 Kanban snapshots use one date-first filename rule so they sort chronologically:
 
 ```text
@@ -42,6 +50,7 @@ book is produced before the Kindle edition.
 
 ## Entries
 
+- [2026-08-04 (Tuesday) — W2-10 persistence and presentation v1.0](2026-08-04.md) · [Kanban snapshot](../week02-2-tue-kanban.html)
 - [2026-08-03 (Monday) — D2 Jinja BorrowRequest vertical slice](2026-08-03.md) · [Kanban snapshot](../2026-08-03-week02-mon-kanban.html)
 - [2026-08-02 (Sunday) — Deliverable 2 verification and client strategy](2026-08-02.md) · [Kanban snapshot](../2026-08-02-week02-sun-kanban.html)
 - [2026-07-30 (Thursday) — Deliverable 1](2026-07-30.md)
