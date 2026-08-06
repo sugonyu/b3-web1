@@ -3,8 +3,8 @@
 import unittest
 
 from bookloop import create_app
-from bookloop.database import db
-from bookloop.models import BookListing, BorrowRequest, User
+from bookloop.db import db
+from bookloop.db.models import BookListing, BorrowRequest, User
 
 
 class CoreModelTest(unittest.TestCase):

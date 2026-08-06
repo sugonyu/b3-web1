@@ -50,6 +50,8 @@ book is produced before the Kindle edition.
 
 ## Entries
 
+- [2026-08-06 (Thursday) — Deliverable 2 feedback and Week 2 closeout](2026-08-06.md) · [Thursday Kanban](../week02-4-thu-kanban.html) · [Week 2 final Kanban](../week02-kanban.html)
+- [2026-08-05 (Wednesday) — structure boundaries, Code Map and Stage A2 snapshot](2026-08-05.md)
 - [2026-08-04 (Tuesday) — W2-10 persistence and presentation v1.0](2026-08-04.md) · [Kanban snapshot](../week02-2-tue-kanban.html)
 - [2026-08-03 (Monday) — D2 Jinja BorrowRequest vertical slice](2026-08-03.md) · [Kanban snapshot](../2026-08-03-week02-mon-kanban.html)
 - [2026-08-02 (Sunday) — Deliverable 2 verification and client strategy](2026-08-02.md) · [Kanban snapshot](../2026-08-02-week02-sun-kanban.html)

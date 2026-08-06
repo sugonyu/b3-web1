@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BookLoop — Project Weekly Kanban Board</title>
+    <style>
+      body { margin: 20px; color: #222; font-family: Arial, sans-serif; }
+      .board { display: grid; grid-template-columns: repeat(5, minmax(180px, 1fr)); gap: 10px; overflow-x: auto; }
+      .column, li { border: 1px solid #aaa; padding: 10px; }
+      .column { min-width: 180px; background: #f5f5f5; }
+      ul { margin: 0; padding: 0; list-style: none; }
+      li { margin-bottom: 8px; background: white; }
+      small { color: #555; }
+      .latest-move {
+        border: 2px solid #f59e0b;
+        background: #fffbeb;
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18);
+      }
+      .latest-move-label {
+        display: inline-block;
+        margin-bottom: 6px;
+        padding: 2px 6px;
+        border-radius: 999px;
+        color: #78350f;
+        background: #fde68a;
+        font-size: 11px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>BookLoop — Project Weekly Kanban Board</h1>
+    <p>
+      <strong>Week 2:</strong> August 3–6, 2026<br />
+      <strong>Last updated:</strong>
+      <time datetime="2026-08-04T22:52:37-04:00">Tuesday, August 4, 2026 · 10:52 PM EDT (Toronto)</time>
+    </p>
+    <p><strong>Current weekly board:</strong> 🗄️ Deliverable 2 BorrowRequest browser vertical slice.</p>
+
+    <main class="board">
+      <section class="column">
+        <h2>Backlog</h2>
+        <ul></ul>
+      </section>
+
+      <section class="column">
+        <h2>Ready</h2>
+        <ul>
+          <li>
+            <strong>W2-11</strong><br />
+            Preserve reproducible Deliverable 2 evidence and snapshot<br />
+            <small>Thursday · After W2-10 verification</small>
+          </li>
+        </ul>
+      </section>
+
+      <section class="column">
+        <h2>In progress</h2>
+        <ul></ul>
+      </section>
+
+      <section class="column">
+        <h2>Testing</h2>
+        <ul></ul>
+      </section>
+
+      <section class="column">
+        <h2>Complete</h2>
+        <ul>
+          <li class="latest-move">
+            <span class="latest-move-label">★ Latest move · Ready → Complete</span><br />
+            <strong>W2-10</strong><br />
+            Verify persistence and presentation evidence<br />
+            <small>Same BorrowRequest reopened after restart · DB evidence reviewed · English presentation v1.0 created · 67 passed</small><br />
+            <small>Moved: Tuesday · August 4, 2026 · 10:52 PM EDT</small>
+          </li>
+          <li>
+            <strong>W2-09</strong><br />
+            Verify validation and access evidence<br />
+            <small>User ID · existing request ID/link · 401/403/404/409 · safe return after login · Tony browser verified · 62 passed</small>
+          </li>
+          <li>
+            <strong>W2-08</strong><br />
+            Build the minimal Python/Jinja product UI<br />
+            <small>Login → The Odyssey → Request → Pending → reopen same request · Tony browser verified · 59 passed</small>
+          </li>
+          <li>
+            <strong>W2-07</strong><br />
+            Extract the shared BorrowRequest service<br />
+            <small>API and Jinja share create/read validation, authorization, and transaction rules · 52 passed</small>
+          </li>
+          <li>
+            <strong>W2-06</strong><br />
+            Connect a real browser authentication session<br />
+            <small>Register · login · refresh persistence · logout · current_user · Tony browser confirmed · 47 passed</small>
+          </li>
+          <li>
+            <strong>W2-05</strong><br />
+            Create reproducible demo seed data<br />
+            <small>Tony · Mina · Alex · The Odyssey created idempotently; BorrowRequest remains empty · 40 passed</small>
+          </li>
+          <li>
+            <strong>W2-04</strong><br />
+            Implement and test BorrowRequest read authorization<br />
+            <small>Borrower/owner allowed · 401/403/404 and privacy tested · 30 passed</small>
+          </li>
+          <li>
+            <strong>W2-03</strong><br />
+            Select the borrow-request create/read vertical slice<br />
+            <small>POST create → GET same request selected</small>
+          </li>
+          <li>
+            <strong>W2-01</strong><br />
+            Verify Flask startup and environment configuration<br />
+            <small>Deliverable 1 baseline reverified: Flask + Python/Jinja together; JavaScript/Vanilla also confirmed</small>
+          </li>
+          <li>
+            <strong>W2-02</strong><br />
+            Verify database creation, models, relationships, and persistence<br />
+            <small>Sunday verification · 25 tests passed</small>
+          </li>
+          <li>
+            <strong>W1-D1</strong><br />
+            Present Deliverable 1 and record scope feedback<br />
+            <small>Week 1 complete · Payment excluded</small>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <h2>Scope guardrails</h2>
+    <ul>
+      <li>Complete one database-backed create/read workflow before adding breadth.</li>
+      <li>Keep the D2 product UI narrow: login, one seeded book, request, pending result, and reopen.</li>
+      <li>Keep private contact information behind an explicit approval boundary.</li>
+      <li>Do not implement payment, card storage, deposits, refunds, or charging.</li>
+      <li>Reporting and Admin View remain documented future scope until the backend foundation is verified.</li>
+    </ul>
+
+    <p>
+      <small>
+        Latest-move rule: keep this highlight on exactly one card. When another task changes columns,
+        move the label and color to that card. Show a completion time only on that latest moved card;
+        remove completion times from older Complete cards.
+      </small>
+    </p>
+  </body>
+</html>

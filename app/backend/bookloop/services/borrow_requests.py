@@ -4,17 +4,19 @@ JSON API와 Python/Jinja 화면은 응답 형식이 다르지만 같은 validati
 authorization과 SQLAlchemy transaction 규칙을 사용한다.
 """
 
-from ..database import db
-from ..models import BookListing, BorrowRequest, User
+from ..db import db
+from ..db.models import BookListing, BorrowRequest, User
 
 
 class BorrowRequestServiceError(Exception):
     """route가 HTTP 응답으로 변환할 수 있는 예상된 application 오류."""
 
-    def __init__(self, message, status_code):
+    def __init__(self, message, status_code, request_id=None):
         super().__init__(message)
         self.message = message
         self.status_code = status_code
+        # 중복 요청처럼 이미 존재하는 resource가 있으면 browser UI가 다시 열 수 있다.
+        self.request_id = request_id
 
 
 def create_borrow_request(listing_id, borrower_id):
@@ -48,6 +50,7 @@ def create_borrow_request(listing_id, borrower_id):
         raise BorrowRequestServiceError(
             "active borrow request already exists",
             409,
+            request_id=active_request.id,
         )
 
     borrow_request = BorrowRequest(listing=listing, borrower=borrower)

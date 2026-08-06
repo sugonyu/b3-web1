@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLoop · Request error</title>
+    <link rel="icon" href="{{ url_for('static', filename='bookloop/python-favicon.svg') }}" type="image/svg+xml">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
+  </head>
+  <body>
+    <main>
+      <a class="brand-badge" href="{{ url_for('jinja_client.product_home') }}">BookLoop</a>
+      <h1>Request unavailable</h1>
+      <p class="error-message" role="alert">
+        <strong>{{ error.status_code }}</strong> · {{ error.message }}
+      </p>
+      <a href="{{ url_for('jinja_client.product_home') }}">Back to books</a>
+    </main>
+  </body>
+</html>

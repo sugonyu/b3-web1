@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLoop · Books</title>
+    <link rel="icon" href="{{ url_for('static', filename='bookloop/python-favicon.svg') }}" type="image/svg+xml">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
+  </head>
+  <body>
+    <main>
+      <h1>Hello BookLoop</h1>
+      <p class="client-type">Share Korean books with your local community.</p>
+
+      {% if current_user.is_authenticated %}
+        <section class="status-card">
+          <h2>Signed in as {{ current_user.username }} · User #{{ current_user.id }}</h2>
+          <p>Welcome, <strong>{{ current_user.username }}</strong>.</p>
+          <p>Choose an available book to create a borrowing request.</p>
+          <form action="{{ url_for('auth.logout') }}" method="post">
+            <button type="submit">Log out</button>
+          </form>
+        </section>
+      {% else %}
+        <section class="status-card">
+          <h2>Borrower session</h2>
+          <p>Sign in before requesting a book.</p>
+          <a href="{{ url_for('auth.login') }}">Log in</a>
+          <a href="{{ url_for('auth.register') }}">Register</a>
+        </section>
+      {% endif %}
+
+      {% if error %}
+        <div class="error-message" role="alert">
+          <p>{{ error }}{% if existing_request_id %} · BorrowRequest #{{ existing_request_id }}{% endif %}</p>
+          {% if existing_request_id %}
+            <a href="{{ url_for('jinja_client.request_detail', request_id=existing_request_id) }}">
+              View Request #{{ existing_request_id }}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <section aria-labelledby="books-title">
+        <h2 id="books-title">Books</h2>
+        {% for listing in listings %}
+          <article class="book-card">
+            <p class="eyebrow">Book #{{ listing.id }}</p>
+            <h3>{{ listing.title }}</h3>
+            <p>by {{ listing.author }}</p>
+            <dl>
+              <dt>Owner</dt>
+              <dd>{{ listing.owner.username }}</dd>
+              <dt>Area</dt>
+              <dd>{{ listing.owner.general_area }}</dd>
+              <dt>Status</dt>
+              <dd>{{ "Available" if listing.availability else "Unavailable" }}</dd>
+            </dl>
+
+            {% if current_user.is_authenticated %}
+              <form action="{{ url_for('jinja_client.request_book', listing_id=listing.id) }}" method="post">
+                <button type="submit"{% if not listing.availability or listing.owner_id == current_user.id %} disabled{% endif %}>
+                  {% if listing.owner_id == current_user.id %}
+                    Your listing
+                  {% elif not listing.availability %}
+                    Unavailable
+                  {% else %}
+                    Request this book
+                  {% endif %}
+                </button>
+              </form>
+            {% else %}
+              <a href="{{ url_for('auth.login') }}">Log in to request</a>
+            {% endif %}
+          </article>
+        {% else %}
+          <p>No books are available yet.</p>
+        {% endfor %}
+      </section>
+
+      <nav class="toc-nav" aria-label="BookLoop development pages">
+        <a href="{{ url_for('client_test.index') }}">🧪 Test Hub</a>
+        <a href="{{ url_for('jinja_client.jinja_reference') }}">🐍 Jinja Reference</a>
+        <a
+          href="{{ url_for('jinja_client.product_home') }}"
+          title="Reload current page"
+          aria-label="Reload current page"
+        >↻</a>
+      </nav>
+    </main>
+  </body>
+</html>

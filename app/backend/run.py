@@ -5,7 +5,7 @@ AWP 참조:
 """
 
 from bookloop import create_app
-from bookloop.database import db
+from bookloop.db import db
 
 
 app = create_app()

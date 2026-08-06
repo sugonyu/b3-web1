@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLoop — Jinja</title>
+    <link rel="icon" href="{{ url_for('static', filename='bookloop/python-favicon.svg') }}" type="image/svg+xml">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
+  </head>
+  <body>
+    <main>
+      <h1>🐍 {{ health.app }}</h1>
+      <p class="client-type">Python / Jinja client</p>
+
+      <section class="client-info" aria-labelledby="client-info-heading">
+        <h2 id="client-info-heading">About this client</h2>
+        <p>
+          Flask가 Python 데이터를 Jinja template에 넣어 HTML을 완성한 뒤
+          browser에 보내는 server-rendered client다.
+        </p>
+        <ul>
+          <li><a href="{{ url_for('client_test.index') }}">🧪 Open Client Test Hub</a></li>
+          <li><a href="{{ url_for('api.health') }}">📤 View JSON API</a></li>
+        </ul>
+      </section>
+
+      <section class="status-card">
+        <h2>Flask Service</h2>
+        <dl>
+          <dt>Status</dt>
+          <dd>{{ health.status }}</dd>
+
+          <dt>Service</dt>
+          <dd>{{ health.service }}</dd>
+
+          <dt>Version</dt>
+          <dd>{{ health.version }}</dd>
+        </dl>
+      </section>
+    </main>
+  </body>
+</html>

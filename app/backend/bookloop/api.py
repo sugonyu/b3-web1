@@ -10,8 +10,8 @@ AWP 참조:
 from flask import Blueprint, jsonify, request
 from flask_login import current_user, login_required
 
-from .database import db
-from .models import BookListing, BorrowRequest, User
+from .db import db
+from .db.models import BookListing, BorrowRequest, User
 from .services.borrow_requests import (
     BorrowRequestServiceError,
     create_borrow_request as create_borrow_request_service,

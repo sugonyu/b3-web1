@@ -5,8 +5,8 @@ import unittest
 from werkzeug.security import generate_password_hash
 
 from bookloop import create_app
-from bookloop.database import db
-from bookloop.models import User
+from bookloop.db import db
+from bookloop.db.models import User
 
 
 class BrowserAuthenticationTest(unittest.TestCase):
@@ -69,6 +69,15 @@ class BrowserAuthenticationTest(unittest.TestCase):
         self.assertIn(b"Invalid username or password.", response.data)
         home_response = self.client.get("/")
         self.assertIn(b"Sign in before requesting a book.", home_response.data)
+
+    def test_login_rejects_external_next_redirect(self):
+        response = self.client.post(
+            "/login?next=https://example.com/unsafe",
+            data={"username": "tony", "password": "1111"},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.headers["Location"], "/")
 
     def test_logout_ends_session_and_protected_api_returns_401(self):
         self.client.post(

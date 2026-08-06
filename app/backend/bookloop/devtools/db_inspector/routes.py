@@ -6,7 +6,7 @@ database를 변경하는 POST, PATCH, DELETE route를 의도적으로 제공하�
 
 from flask import Blueprint, abort, current_app, render_template
 
-from ...models import BookListing, BorrowRequest, User
+from ...db.models import BookListing, BorrowRequest, User
 
 
 db_inspector = Blueprint(

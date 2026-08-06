@@ -21,7 +21,7 @@ class ClientTestHubTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"BookLoop Test Hub", response.data)
         self.assertIn(b'class="brand-badge" href="/"', response.data)
-        self.assertIn(b"/static/web/python-favicon.svg", response.data)
+        self.assertIn(b"/static/bookloop/python-favicon.svg", response.data)
         self.assertIn("1 · Clients".encode(), response.data)
         self.assertIn("2 · API".encode(), response.data)
         self.assertIn("3 · Developer Tools".encode(), response.data)
@@ -33,7 +33,7 @@ class ClientTestHubTest(unittest.TestCase):
         self.assertIn(b'href="/api/health"', response.data)
         self.assertIn(b'href="/dev/db/"', response.data)
         self.assertIn(
-            b"http://localhost:8080/pub/b3-web1/app/frontend-vanilla/",
+            b"http://localhost:8080/pub/b3-web1/app/frontend/js-vanilla/",
             response.data,
         )
         response.close()

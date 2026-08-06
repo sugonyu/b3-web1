@@ -21,7 +21,17 @@ bookloop/devtools/                       → 개발자가 로컬에서만 사용
 | 폴더 | 역할 | 상태 |
 | --- | --- | --- |
 | [`db_inspector/`](db_inspector/README.md) | 세 핵심 SQLAlchemy model을 읽기 전용으로 확인 | v0.1 |
-| [`seed/`](seed/README.md) | D2 데모 시작 데이터를 재현하는 Flask CLI 명령 | v0.1 |
+| [`bl_cli/`](bl_cli/README.md) | Seed 등 개발 도구를 터미널 명령으로 조립 | v0.1 |
+
+터미널 실행 편의를 위해 `backend/bl_cli.py`를 유지하지만, 이 파일은 실제 구현을
+담지 않는 얇은 진입점이다. BL-CLI 구현과 문서는 `devtools/bl_cli/`에 둔다.
+
+```text
+devtools/
+├── db_inspector/       # Browser-based read-only tool
+└── bl_cli/             # Terminal tool
+    └── seed/           # BL-CLI seed/reset feature
+```
 
 ## 미래 확장 규칙
 

@@ -1,0 +1,187 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@600;700&display=swap");
+
+:root {
+  --lbv-cream: #faf9f5;
+  --lbv-tomato: #a83226;
+  --lbv-olive: #4a5a24;
+  --lbv-charcoal: #2f3320;
+  --lbv-card: #fcfbf7;
+  --lbv-border: #d8d2c4;
+  --lbv-footer: #f3efe6;
+  --lbv-heading-font: "Playfair Display", Georgia, serif;
+  --lbv-body-font: "Lato", Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--lbv-charcoal);
+  background: var(--lbv-cream);
+  font-family: var(--lbv-body-font);
+  line-height: 1.65;
+}
+
+main {
+  max-width: 44rem;
+  margin: 3rem auto;
+  padding: 0 1.25rem 4rem;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--lbv-tomato);
+  font-family: var(--lbv-heading-font);
+}
+
+h1 {
+  margin-bottom: 0.25rem;
+  font-size: clamp(2.4rem, 7vw, 4rem);
+  line-height: 1;
+}
+
+.host-context {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid rgba(168, 50, 38, 0.2);
+  color: var(--lbv-olive);
+  font-size: 0.85rem;
+}
+
+.host-context span {
+  color: #666351;
+}
+
+.client-type {
+  margin-top: 0;
+  color: var(--lbv-olive);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.toc-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  margin-top: 1rem;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--lbv-border);
+  border-radius: 10px;
+  background: var(--lbv-card);
+  font-size: 0.9rem;
+}
+
+.toc-nav strong {
+  color: var(--lbv-tomato);
+  font-family: var(--lbv-heading-font);
+}
+
+.toc-nav a {
+  white-space: nowrap;
+}
+
+.flow-line {
+  margin-bottom: 0;
+  overflow-wrap: anywhere;
+  color: var(--lbv-olive);
+}
+
+.client-link,
+.api-link {
+  margin: 0.75rem 0;
+}
+
+.client-info,
+.status-card {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--lbv-border);
+  border-radius: 10px;
+  background: var(--lbv-card);
+}
+
+.status-card {
+  border-left: 5px solid var(--lbv-olive);
+}
+
+.client-info h2,
+.status-card h2 {
+  margin-top: 0;
+}
+
+.client-info li + li {
+  margin-top: 0.45rem;
+}
+
+a {
+  color: var(--lbv-olive);
+  text-underline-offset: 0.16em;
+}
+
+a:hover,
+a:focus-visible {
+  color: var(--lbv-tomato);
+}
+
+button {
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--lbv-olive);
+  border-radius: 999px;
+  color: var(--lbv-cream);
+  background: var(--lbv-olive);
+  font-family: var(--lbv-body-font);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover,
+button:focus-visible {
+  border-color: var(--lbv-tomato);
+  background: var(--lbv-tomato);
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--lbv-tomato);
+  outline-offset: 3px;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+code {
+  font-family: "Courier New", monospace;
+}
+
+dt {
+  font-weight: bold;
+}
+
+dd {
+  margin: 0 0 1rem;
+}
+
+@media (max-width: 520px) {
+  main {
+    margin-top: 1.5rem;
+  }
+
+  .host-context {
+    display: block;
+  }
+
+  .host-context span {
+    display: block;
+    margin-top: 0.25rem;
+  }
+}

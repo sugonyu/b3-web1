@@ -15,12 +15,10 @@ from flask_cors import CORS
 
 from .api import api
 from .auth import auth, login_manager
-from .database import db
-from .client_jinja import jinja_client
-from .client_test import client_test
-from .client_vanilla import vanilla_client
+from .db import db
+from .clients import client_test, jinja_client, vanilla_client
 from .devtools.db_inspector import db_inspector
-from .devtools.seed import register_seed_commands
+from .devtools.bl_cli.seed import register_seed_commands
 
 
 def create_app(test_config=None):
@@ -51,7 +49,7 @@ def create_app(test_config=None):
     login_manager.init_app(app)
 
     # db.create_all()이 세 model을 찾을 수 있도록 metadata에 등록한다.
-    from . import models  # noqa: F401
+    from .db import models  # noqa: F401
 
     # Private Stage B0: VS Code Live Preview(3000)에서 Flask API(5000) 호출 허용.
     CORS(

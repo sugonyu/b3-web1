@@ -20,14 +20,18 @@ class VanillaFrontendTest(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"BookLoop", response.data)
-        self.assertIn(b"./vanilla-favicon.svg", response.data)
+        self.assertIn(b"/static/bookloop/python-favicon.svg", response.data)
         self.assertIn(b'href="#about"', response.data)
         self.assertIn(b'href="#connection"', response.data)
         self.assertIn(b'href="#preview"', response.data)
         self.assertIn(b'href="#presentations"', response.data)
         self.assertIn(b'href="#related"', response.data)
-        self.assertIn(b"La Bella Vita CMS", response.data)
-        self.assertIn(b"http://localhost:8080/news/", response.data)
+        self.assertIn(b"BookLoop Flask home", response.data)
+        self.assertIn(b"Flask Vanilla :5000", response.data)
+        self.assertIn(
+            b"http://localhost:8080/pub/b3-web1/app/frontend/js-vanilla/",
+            response.data,
+        )
         self.assertIn(
             b"Flask Server &amp; API Connection \xe2\x80\x94 Port 5000",
             response.data,
@@ -68,7 +72,7 @@ class VanillaFrontendTest(unittest.TestCase):
         response.close()
 
     def test_favicon_asset_is_available(self):
-        response = self.client.get("/vanilla/vanilla-favicon.svg")
+        response = self.client.get("/static/bookloop/python-favicon.svg")
 
         self.assertEqual(response.status_code, 200)
         response.close()

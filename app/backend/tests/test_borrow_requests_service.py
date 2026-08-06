@@ -3,8 +3,8 @@
 import unittest
 
 from bookloop import create_app
-from bookloop.database import db
-from bookloop.models import BookListing, BorrowRequest, User
+from bookloop.db import db
+from bookloop.db.models import BookListing, BorrowRequest, User
 from bookloop.services.borrow_requests import (
     BorrowRequestServiceError,
     create_borrow_request,
@@ -79,6 +79,7 @@ class BorrowRequestServiceTest(unittest.TestCase):
             context.exception.message,
             "active borrow request already exists",
         )
+        self.assertEqual(context.exception.request_id, 1)
 
     def test_read_allows_borrower_and_owner(self):
         borrow_request = create_borrow_request(

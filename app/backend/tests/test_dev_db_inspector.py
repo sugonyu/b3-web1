@@ -3,8 +3,8 @@
 import unittest
 
 from bookloop import create_app
-from bookloop.database import db
-from bookloop.models import BookListing, BorrowRequest, User
+from bookloop.db import db
+from bookloop.db.models import BookListing, BorrowRequest, User
 
 
 class DeveloperDatabaseInspectorTest(unittest.TestCase):
@@ -36,8 +36,8 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
                 general_area="NDG",
             )
             listing = BookListing(
-                title="Almond",
-                author="Sohn Won-pyung",
+                title="The Odyssey",
+                author="Homer",
                 owner=owner,
             )
             borrow_request = BorrowRequest(
@@ -75,11 +75,29 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
         self.assertIn(b"Borrow Requests", response.data)
         self.assertIn(b'href="/dev/db/"', response.data)
         self.assertIn(b"Reload", response.data)
-        self.assertIn(b"/static/web/python-favicon.svg", response.data)
+        self.assertIn(b"Server:", response.data)
+        self.assertIn(b"localhost", response.data)
+        self.assertIn(b"/static/bookloop/python-favicon.svg", response.data)
+        self.assertIn(b"Course &amp; Presentation Resources", response.data)
+        self.assertIn(b"python3 bl_cli.py reset-demo-requests", response.data)
+        self.assertIn(b"Users and Book Listings are preserved", response.data)
+        self.assertIn(b"web1-schedule-summer-2026.html", response.data)
+        self.assertIn(b"bookloop/README.html", response.data)
+        self.assertIn(b"docs/presentations/", response.data)
+        self.assertEqual(response.data.count(b'target="_blank"'), 3)
         self.assertIn(b"mina", response.data)
         self.assertIn(b"tony", response.data)
-        self.assertIn(b"Almond", response.data)
+        self.assertIn(b"The Odyssey", response.data)
         self.assertIn(b"pending", response.data)
+        self.assertIn(b"<code>#1</code> \xc2\xb7 The Odyssey", response.data)
+        self.assertIn(b"<code>#2</code> \xc2\xb7 tony", response.data)
+
+        # 자주 확인하는 거래 흐름부터 위에 보이도록 model section 순서를 고정한다.
+        requests_position = response.data.index(b'id="requests-heading"')
+        listings_position = response.data.index(b'id="listings-heading"')
+        users_position = response.data.index(b'id="users-heading"')
+        self.assertLess(requests_position, listings_position)
+        self.assertLess(listings_position, users_position)
 
         # 실제 private 값이 HTML 어디에도 섞이지 않았는지 값 자체로 검사한다.
         self.assertNotIn(b"mina.private@example.com", response.data)
