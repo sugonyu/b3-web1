@@ -31,6 +31,7 @@ application architecture before implementation begins.
 
 - [Deliverable 1 Presentation](presentation.html)
 - [Presentation v1.0 Snapshot](presentation-v1.0.html)
+- [BookLoop Web1 Roadmap](../../docs/bookloop-web1-roadmap.md)
 - [Design](evidence/design/README.md)
 - [Data Model](evidence/data-model/README.md)
 - [Architecture](evidence/architecture/README.md)
@@ -92,6 +93,9 @@ Deliverable 1 on July 30, 2026.
 Decision: payment, card storage, deposits, refunds, and charging remain outside
 the Web1 scope. Deliverable 2 prioritizes the backend, relational persistence,
 validation, authentication where required, and one complete vertical slice.
+Kamyar's verification, reporting and Admin View recommendations are tracked as
+weekly implementation gates in the
+[BookLoop Web1 Roadmap](../../docs/bookloop-web1-roadmap.md).
 
 ## Snapshot Status
 
