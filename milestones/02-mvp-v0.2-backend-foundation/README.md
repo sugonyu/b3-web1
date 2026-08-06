@@ -57,7 +57,7 @@ the command-line evidence before Tony's direct browser check.
 
 Tony then confirmed both client paths in the browser: the Python/Jinja client at
 `http://127.0.0.1:5000/` and the independent JavaScript/Vanilla client at
-`http://localhost:8080/pub/b3-web1/app/frontend-vanilla/`. Together with the HTTP
+`http://localhost:8080/pub/b3-web1/app/frontend/js-vanilla/`. Together with the HTTP
 and CORS checks, this completes the application startup and local environment
 configuration evidence.
 

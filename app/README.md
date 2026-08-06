@@ -18,7 +18,7 @@ verification path. React will reuse the verified API in Deliverable 3.
 ```text
 app/
 ├── backend/          # Flask, SQLAlchemy, SQLite, Jinja and automated tests
-└── frontend-vanilla/ # Independent HTML, CSS and JavaScript API client
+└── frontend/js-vanilla/ # Independent HTML, CSS and JavaScript API client
 ```
 
 ## Run the Backend
