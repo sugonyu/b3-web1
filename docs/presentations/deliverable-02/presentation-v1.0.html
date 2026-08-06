@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BookLoop Deliverable 2 backend and database presentation">
+    <title>BookLoop — Deliverable 2 Presentation v1.0</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+    <style>
+      :root {
+        --ink: #243029;
+        --muted: #5d665f;
+        --paper: #f6f1e7;
+        --surface: #ffffff;
+        --brand: #315c43;
+        --brand-soft: #e4eee7;
+        --accent: #c66a2b;
+        --warning-soft: #fff1df;
+        --danger: #9e3d32;
+        --border: #b8b8ae;
+        --space-1: 0.5rem;
+        --space-2: 1rem;
+        --space-3: 1.5rem;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+        font-family: Arial, sans-serif;
+        font-size: 18px;
+        line-height: 1.55;
+      }
+      a { color: var(--brand); }
+      code { overflow-wrap: anywhere; }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-bottom: 1px solid var(--border);
+        background: rgba(246, 241, 231, 0.97);
+      }
+      .nav {
+        display: flex;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0.7rem 1rem;
+        gap: 1rem;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+      .nav a { font-size: 0.86rem; text-decoration: none; }
+      .nav a:hover, .nav a:focus { text-decoration: underline; }
+
+      main { max-width: 1180px; margin: 0 auto; padding: 0 1rem 4rem; }
+      .slide {
+        min-height: 78vh;
+        padding: 5rem 0 3rem;
+        border-bottom: 1px solid var(--border);
+        scroll-margin-top: 3rem;
+      }
+      .title-slide { display: grid; align-content: center; min-height: 88vh; }
+      .eyebrow {
+        margin: 0 0 var(--space-1);
+        color: var(--brand);
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      h1 { max-width: 900px; margin: 0; font-size: clamp(3rem, 8vw, 6.5rem); line-height: 0.98; }
+      h2 { margin: 0 0 var(--space-3); font-size: clamp(2rem, 5vw, 3.7rem); line-height: 1.08; }
+      h3 { margin-top: 0; font-size: 1.15rem; }
+      .lede { max-width: 880px; font-size: clamp(1.2rem, 2.5vw, 1.65rem); }
+      .meta { color: var(--muted); }
+      .badge-row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+      .badge-flow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.55rem;
+        margin: 1.5rem 0;
+        padding: 1.25rem;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        flex-wrap: wrap;
+      }
+      .flow-badge {
+        padding: 0.5rem 0.8rem;
+        border: 1px solid var(--brand);
+        border-radius: 999px;
+        background: var(--brand-soft);
+        color: var(--brand);
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-align: center;
+        text-decoration: none;
+      }
+      .flow-badge.d1 { border-color: var(--border); background: var(--paper); color: var(--ink); }
+      .flow-badge.d2 { border-color: var(--brand); background: var(--brand); color: white; }
+      .flow-badge.planned-flow { border-color: var(--accent); background: var(--warning-soft); color: #7d431e; }
+      .flow-arrow { color: var(--accent); font-size: 1.35rem; font-weight: 700; }
+      .merge-marker {
+        margin: 1rem 0 0;
+        color: var(--accent);
+        font-weight: 700;
+        text-align: center;
+      }
+      .status, .draft-badge, .planned-badge {
+        display: inline-block;
+        width: fit-content;
+        padding: 0.35rem 0.7rem;
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+      .status { border: 1px solid var(--brand); background: var(--brand-soft); color: var(--brand); }
+      .draft-badge { border: 1px solid var(--accent); background: var(--surface); color: var(--accent); }
+      .planned-badge { border: 1px solid var(--accent); background: var(--warning-soft); color: #7d431e; }
+
+      .grid-2, .grid-3, .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--space-2);
+      }
+      .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .card {
+        padding: var(--space-3);
+        border: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .card p:last-child, .card ul:last-child { margin-bottom: 0; }
+      .verified { border-top: 5px solid var(--brand); }
+      .pending { border-top: 5px solid var(--accent); }
+      .placeholder {
+        padding: var(--space-3);
+        border: 2px dashed var(--accent);
+        background: var(--warning-soft);
+      }
+      .placeholder strong { color: #7d431e; }
+      .placeholder code { display: block; margin-top: 0.5rem; }
+      .callout {
+        max-width: 960px;
+        padding: var(--space-3);
+        border-left: 6px solid var(--brand);
+        background: var(--surface);
+        font-size: 1.2rem;
+      }
+      .flow {
+        display: flex;
+        align-items: stretch;
+        margin: 2rem 0;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+      }
+      .flow span {
+        flex: 1 1 145px;
+        padding: 1rem;
+        border: 1px solid var(--brand);
+        background: var(--surface);
+        text-align: center;
+        font-weight: 700;
+      }
+      .flow .pending-step { border-color: var(--accent); background: var(--warning-soft); }
+
+      .model-diagram { margin: 1.5rem 0; }
+      .model-diagram img { display: block; width: 100%; height: auto; border: 1px solid var(--border); background: var(--surface); }
+      .overview-figure { margin: 1.5rem 0 0; }
+      .overview-figure img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .overview-figure figcaption { margin-top: 0.75rem; color: var(--muted); font-size: 0.9rem; }
+      .entity-card { position: relative; padding-top: 3.4rem; }
+      .entity-card::before {
+        position: absolute;
+        top: 1rem;
+        left: 1.5rem;
+        padding: 0.2rem 0.55rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .entity-person { border-top: 5px solid var(--brand); background: var(--brand-soft); }
+      .entity-person::before { content: "👤 Person"; color: white; background: var(--brand); }
+      .entity-book { border-top: 5px solid var(--accent); background: var(--warning-soft); }
+      .entity-book::before { content: "📕 Book"; color: white; background: var(--accent); }
+      .demo-window { padding: var(--space-3); border: 2px solid var(--ink); background: var(--surface); }
+      .demo-window header { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px solid var(--border); }
+      .request-result { margin-top: 1rem; padding: 1rem; border-left: 5px solid var(--brand); background: var(--brand-soft); }
+      .ui-model-label {
+        display: inline-block;
+        margin-bottom: 0.45rem;
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+      .ui-model-label.person { color: white; background: var(--brand); }
+      .ui-model-label.book { color: white; background: var(--accent); }
+      .ui-model-label.request { color: var(--brand); border: 1px solid var(--brand); background: var(--surface); }
+      .action-note { color: var(--muted); font-size: 0.8rem; }
+      .boundary { font-weight: 700; text-align: center; }
+      .code-ok { color: var(--brand); }
+      .code-blocked { color: var(--danger); }
+      table { width: 100%; border-collapse: collapse; background: var(--surface); }
+      th, td { padding: 0.75rem; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+      th { background: var(--brand-soft); }
+      pre {
+        overflow-x: auto;
+        padding: var(--space-3);
+        border: 1px solid var(--border);
+        background: var(--surface);
+        font-size: 0.86rem;
+        line-height: 1.45;
+      }
+      .checklist { list-style: none; padding: 0; }
+      .checklist li { margin: 0.55rem 0; }
+      .source-links { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+      .page-controls {
+        position: fixed;
+        right: 1rem;
+        bottom: 1rem;
+        display: flex;
+        gap: 0.5rem;
+      }
+      .page-controls a {
+        width: 2.7rem;
+        height: 2.7rem;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--brand);
+        background: var(--surface);
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      @media (max-width: 800px) {
+        body { font-size: 16px; }
+        .slide { min-height: auto; padding-top: 4rem; }
+        .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+        table, thead, tbody, tr, th, td { display: block; }
+        thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+        tr { border: 1px solid var(--border); }
+        td { border: 0; border-bottom: 1px solid #ddd; }
+      }
+
+      @media print {
+        .topbar, .page-controls { display: none; }
+        body { background: white; font-size: 12pt; }
+        .slide { min-height: auto; break-after: page; padding: 2rem 0; }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="topbar" aria-label="Presentation sections">
+      <div class="nav">
+        <a href="#start">00 · Start</a><a href="#change">01 · D1 → D2</a><a href="#overview">02 · Overview</a><a href="#setup">03 · Setup</a><a href="#seed">04 · Seed</a>
+        <a href="#slice">05 · Slice</a><a href="#architecture">06 · Architecture</a><a href="#data">07 · Data</a>
+        <a href="#demo">08 · Demo</a><a href="#access">09 · Access</a><a href="#evidence">10 · Evidence</a>
+        <a href="#reuse">11 · Reuse</a><a href="#next">12 · Next</a><a href="presentation-v0.3-draft-ko.html" lang="ko">한국어 draft</a>
+      </div>
+    </nav>
+
+    <main>
+      <section id="start" class="slide title-slide">
+        <p class="eyebrow">582-32W-VA · 🗄️ Deliverable 2</p>
+        <h1>BookLoop</h1>
+        <p class="lede">A private, database-backed borrowing request flow.</p>
+        <p class="meta">Backend and Database · MVP v0.2 · August 2026 · Tony Yu</p>
+        <div class="badge-row">
+          <span class="status">Backend vertical slice</span>
+          <span class="status">Verified presentation · v1.0</span>
+        </div>
+      </section>
+
+      <section id="change" class="slide">
+        <p class="eyebrow">01 · D1 → D2</p>
+        <h2>From a designed workflow to a working data flow.</h2>
+        <div class="grid-2" style="margin-top: 1rem;">
+          <article class="card">
+            <h3>Deliverable 1</h3>
+            <p>Defined the users, privacy problem, data model, API contract, and interface direction.</p>
+          </article>
+          <article class="card verified">
+            <h3>Deliverable 2</h3>
+            <p>Runs a Flask backend, validates data, stores relational records, and protects request access.</p>
+          </article>
+        </div>
+        <p class="meta" style="margin: 1.5rem 0 0;"><strong>Project progression</strong></p>
+        <div class="badge-flow" aria-label="Project progression from Deliverable 1 definition to Deliverable 2 verification">
+          <span class="flow-badge d1">D1 · Define need</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d1">Design workflow</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">Build backend</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">Connect database</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">Verify vertical slice</span>
+        </div>
+        <p class="meta"><strong>Architecture preview · details in 06</strong></p>
+        <div class="badge-flow" aria-label="Architecture preview linking the D2 Python Jinja client and D3 React client through shared backend rules">
+          <a class="flow-badge d2" href="#architecture">🐍 Python/Jinja now</a>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <a class="flow-badge planned-flow" href="#architecture">Shared backend rules</a>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <a class="flow-badge planned-flow" href="#architecture">🟨 React next</a>
+        </div>
+        <div class="callout" style="margin-top: 1rem;">
+          One complete borrowing-request flow is more valuable than many disconnected CRUD screens.
+        </div>
+        <p class="meta"><strong>Instructor feedback carried into the roadmap</strong></p>
+        <div class="badge-flow" aria-label="Kamyar privacy feedback carried from D2 foundation into later report and Admin milestones">
+          <span class="flow-badge d1">Prove privacy meaningfully</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">D2 · Protected request access</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge planned-flow">D3 · Report entry</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge planned-flow">D4 · Admin View</span>
+        </div>
+      </section>
+
+      <section id="overview" class="slide">
+        <p class="eyebrow">02 · Technical workflow overview</p>
+        <h2>See the complete vertical slice before examining each layer.</h2>
+        <figure class="overview-figure">
+          <a
+            href="Book_Application_Technical_Workflow_Overview.png"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open the BookLoop technical workflow overview at full size"
+          >
+            <img
+              src="Book_Application_Technical_Workflow_Overview.png"
+              alt="Illustrated BookLoop Deliverable 2 overview showing Tony's borrowing request moving through a Jinja form, Flask and SQLAlchemy validation, SQLite persistence, a shared backend service, and protected access for Tony and Mina while Alex is forbidden"
+            >
+          </a>
+          <figcaption>
+            Conceptual overview supplied for the presentation. Later slides contain the current live demo values and verified evidence. Select the image to open the full-size version.
+          </figcaption>
+        </figure>
+      </section>
+
+      <section id="setup" class="slide">
+        <p class="eyebrow">03 · Application, environment, and database setup</p>
+        <h2>Start from documented commands and a reproducible database.</h2>
+        <div class="grid-3">
+          <article class="card verified">
+            <strong>Application startup</strong>
+            <p><code>python3 run.py</code> starts the Flask development server. The product and API routes were checked in the browser.</p>
+          </article>
+          <article class="card verified">
+            <strong>Environment configuration</strong>
+            <p>Local configuration loads through the application factory. Passwords and secrets stay outside committed source files.</p>
+          </article>
+          <article class="card verified">
+            <strong>Database creation</strong>
+            <p>SQLAlchemy creates the SQLite tables. The read-only DB Inspector confirms Users, Book Listings, and Borrow Requests.</p>
+          </article>
+        </div>
+        <p class="meta">These setup steps were reviewed as part of the D2 persistence checkpoint.</p>
+      </section>
+
+      <section id="seed" class="slide">
+        <p class="eyebrow">04 · Reproducible demo starting data</p>
+        <h2>Seed the starting point—not the result.</h2>
+        <div class="grid-4">
+          <article class="card entity-card entity-person">
+            <h3>Tony</h3>
+            <p>Seeded borrower account</p>
+          </article>
+          <article class="card entity-card entity-person">
+            <h3>Mina</h3>
+            <p>Seeded listing owner</p>
+          </article>
+          <article class="card entity-card entity-person">
+            <h3>Alex</h3>
+            <p>Seeded unrelated test user</p>
+          </article>
+          <article class="card entity-card entity-book">
+            <h3>The Odyssey</h3>
+            <p>Seeded available BookListing by Homer</p>
+          </article>
+        </div>
+        <div class="flow">
+          <span class="pending-step"><code>python3 bl_cli.py seed-demo</code></span>
+          <span>Flask app context</span>
+          <span>SQLAlchemy models</span>
+          <span>SQLite commit</span>
+        </div>
+        <div class="grid-2">
+          <article class="card verified">
+            <h3>Seed before the demo</h3>
+            <p>Users and one available listing create a reproducible starting state.</p>
+          </article>
+          <article class="card pending">
+            <h3>Never seed the BorrowRequest</h3>
+            <p>The borrower must create it through the live 🐍 Jinja form so validation, persistence, and the updated interface are real evidence.</p>
+          </article>
+        </div>
+        <div class="card verified" style="margin-top: 1rem;">
+          <strong>Idempotent seed command</strong>
+          <p><code>python3 bl_cli.py seed-demo</code> prepares Tony, Mina, Alex, and The Odyssey. A second run creates no duplicate users or listing.</p>
+        </div>
+        <p class="meta">The seed prepares the starting state only. The BorrowRequest is created through the live product flow.</p>
+      </section>
+
+      <section id="slice" class="slide">
+        <p class="eyebrow">05 · Selected vertical slice</p>
+        <h2>One request travels through the complete system.</h2>
+        <p class="meta"><strong>Borrowing-request flow</strong></p>
+        <div class="badge-flow" aria-label="Detailed BorrowRequest vertical slice flow">
+          <span class="flow-badge d2">👤 Tony · Borrower logs in</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">📕 Opens Mina's “The Odyssey” listing</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">📝 Submits borrowing request</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">POST request</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">🐍 Flask validates Tony + listing</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">🗄️ SQLite inserts BorrowRequest</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">🔍 Reads same request</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">✅ 🐍 Jinja displays Pending</span>
+        </div>
+        <table aria-label="BorrowRequest flow across interface, Flask, and SQLite">
+          <thead>
+            <tr><th>User / Jinja</th><th>Flask</th><th>SQLite</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Tony logs in</td><td>Authenticate Tony</td><td>Find Tony</td></tr>
+            <tr><td>Tony requests Mina's <em>The Odyssey</em></td><td>Validate borrower and listing</td><td>Insert BorrowRequest</td></tr>
+            <tr><td>Tony opens the result</td><td>Read Tony's authorized request</td><td>Select saved row</td></tr>
+            <tr><td>Tony sees <code>Pending</code></td><td>Return response</td><td>Persisted data</td></tr>
+          </tbody>
+        </table>
+        <div class="grid-2" style="margin-top: 1rem;">
+          <article class="card verified">
+            <h3>Verified backend</h3>
+            <p>Create/read APIs, database models, validation, privacy-safe serialization, and authorization tests.</p>
+          </article>
+          <article class="card verified">
+            <h3>Verified product demo</h3>
+            <p>Real browser login, shared service extraction, and the 🐍 Python/Jinja request screen were confirmed.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="architecture" class="slide">
+        <p class="eyebrow">06 · Data-flow diagram and validation boundary</p>
+        <h2>One service keeps the rules reusable.</h2>
+        <div class="grid-2">
+          <article class="card verified">
+            <h3>D2 · 🐍 Python/Jinja verification client</h3>
+            <div class="badge-flow">
+              <span class="flow-badge planned-flow">🐍 Python/Jinja UI</span>
+              <span class="flow-arrow" aria-hidden="true">→</span>
+              <span class="flow-badge d2">Flask page route</span>
+            </div>
+            <p class="meta">Verified in the D2 browser flow.</p>
+          </article>
+          <article class="card pending">
+            <h3>D3 · 🟨 React final client</h3>
+            <div class="badge-flow">
+              <span class="flow-badge planned-flow">🟨 React UI</span>
+              <span class="flow-arrow" aria-hidden="true">→</span>
+              <span class="flow-badge planned-flow">Flask JSON API</span>
+            </div>
+            <p class="meta">Planned for Deliverable 3 after this verified D2 API.</p>
+          </article>
+        </div>
+        <p class="merge-marker">↘ Both client paths converge on the same rules ↙</p>
+        <div class="badge-flow" aria-label="Python Jinja and React clients converge on one shared BorrowRequest service">
+          <span class="flow-badge planned-flow">Shared BorrowRequest service</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">SQLAlchemy models</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">SQLite</span>
+        </div>
+        <div class="grid-3">
+          <article class="card"><h3>Route</h3><p>Receives HTTP input and chooses the response format.</p></article>
+          <article class="card"><h3>Service</h3><p>Owns validation, authorization orchestration, and create/read rules.</p></article>
+          <article class="card"><h3>Model</h3><p>Defines relationships and persists valid application data.</p></article>
+        </div>
+        <div class="grid-2" style="margin-top: 1rem;">
+          <article class="card verified">
+            <h3>Current verified location</h3>
+            <p>Validation currently runs in the Flask API route before SQLAlchemy commits valid data.</p>
+          </article>
+          <article class="card verified">
+            <strong>Verified service boundary</strong>
+            <p>The shared BorrowRequest service owns validation, authorization, duplicate prevention, and transaction rules for both API and Jinja.</p>
+          </article>
+        </div>
+        <p class="meta">Orange steps are future client integration; the D2 service and Jinja path are verified.</p>
+      </section>
+
+      <section id="data" class="slide">
+        <p class="eyebrow">07 · Relational database</p>
+        <h2>Three models record who owns, requests, and borrows.</h2>
+        <figure class="model-diagram">
+          <img src="assets/bookloop-database-model-diagram.svg" alt="BookLoop relational model diagram: one User owns many BookListings, one borrower User creates many BorrowRequests, and one BookListing receives many BorrowRequests">
+        </figure>
+      </section>
+
+      <section id="demo" class="slide">
+        <p class="eyebrow">08 · Verified live product demo</p>
+        <h2>Create it once. Read the same saved request again.</h2>
+        <p class="meta"><strong>Live demo click path</strong></p>
+        <div class="badge-flow" aria-label="Verified live product demonstration sequence">
+          <span class="flow-badge d2">🐍 Log in as Tony</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">📕 Open The Odyssey</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">Request this book</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">💾 Save as Pending</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">🔄 Refresh / reopen</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge d2">✓ Same request appears</span>
+        </div>
+        <div class="demo-window">
+          <header>
+            <p><strong>BookLoop</strong></p>
+            <p><span class="ui-model-label person">👤 User session</span><br>Signed in as Tony</p>
+          </header>
+          <div class="grid-2" style="margin-top: 1rem;">
+            <div>
+              <span class="ui-model-label book">📕 BookListing</span>
+              <h3>The Odyssey</h3>
+              <p>Available · Montreal</p>
+              <button type="button">Request this book</button>
+              <p class="action-note">Action · creates a new BorrowRequest</p>
+            </div>
+            <div class="request-result">
+              <span class="ui-model-label request">🔁 BorrowRequest</span><br>
+              <strong>Request #3</strong>
+              <p>Status: pending</p>
+              <p>The request was saved successfully.</p>
+            </div>
+          </div>
+        </div>
+        <p class="status" style="margin-top: 1rem;">Browser flow verified by Tony · persistence reviewed after restart</p>
+        <p class="meta"><strong>Database evidence for the same <code>BorrowRequest #3</code></strong></p>
+        <div class="grid-3" style="margin-top: 1rem;">
+          <article class="placeholder">
+            <strong>📝 Create BorrowRequest</strong>
+            <p>Submit the form → create one pending BorrowRequest through the shared service.</p>
+          </article>
+          <article class="placeholder">
+            <strong>🔎 Read the Same BorrowRequest</strong>
+            <p>Open the same request URL → the saved status remains <code>Pending</code>.</p>
+          </article>
+          <article class="placeholder">
+            <strong>💾 Prove SQLite Persistence</strong>
+            <p>Refresh and restart → the same request remains in SQLite and reopens.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="access" class="slide">
+        <p class="eyebrow">09 · Validation and authorization boundary</p>
+        <h2>The same request is visible only to the right people.</h2>
+        <div class="grid-4">
+          <article class="card verified boundary"><p>👤 <strong>Tony</strong><br>Borrower</p><p class="code-ok">200 · Allowed</p></article>
+          <article class="card verified boundary"><p>👤 <strong>Mina</strong><br>The Odyssey owner</p><p class="code-ok">200 · Allowed</p></article>
+          <article class="card pending boundary"><p>👤 <strong>Alex</strong><br>Unrelated user</p><p class="code-blocked">403 · Forbidden</p></article>
+          <article class="card pending boundary"><p>🚪 <strong>Guest</strong><br>Logged out</p><p class="code-blocked">401 · Login required</p></article>
+        </div>
+        <table style="margin-top: 1rem;">
+          <thead><tr><th>User</th><th>Request</th><th>Result</th><th>Why?</th></tr></thead>
+          <tbody>
+            <tr><td>Tony</td><td><code>GET /api/requests/3</code></td><td>200</td><td>Tony created Request #3.</td></tr>
+            <tr><td>Mina</td><td><code>GET /api/requests/3</code></td><td>200</td><td>Mina owns The Odyssey listing.</td></tr>
+            <tr><td>Tony</td><td><code>GET /api/requests/999</code></td><td>404</td><td>Request #999 does not exist.</td></tr>
+            <tr><td>Alex</td><td><code>GET /api/requests/3</code></td><td>403</td><td>Alex is neither borrower nor owner.</td></tr>
+            <tr><td>Guest</td><td><code>GET /api/requests/3</code></td><td>401</td><td>No authenticated session.</td></tr>
+          </tbody>
+        </table>
+        <div class="card verified" style="margin-top: 1rem;">
+          <strong>⚠️ Visible validation evidence</strong>
+          <p>Tony's duplicate request is rejected with the existing BorrowRequest ID and protected reopen link. No extra active request is saved.</p>
+        </div>
+        <div class="callout" style="margin-top: 1rem;">
+          This is my first practical response to Kamyar's privacy feedback. The server allows only the borrower and the book owner to view the request. It blocks unrelated users and logged-out visitors.
+        </div>
+      </section>
+
+      <section id="evidence" class="slide">
+        <p class="eyebrow">10 · Verification and Git evidence</p>
+        <h2>Tests prove the boundary before the UI depends on it.</h2>
+        <div class="grid-2">
+          <article class="card verified">
+            <h3>Verified through August 4</h3>
+            <ul class="checklist">
+              <li>✓ Flask application starts</li>
+              <li>✓ Models and relationships work</li>
+              <li>✓ BorrowRequest create/read APIs exist</li>
+              <li>✓ Authorization responses are tested</li>
+              <li>✓ Private fields are excluded</li>
+              <li>✓ Full backend suite: 67 tests passed</li>
+            </ul>
+          </article>
+          <article class="card verified">
+            <h3>W2-10 persistence checkpoint</h3>
+            <ul class="checklist">
+              <li>✓ Reopen the same request after a server restart</li>
+              <li>✓ Confirm the saved row in the DB Inspector</li>
+              <li>✓ Confirm the complete browser flow with Tony</li>
+              <li>✓ Freeze the English presentation as v1.0</li>
+            </ul>
+          </article>
+        </div>
+        <div class="grid-3" style="margin-top: 1rem;">
+          <article class="card verified"><strong>Test output</strong><p>Focused authorization and Jinja checks passed. The full backend suite reached 67 passing tests.</p></article>
+          <article class="card verified"><strong>Git progression</strong><p>D2 is recorded through incremental seed, auth, service, Jinja, access-evidence, and CLI commits.</p></article>
+          <article class="card verified"><strong>Run documentation</strong><p><code>source .venv/bin/activate</code> → <code>python3 run.py</code> → browser verification.</p></article>
+        </div>
+      </section>
+
+      <section id="reuse" class="slide">
+        <p class="eyebrow">11 · How this architecture supports remaining work</p>
+        <h2>The first workflow becomes a reusable CRUD production line.</h2>
+        <div class="flow">
+          <span>🔐 Login</span><span>🛡️ Authorize</span><span>✅ Validate</span>
+          <span>🧩 Service</span><span>🗄️ Transaction</span><span>📤 Response</span>
+        </div>
+        <div class="grid-3">
+          <article class="card"><h3>📕 BookListing CRUD</h3><p>Reuses 🔐 login, ✅ validation, 🧩 service, 🗄️ transaction, and test patterns.</p></article>
+          <article class="card"><h3>📝 BorrowRequest updates</h3><p>Reuses the same modules and adds valid status transitions.</p></article>
+          <article class="card"><h3>🟨 React integration</h3><p>Consumes the verified 📤 JSON API without rebuilding backend rules.</p></article>
+        </div>
+        <div class="grid-2" style="margin-top: 1rem;">
+          <article class="card pending"><h3>📝 Future Report service</h3><p>Reuses authentication, validation, persistence, and privacy-safe responses.</p></article>
+          <article class="card pending"><h3>🛡️ Future Admin boundary</h3><p>Adds role-protected review actions; it is not unrestricted access to private data.</p></article>
+        </div>
+        <p class="meta">Later CRUD becomes easier, but ownership, deletion history, roles, and state transitions still need their own rules.</p>
+      </section>
+
+      <section id="next" class="slide">
+        <p class="eyebrow">12 · Next checkpoint</p>
+        <h2>Finish the D2 browser flow, then promote the API to React.</h2>
+        <div class="grid-2">
+          <article class="card verified">
+            <h3>Deliverable 2 verified</h3>
+            <ol>
+              <li>Real login session verified.</li>
+              <li>Shared BorrowRequest service verified.</li>
+              <li>🐍 Python/Jinja product screen verified.</li>
+              <li>Persistence and the complete browser flow verified.</li>
+            </ol>
+          </article>
+          <article class="card verified">
+            <h3>Prepare Deliverable 3</h3>
+            <p>🟨 React will call the same JSON API and reuse the verified models, status codes, validation rules, and test cases.</p>
+          </article>
+        </div>
+        <p class="meta"><strong>Privacy feedback roadmap</strong></p>
+        <div class="badge-flow" aria-label="Privacy roadmap from Deliverable 2 foundation to the final demonstration">
+          <span class="flow-badge d2">D2 · Privacy foundation</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge planned-flow">D3 · React + report entry</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge planned-flow">D4 · Protected Admin View</span>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <span class="flow-badge planned-flow">Final · Privacy demo</span>
+        </div>
+        <div class="callout" style="margin-top: 1rem;">
+          Build the rule once in Python. Reuse it from 🐍 Jinja today and 🟨 React next.
+        </div>
+        <div class="source-links" style="margin-top: 1.5rem;">
+          <a href="README.md">D2 presentation notes</a>
+          <a href="../../planning/D2_PYTHON_JINJA_TO_D3_REACT_ROADMAP.md">D2 → D3 roadmap</a>
+          <a href="../../planning/D2_DEMO_SEED_DATA_PLAN.md">Demo seed-data plan</a>
+          <a href="../deliverable-01/presentation-v1.1-candidate.html">Deliverable 1 presentation</a>
+        </div>
+      </section>
+    </main>
+
+    <div class="page-controls" aria-label="Page controls">
+      <a href="#start" title="Back to start">↑</a>
+      <a href="#next" title="Next checkpoint">✓</a>
+    </div>
+  </body>
+</html>

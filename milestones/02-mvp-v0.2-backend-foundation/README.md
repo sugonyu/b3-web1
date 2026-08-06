@@ -6,6 +6,8 @@ Status: Week 2 complete — W2-11 snapshot and Deliverable 2 presentation feedba
 
 Roadmap: [BookLoop Web1 Roadmap](../../docs/bookloop-web1-roadmap.md)
 
+Presentation: [Deliverable 2 presentation](../../docs/presentations/deliverable-02/presentation.html)
+
 ## Goal
 
 Demonstrate a reproducible Flask backend with relational persistence,

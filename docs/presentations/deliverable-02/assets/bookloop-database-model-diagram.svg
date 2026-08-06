@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">BookLoop relational database model diagram</title>
+  <desc id="desc">User owns many BookListings, User creates many BorrowRequests, and BookListing receives many BorrowRequests.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#315c43"/>
+    </marker>
+    <style>
+      .title { font: 700 30px Arial, sans-serif; fill: #243029; }
+      .subtitle { font: 18px Arial, sans-serif; fill: #5d665f; }
+      .model-title { font: 700 25px Arial, sans-serif; fill: #ffffff; }
+      .field { font: 18px Arial, sans-serif; fill: #243029; }
+      .key { font-weight: 700; fill: #315c43; }
+      .relation { font: 700 17px Arial, sans-serif; fill: #315c43; }
+      .card { fill: #ffffff; stroke: #b8b8ae; stroke-width: 2; }
+      .header { fill: #315c43; }
+      .line { fill: none; stroke: #315c43; stroke-width: 4; marker-end: url(#arrow); }
+      .label-bg { fill: #f6f1e7; stroke: #b8b8ae; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="680" fill="#f6f1e7"/>
+  <text x="60" y="60" class="title">BookLoop Database Models</text>
+  <text x="60" y="92" class="subtitle">Three relational models support one borrowing-request workflow.</text>
+
+  <g aria-label="User model">
+    <rect x="60" y="170" width="330" height="300" rx="10" class="card"/>
+    <path d="M70 170 H380 Q390 170 390 180 V230 H60 V180 Q60 170 70 170" class="header"/>
+    <text x="90" y="210" class="model-title">👤 User</text>
+    <text x="90" y="275" class="field key">PK  id</text>
+    <text x="90" y="315" class="field">username</text>
+    <text x="90" y="355" class="field">email</text>
+    <text x="90" y="395" class="field">password_hash</text>
+    <text x="90" y="435" class="field">general_area</text>
+  </g>
+
+  <g aria-label="BookListing model">
+    <rect x="810" y="115" width="330" height="255" rx="10" class="card"/>
+    <path d="M820 115 H1130 Q1140 115 1140 125 V175 H810 V125 Q810 115 820 115" class="header"/>
+    <text x="840" y="155" class="model-title">📕 BookListing</text>
+    <text x="840" y="220" class="field key">PK  id</text>
+    <text x="840" y="260" class="field">title · author</text>
+    <text x="840" y="300" class="field">availability</text>
+    <text x="840" y="340" class="field key">FK  owner_id → User.id</text>
+  </g>
+
+  <g aria-label="BorrowRequest model">
+    <rect x="810" y="425" width="330" height="220" rx="10" class="card"/>
+    <path d="M820 425 H1130 Q1140 425 1140 435 V485 H810 V435 Q810 425 820 425" class="header"/>
+    <text x="840" y="465" class="model-title">🔁 BorrowRequest</text>
+    <text x="840" y="530" class="field key">PK  id</text>
+    <text x="840" y="570" class="field">status</text>
+    <text x="840" y="610" class="field key">FK  listing_id · borrower_id</text>
+  </g>
+
+  <path d="M390 245 C545 245 650 210 810 210" class="line"/>
+  <rect x="500" y="172" width="205" height="38" rx="19" class="label-bg"/>
+  <text x="519" y="197" class="relation">owner 1 → many books</text>
+
+  <path d="M390 395 C565 395 640 535 810 535" class="line"/>
+  <rect x="470" y="451" width="255" height="38" rx="19" class="label-bg"/>
+  <text x="489" y="476" class="relation">borrower 1 → many requests</text>
+
+  <path d="M975 370 L975 425" class="line"/>
+  <rect x="735" y="378" width="210" height="38" rx="19" class="label-bg"/>
+  <text x="754" y="403" class="relation">1 book → many requests</text>
+
+  <g transform="translate(60 555)">
+    <rect width="610" height="86" rx="8" fill="#e4eee7" stroke="#315c43"/>
+    <text x="24" y="34" class="relation">Privacy boundary</text>
+    <text x="24" y="64" class="subtitle">Public responses exclude email, password hash, and precise contact details.</text>
+  </g>
+</svg>
