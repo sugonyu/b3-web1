@@ -32,16 +32,47 @@
   <body>
     <h1>BookLoop — Project Weekly Kanban Board</h1>
     <p>
-      <strong>Week 2:</strong> August 3–6, 2026<br />
+      <strong>Week 3:</strong> August 10–13, 2026<br />
       <strong>Last updated:</strong>
-      <time datetime="2026-08-06T11:48:04-04:00">Thursday, August 6, 2026 · 11:48 AM EDT (Toronto)</time>
+      <time datetime="2026-08-06T14:41:28-04:00">Thursday, August 6, 2026 · 2:41 PM EDT (Toronto)</time>
     </p>
-    <p><strong>Current weekly board:</strong> 🗄️ Deliverable 2 BorrowRequest browser vertical slice.</p>
+    <p><strong>Current weekly board:</strong> 🔗 Deliverable 3 integrated working prototype preparation.</p>
 
     <main class="board">
       <section class="column">
         <h2>Backlog</h2>
-        <ul></ul>
+        <ul>
+          <li>
+            <strong>W3-03</strong><br />
+            Add the listing owner's privacy-safe request-history view<br />
+            <small>Mina sees requests for her listings; unrelated users remain forbidden</small>
+          </li>
+          <li>
+            <strong>W3-04</strong><br />
+            Complete visible validation and action feedback<br />
+            <small>Required input · duplicate request · success · 401/403/404 states</small>
+          </li>
+          <li>
+            <strong>W3-05</strong><br />
+            Align navigation and responsive product layout<br />
+            <small>Functional paths · mobile/desktop checks · established BookLoop design direction</small>
+          </li>
+          <li>
+            <strong>W3-06</strong><br />
+            Verify the complete dynamic-data workflow<br />
+            <small>Login → real listing → request → feedback → borrower/owner history · no major placeholder data</small>
+          </li>
+          <li>
+            <strong>W3-07</strong><br />
+            Preserve the JSON API contract for the later React client<br />
+            <small>Jinja MVP first; React reuses the verified service and API rules afterward</small>
+          </li>
+          <li>
+            <strong>W3-08</strong><br />
+            Prepare and verify Deliverable 3 evidence<br />
+            <small>Browser · dynamic DB data · responsive states · errors/success · concise timed summary</small>
+          </li>
+        </ul>
       </section>
 
       <section class="column">
@@ -63,66 +94,16 @@
         <h2>Complete</h2>
         <ul>
           <li class="latest-move">
-            <span class="latest-move-label">★ Latest move · Ready → Complete</span><br />
-            <strong>W2-11</strong><br />
-            Preserve reproducible Deliverable 2 evidence and snapshot<br />
-            <small>Thursday closeout · presentation feedback recorded · D2 evidence bundle verified</small><br />
-            <small>Moved: Thursday · August 6, 2026 · 11:48 AM EDT (Toronto)</small>
+            <span class="latest-move-label">★ Latest move · Testing → Complete</span><br />
+            <strong>W3-02</strong><br />
+            Build the borrower's real request-history view<br />
+            <small>Tony sees only his BorrowRequests with listing and status data from SQLite · focused 16 passed · full suite 70 passed · Tony browser verified</small><br />
+            <small>Moved: Thursday · August 6, 2026 · 2:41 PM EDT (Toronto)</small>
           </li>
           <li>
-            <strong>W2-10</strong><br />
-            Verify persistence and presentation evidence<br />
-            <small>Same BorrowRequest reopened after restart · DB evidence reviewed · English presentation v1.0 created · 67 passed</small>
-          </li>
-          <li>
-            <strong>W2-09</strong><br />
-            Verify validation and access evidence<br />
-            <small>User ID · existing request ID/link · 401/403/404/409 · safe return after login · Tony browser verified · 62 passed</small>
-          </li>
-          <li>
-            <strong>W2-08</strong><br />
-            Build the minimal Python/Jinja product UI<br />
-            <small>Login → The Odyssey → Request → Pending → reopen same request · Tony browser verified · 59 passed</small>
-          </li>
-          <li>
-            <strong>W2-07</strong><br />
-            Extract the shared BorrowRequest service<br />
-            <small>API and Jinja share create/read validation, authorization, and transaction rules · 52 passed</small>
-          </li>
-          <li>
-            <strong>W2-06</strong><br />
-            Connect a real browser authentication session<br />
-            <small>Register · login · refresh persistence · logout · current_user · Tony browser confirmed · 47 passed</small>
-          </li>
-          <li>
-            <strong>W2-05</strong><br />
-            Create reproducible demo seed data<br />
-            <small>Tony · Mina · Alex · The Odyssey created idempotently; BorrowRequest remains empty · 40 passed</small>
-          </li>
-          <li>
-            <strong>W2-04</strong><br />
-            Implement and test BorrowRequest read authorization<br />
-            <small>Borrower/owner allowed · 401/403/404 and privacy tested · 30 passed</small>
-          </li>
-          <li>
-            <strong>W2-03</strong><br />
-            Select the borrow-request create/read vertical slice<br />
-            <small>POST create → GET same request selected</small>
-          </li>
-          <li>
-            <strong>W2-01</strong><br />
-            Verify Flask startup and environment configuration<br />
-            <small>Deliverable 1 baseline reverified: Flask + Python/Jinja together; JavaScript/Vanilla also confirmed</small>
-          </li>
-          <li>
-            <strong>W2-02</strong><br />
-            Verify database creation, models, relationships, and persistence<br />
-            <small>Sunday verification · 25 tests passed</small>
-          </li>
-          <li>
-            <strong>W1-D1</strong><br />
-            Present Deliverable 1 and record scope feedback<br />
-            <small>Week 1 complete · Payment excluded</small>
+            <strong>W3-01</strong><br />
+            Define the smallest Python/Jinja Deliverable 3 product MVP<br />
+            <small>Jinja route → shared BorrowRequest service → SQLite → visible browser feedback</small>
           </li>
         </ul>
       </section>
@@ -130,16 +111,18 @@
 
     <h2>Scope guardrails</h2>
     <ul>
-      <li>Complete one database-backed create/read workflow before adding breadth.</li>
-      <li>Keep the D2 product UI narrow: login, one seeded book, request, pending result, and reopen.</li>
+      <li>Build and verify the Python/Jinja product MVP before beginning the React client conversion.</li>
+      <li>Reuse the verified D2 service, authorization, validation, and database contract.</li>
+      <li>Use real SQLite rows; do not treat placeholder-only screens as complete.</li>
       <li>Keep private contact information behind an explicit approval boundary.</li>
       <li>Do not implement payment, card storage, deposits, refunds, or charging.</li>
-      <li>Reporting and Admin View remain documented future scope until the backend foundation is verified.</li>
+      <li>Keep the full reporting, verification, and Admin View system in the D4 roadmap.</li>
     </ul>
 
     <p>
       <small>
-        Latest-move rule: keep this highlight on exactly one card. When another task changes columns,
+        Latest-move rule: the new Week 3 board starts without a moved-card highlight. After work begins,
+        keep this highlight on exactly one card. When another task changes columns,
         move the label and color to that card. Show a completion time only on that latest moved card;
         remove completion times from older Complete cards.
       </small>

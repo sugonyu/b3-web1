@@ -49,13 +49,13 @@
     <header>
       <h1>Web Project 1</h1>
       <p>Project dashboard for course 582-32W-VA.</p>
-      <p><strong>Week 2 focus:</strong> verify the backend foundation and one database-backed vertical slice.</p>
+      <p><strong>Current phase:</strong> Week 2 is closed. Week 3 preparation begins with frontend/backend integration.</p>
     </header>
 
     <nav aria-label="Project navigation">
       <a href="docs/project-weekly-kanban-board.html">Current project weekly Kanban board</a>
       <a href="docs/journal/2026-08-06.md">Latest journal</a>
-      <a href="milestones/02-mvp-v0.2-backend-foundation/README.md">Current milestone</a>
+      <a href="milestones/02-mvp-v0.2-backend-foundation/README.md">Completed D2 milestone</a>
       <a href="docs/presentations/deliverable-02/presentation.html">Deliverable 2 presentation</a>
       <a href="app/README.md">Application source</a>
     </nav>
@@ -64,8 +64,9 @@
       <section>
         <h2>Current status</h2>
         <ul>
-          <li>Current week: Week 2</li>
-          <li>Current milestone: MVP v0.2 — Backend Foundation and First Vertical Slice</li>
+          <li>Current phase: Week 2 closed · Week 3 preparation</li>
+          <li>Completed milestone: MVP v0.2 — Backend Foundation and First Vertical Slice</li>
+          <li>Next milestone: MVP v0.3 — Integrated Prototype</li>
           <li>Official checkpoint: <a href="milestones/02-mvp-v0.2-backend-foundation/README.md">🗄️ Deliverable 2</a> — Backend and Database</li>
           <li>Status: Week 2 complete — Deliverable 2 feedback captured and W2-11 evidence frozen</li>
           <li>Application baseline: authentication, demo seed, shared service, Jinja flow, authorization, restart persistence, and the 67-test suite are verified</li>
@@ -84,13 +85,25 @@
       </section>
 
       <section>
+        <h2>Week 2 closeout — Thursday, August 6</h2>
+        <ul>
+          <li>Verified one complete login → request → Pending → reopen workflow with real SQLite data.</li>
+          <li>Confirmed validation, authorization, restart persistence, and privacy-safe responses.</li>
+          <li>Completed the 67-test backend suite and delivered the Deliverable 2 presentation.</li>
+          <li>Recorded presentation feedback and synchronized the public backend and frontend source evidence.</li>
+        </ul>
+      </section>
+
+      <section>
         <h2>Next — Week 3 / Deliverable 3 preparation</h2>
         <ol>
-          <li>Design request-history reads scoped to the borrower and listing owner.</li>
-          <li>Turn verification, reporting and Admin View into a bounded privacy roadmap.</li>
-          <li>Run a presentation preflight for DB visibility, timing and final summary.</li>
+          <li>Build the smallest Deliverable 3 product MVP first with Python/Jinja and the verified shared BorrowRequest service.</li>
+          <li>Display real BookListing and BorrowRequest data from SQLite in that browser workflow.</li>
+          <li>Verify one end-to-end Jinja workflow with validation, success feedback, visible errors, working navigation, and responsive behavior.</li>
+          <li>Preserve the Flask JSON API contract so the verified MVP can later move to React without rewriting the backend rules.</li>
+          <li>Then add borrower/owner request-history reads and refine the bounded privacy roadmap.</li>
         </ol>
-        <p>Do not expand into payment or the full moderation system before the backend foundation is reproducible.</p>
+        <p>Keep the verified D2 backend contract stable. Python/Jinja is the first D3 product MVP; React integration follows after the workflow is easy to test and explain. Do not expand into payment, Admin View, or the full moderation system during the first D3 slice.</p>
       </section>
 
       <section>
