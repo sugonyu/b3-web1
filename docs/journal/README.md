@@ -9,6 +9,9 @@ YYYY-MM-DD.md
 Each entry records the goal, completed work, problems or decisions, verification
 and next step.
 
+Journal headings record the calendar date and weekday together, for example
+`August 7, 2026 (Friday)`.
+
 ## Voice rule
 
 Every journal entry uses Tony's first-person perspective without forcing every
@@ -50,6 +53,7 @@ book is produced before the Kindle edition.
 
 ## Entries
 
+- [2026-08-07 (Friday) — route and service naming checkpoint](2026-08-07.md)
 - [2026-08-06 (Thursday) — Deliverable 2 feedback and Week 2 closeout](2026-08-06.md) · [Thursday Kanban](../week02-4-thu-kanban.html) · [Week 2 final Kanban](../week02-kanban.html)
 - [2026-08-05 (Wednesday) — structure boundaries, Code Map and Stage A2 snapshot](2026-08-05.md)
 - [2026-08-04 (Tuesday) — W2-10 persistence and presentation v1.0](2026-08-04.md) · [Kanban snapshot](../week02-2-tue-kanban.html)
