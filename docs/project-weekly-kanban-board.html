@@ -34,7 +34,7 @@
     <p>
       <strong>Week 3:</strong> August 10–13, 2026<br />
       <strong>Last updated:</strong>
-      <time datetime="2026-08-06T14:41:28-04:00">Thursday, August 6, 2026 · 2:41 PM EDT (Toronto)</time>
+      <time datetime="2026-08-06T21:58:57-04:00">Thursday, August 6, 2026 · 9:58 PM EDT (Toronto)</time>
     </p>
     <p><strong>Current weekly board:</strong> 🔗 Deliverable 3 integrated working prototype preparation.</p>
 
@@ -42,42 +42,18 @@
       <section class="column">
         <h2>Backlog</h2>
         <ul>
-          <li>
-            <strong>W3-03</strong><br />
-            Add the listing owner's privacy-safe request-history view<br />
-            <small>Mina sees requests for her listings; unrelated users remain forbidden</small>
-          </li>
-          <li>
-            <strong>W3-04</strong><br />
-            Complete visible validation and action feedback<br />
-            <small>Required input · duplicate request · success · 401/403/404 states</small>
-          </li>
-          <li>
-            <strong>W3-05</strong><br />
-            Align navigation and responsive product layout<br />
-            <small>Functional paths · mobile/desktop checks · established BookLoop design direction</small>
-          </li>
-          <li>
-            <strong>W3-06</strong><br />
-            Verify the complete dynamic-data workflow<br />
-            <small>Login → real listing → request → feedback → borrower/owner history · no major placeholder data</small>
-          </li>
-          <li>
-            <strong>W3-07</strong><br />
-            Preserve the JSON API contract for the later React client<br />
-            <small>Jinja MVP first; React reuses the verified service and API rules afterward</small>
-          </li>
-          <li>
-            <strong>W3-08</strong><br />
-            Prepare and verify Deliverable 3 evidence<br />
-            <small>Browser · dynamic DB data · responsive states · errors/success · concise timed summary</small>
-          </li>
         </ul>
       </section>
 
       <section class="column">
         <h2>Ready</h2>
-        <ul></ul>
+        <ul>
+          <li>
+            <strong>W3-08</strong><br />
+            Prepare and verify Deliverable 3 evidence<br />
+            <small>v0.1 presentation structure and 8-minute script created · resume after the Admin View foundation</small>
+          </li>
+        </ul>
       </section>
 
       <section class="column">
@@ -87,18 +63,74 @@
 
       <section class="column">
         <h2>Testing</h2>
-        <ul></ul>
+        <ul>
+          <li class="latest-move">
+            <span class="latest-move-label">★ Latest move · In progress → Testing</span><br />
+            <strong>W3-14</strong><br />
+            Complete the two-step book return confirmation<br />
+            <small>Borrower marks returned → owner confirms received · return_pending contract · listing available after confirmation · Jinja/API parity · full suite 124 passed · Tony browser check pending</small><br />
+            <small>Moved: Thursday · August 6, 2026 · 9:58 PM EDT (Toronto)</small>
+          </li>
+        </ul>
       </section>
 
       <section class="column">
         <h2>Complete</h2>
         <ul>
-          <li class="latest-move">
-            <span class="latest-move-label">★ Latest move · Testing → Complete</span><br />
+          <li>
+            <strong>W3-13</strong><br />
+            Build the protected Admin View foundation<br />
+            <small>DB-backed admin role · System Overview · Owner + active Current borrower Book Sharing Overview · request status summary · privacy-safe Report queue · full suite 120 passed · Tony browser verified</small>
+          </li>
+          <li>
+            <strong>W3-12</strong><br />
+            Allow the borrower to cancel before the owner decides<br />
+            <small>Borrower-only pending → cancelled · owner/session boundary · availability preserved · cancellation blocked after decision · approved contact/profile privacy verified · full suite 107 passed · Tony browser verified</small>
+          </li>
+          <li>
+            <strong>W3-11</strong><br />
+            Add privacy-safe context before the listing owner's decision<br />
+            <small>Review &amp; decide → request/member timing · completed/active aggregates · private fields hidden · D3/D4 roadmap · full suite 96 passed · Tony browser verified</small>
+          </li>
+          <li>
+            <strong>W3-10</strong><br />
+            Improve dynamic database evidence in the local Inspector<br />
+            <small>Newest rows first · Toronto created_at · legacy-row honesty · non-destructive schema upgrade · full suite 93 passed · Tony browser verified</small>
+          </li>
+          <li>
+            <strong>W3-09</strong><br />
+            Complete the listing owner's request decision workflow<br />
+            <small>Mina Approve/Reject → shared service → SQLite → Tony result · session-bound API · full suite 91 passed · Tony browser verified</small>
+          </li>
+          <li>
+            <strong>W3-07</strong><br />
+            Preserve the JSON API contract for the later React client<br />
+            <small>Session-bound POST · Sent/Received collection endpoints · privacy-safe nested JSON · API contract synchronized · full suite 84 passed</small>
+          </li>
+          <li>
+            <strong>W3-06</strong><br />
+            Verify the complete dynamic-data workflow<br />
+            <small>Tony Sent → Mina Received → same Request detail → Alex 403 · real SQLite row · Tony browser verified</small>
+          </li>
+          <li>
+            <strong>W3-05</strong><br />
+            Align navigation and responsive product layout<br />
+            <small>Shared Books/Sent/Received nav · responsive tables · Request ID detail links · seed user View-as tool · full suite 79 passed · Tony browser verified</small>
+          </li>
+          <li>
+            <strong>W3-04</strong><br />
+            Complete visible validation and action feedback<br />
+            <small>Unified success · 403/404 · duplicate/owner 409 messages · full suite 74 passed · Tony browser verified</small>
+          </li>
+          <li>
+            <strong>W3-03</strong><br />
+            Add the listing owner's privacy-safe request-history view<br />
+            <small>Mina owner scope · Alex empty state · request counts · responsive book table · full suite 74 passed · Tony browser verified</small>
+          </li>
+          <li>
             <strong>W3-02</strong><br />
             Build the borrower's real request-history view<br />
-            <small>Tony sees only his BorrowRequests with listing and status data from SQLite · focused 16 passed · full suite 70 passed · Tony browser verified</small><br />
-            <small>Moved: Thursday · August 6, 2026 · 2:41 PM EDT (Toronto)</small>
+            <small>Tony sees only his BorrowRequests with listing and status data from SQLite · focused 16 passed · full suite 70 passed · Tony browser verified</small>
           </li>
           <li>
             <strong>W3-01</strong><br />

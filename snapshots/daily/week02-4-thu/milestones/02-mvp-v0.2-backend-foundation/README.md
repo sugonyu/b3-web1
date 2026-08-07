@@ -6,6 +6,8 @@ Status: Week 2 complete — W2-11 snapshot and Deliverable 2 presentation feedba
 
 Roadmap: [BookLoop Web1 Roadmap](../../docs/bookloop-web1-roadmap.md)
 
+Presentation: [Deliverable 2 presentation](../../docs/presentations/deliverable-02/presentation.html)
+
 ## Goal
 
 Demonstrate a reproducible Flask backend with relational persistence,
@@ -57,7 +59,7 @@ the command-line evidence before Tony's direct browser check.
 
 Tony then confirmed both client paths in the browser: the Python/Jinja client at
 `http://127.0.0.1:5000/` and the independent JavaScript/Vanilla client at
-`http://localhost:8080/pub/b3-web1/app/frontend-vanilla/`. Together with the HTTP
+`http://localhost:8080/pub/b3-web1/app/frontend/js-vanilla/`. Together with the HTTP
 and CORS checks, this completes the application startup and local environment
 configuration evidence.
 
