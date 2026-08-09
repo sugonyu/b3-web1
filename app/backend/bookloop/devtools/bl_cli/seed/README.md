@@ -1,6 +1,6 @@
-# Seed Tool · D2 Demo Data
+# Seed Tool · BookLoop Demo Data
 
-배달 2 브라우저 데모의 시작 데이터와 BorrowRequest 초기화를 HTTP 버튼이 아닌
+BookLoop 브라우저 데모의 시작 데이터와 BorrowRequest 초기화를 HTTP 버튼이 아닌
 명시적인 Python CLI 명령으로 관리한다. `/dev/db/`는 계속 read-only다.
 
 ## BL-CLI entry point
@@ -42,17 +42,18 @@ python3 bl_cli.py reset-demo-requests
 
 | 명령 | 역할 | 삭제 범위 |
 | --- | --- | --- |
-| `seed-demo` | Tony·Mina·Alex와 The Odyssey를 준비 | 삭제하지 않음 |
-| `reset-demo-requests` | live request 시연 전 demo 요청 초기화 | Mina의 The Odyssey 요청만 삭제 |
+| `seed-demo` | 세 사용자 역할과 Homer·Han Kang 책 네 권 준비 | 삭제하지 않음 |
+| `reset-demo-requests` | live request 시연 전 demo 요청 초기화 | 네 demo book의 요청만 삭제 |
 
 ## 1. Seed the starting data
 
 생성 대상:
 
-- 사용자 `tony` — borrower
-- 사용자 `mina` — The Odyssey listing owner
+- 사용자 `tony` — 관리자이자 Homer listing 두 권의 owner
+- 사용자 `mina` — 일반 회원이자 Han Kang listing 두 권의 owner
 - 사용자 `alex` — authorization boundary 확인용 unrelated user
-- Mina 소유의 대여 가능한 `The Odyssey` BookListing
+- Tony 소유의 `The Odyssey`, `The Iliad`
+- Mina 소유의 `The Vegetarian`, `Human Acts`
 
 `BorrowRequest`는 만들지 않는다. 발표 중 Tony가 실제 Jinja 폼으로 생성해야
 validation, SQLite persistence와 갱신된 화면을 증명할 수 있기 때문이다.
@@ -66,9 +67,12 @@ python3 bl_cli.py seed-demo
 현재 수업 데모에서는 Tony, Mina, Alex가 기억하기 쉬운 공통 암호 `1111`을 사용한다.
 이 값은 로컬 데모 전용이며 실제 사용자 계정이나 운영 환경의 암호 정책이 아니다.
 
-같은 명령을 다시 실행해도 같은 username과 Mina의 The Odyssey listing을 중복 생성하지
+같은 명령을 다시 실행해도 같은 username과 네 demo listing을 중복 생성하지
 않으며, 세 데모 계정의 password hash는 현재 환경변수 값으로 동기화한다. 이 명령은
 기존 row를 삭제하거나 데이터베이스를 reset하지 않는다.
+
+관리자 권한도 username 문자열로 판단하지 않는다. 시드는 Tony의 DB `is_admin` 값을
+`true`, Mina와 Alex를 `false`로 동기화한다.
 
 ## 2. Reset only the demo BorrowRequests
 
@@ -77,8 +81,8 @@ cd app/backend
 python3 bl_cli.py reset-demo-requests
 ```
 
-이 명령은 Mina의 `The Odyssey` listing에 연결된 BorrowRequest만 삭제한다. User,
-BookListing과 다른 책의 BorrowRequest는 유지한다. 같은 명령을 다시 실행해도 오류가
+이 명령은 Tony의 Homer 책 두 권과 Mina의 Han Kang 책 두 권에 연결된 BorrowRequest만 삭제한다.
+User, BookListing과 다른 책의 BorrowRequest는 유지한다. 같은 명령을 다시 실행해도 오류가
 나지 않으며 `deleted=0`을 출력한다.
 
 예상 출력:

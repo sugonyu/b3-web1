@@ -7,11 +7,15 @@ Flask가 제공하는 Vanilla UI, JSON API와 독립 Vanilla client의 실행 �
 from flask import Blueprint, render_template
 
 
-client_test = Blueprint("client_test", __name__)
+test_hub = Blueprint(
+    "test_hub",
+    __name__,
+    template_folder="templates",
+)
 
 
-@client_test.get("/test")
-@client_test.get("/test/")
+@test_hub.get("/test")
+@test_hub.get("/test/")
 def index():
-    """네 client/API 진입점과 각 실행 방식의 차이를 설명한다."""
+    """제품 client, API와 개발 도구 진입점의 차이를 설명한다."""
     return render_template("test_hub/index.html")

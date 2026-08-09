@@ -1,0 +1,12 @@
+{% if current_user.id == borrow_request.listing.owner_id and borrow_request.status == "pending" %}
+  <div class="request-decision-actions" aria-label="Decision for request {{ borrow_request.id }}">
+    <form action="{{ url_for('jinja_client.decide_borrow_request', request_id=borrow_request.id) }}" method="post">
+      <input type="hidden" name="status" value="approved">
+      <button class="decision-approve" type="submit">✅ Approve</button>
+    </form>
+    <form action="{{ url_for('jinja_client.decide_borrow_request', request_id=borrow_request.id) }}" method="post">
+      <input type="hidden" name="status" value="rejected">
+      <button class="decision-reject" type="submit">❌ Reject</button>
+    </form>
+  </div>
+{% endif %}

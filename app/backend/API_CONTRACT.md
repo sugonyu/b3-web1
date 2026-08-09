@@ -1,9 +1,12 @@
 # BookLoop Core JSON API Contract
 
-> Private Stage A-3 planning contract · 2026-07-28
+> D3 React handoff contract · updated 2026-08-06
+
+사람이 이 변경의 이유와 코드 흐름을 다시 공부할 때는
+[W3-07 API Handoff 복기 노트](W3_07_API_HANDOFF_STUDY_NOTE.md)를 먼저 읽는다.
 
 이 문서는 React client와 Flask backend 사이의 핵심 JSON 경계를 먼저 확정한다.
-현재 구현된 운영 확인용 `GET /api/health`는 아래 8개 제품 endpoint 수에 포함하지
+현재 구현된 운영 확인용 `GET /api/health`는 아래 10개 제품 endpoint 수에 포함하지
 않는다.
 
 ## 이것은 Endpoint 계획인가?
@@ -90,7 +93,7 @@ PATCH /api/requests/<request_id>
 → 승인된 대여를 반납 완료로 변경
 ```
 
-## Eight Core Endpoints
+## Ten Core Endpoints
 
 | # | Method | Path | 역할 | 접근 경계 |
 | --- | --- | --- | --- | --- |
@@ -100,20 +103,15 @@ PATCH /api/requests/<request_id>
 | 4 | `PATCH` | `/api/listings/<listing_id>` | 제목·저자·대여 가능 상태 수정 | Owner only |
 | 5 | `DELETE` | `/api/listings/<listing_id>` | 소유자의 책 등록 삭제 | Owner only |
 | 6 | `POST` | `/api/listings/<listing_id>/requests` | 사용자가 대여 요청 생성 | Authenticated borrower |
-| 7 | `GET` | `/api/requests/<request_id>` | 생성된 요청 하나 조회 | Borrower or listing owner |
-| 8 | `PATCH` | `/api/requests/<request_id>` | 요청 승인·거절·반납 상태 변경 | Owner/workflow rule |
+| 7 | `GET` | `/api/requests` | 로그인 사용자가 보낸 요청 목록 | Borrower only |
+| 8 | `GET` | `/api/listing-requests` | 로그인 사용자의 책에 들어온 요청 목록 | Listing owner only |
+| 9 | `GET` | `/api/requests/<request_id>` | 생성된 요청 하나 조회 | Borrower or listing owner |
+| 10 | `PATCH` | `/api/requests/<request_id>` | 요청 승인·거절·반납 상태 변경 | Owner/workflow rule |
 
-인증을 구현하기 전 private API 실험에서는 request body의 `owner_id` 또는
-`borrower_id`를 임시로 사용한다. 실제 인증 단계에서는 Flask session의 현재 사용자로
-대체하고 client가 임의의 사용자 ID를 선택하지 못하게 한다.
-
-현재는 실제 로그인 기능이 없다. `User`의 email·password hash 필드와
-`Flask-Login` dependency만 준비되어 있다. 🧩 Deliverable 1 — 정의·디자인
-(D1)에는 이 인증 경계를 설계로 제시하고, 회원가입·로그인·로그아웃과
-`current_user` 전환은 🗄️ Deliverable 2 — 백엔드·데이터베이스 (D2) 전에
-구현한다. 세부 계획은
-[Authentication Implementation Roadmap](../../docs/planning/AUTHENTICATION_IMPLEMENTATION_ROADMAP.md)을
-따른다.
+회원가입·로그인·로그아웃과 Flask-Login session은 D2에서 구현됐다. BorrowRequest
+생성·단일 조회·두 목록 조회와 상태 변경은 모두 `current_user`를 사용하며, client가
+JSON body로 borrower 또는 owner ID를 선택할 수 없다. BookListing mutation의 임시
+`owner_id` body만 남아 있으며 이후 인증 정리 범위의 명시된 기술 부채다.
 
 ## BookListing JSON Shape
 
@@ -141,6 +139,17 @@ PATCH /api/requests/<request_id>
   "id": 1,
   "status": "pending",
   "listing_id": 1,
+  "listing": {
+    "id": 1,
+    "title": "Almond",
+    "author": "Sohn Won-pyung",
+    "availability": true,
+    "owner": {
+      "id": 1,
+      "username": "book_owner",
+      "general_area": "NDG"
+    }
+  },
   "borrower": {
     "id": 2,
     "username": "reader",
@@ -154,6 +163,7 @@ PATCH /api/requests/<request_id>
 ```text
 pending  → approved
 pending  → rejected
+pending  → cancelled  # borrower only
 approved → returned
 ```
 
@@ -171,7 +181,8 @@ A-3.3 listing detail/update/delete — 구현 및 테스트 통과
 A-4.1 BorrowRequest create — 구현 및 테스트 통과
 A-4.2 request status workflow — 구현 및 테스트 통과
 A-4.3 BorrowRequest detail read + authorization — 구현 및 테스트 통과
-전체 결과 — 30 passed (2026-08-02)
+D3.1 borrower/owner request collections — 구현 및 테스트 통과
+D3.2 request POST session identity — 구현 및 테스트 통과
 ```
 
 ### `GET /api/listings`
@@ -190,7 +201,7 @@ A-4.3 BorrowRequest detail read + authorization — 구현 및 테스트 통과
 
 ### `POST /api/listings`
 
-임시 request body:
+로그인한 listing owner의 request body:
 
 ```json
 {
@@ -227,16 +238,26 @@ DELETE /api/listings/<listing_id>
 POST /api/listings/<listing_id>/requests
 ```
 
-임시 request body:
-
-```json
-{
-  "borrower_id": 2
-}
-```
+request body는 필요하지 않다. 서버는 Flask-Login session의 `current_user.id`를
+service에 전달한다. body에 `borrower_id`를 보내더라도 사용자 identity로 신뢰하지
+않는다.
 
 서버는 자기 책 요청, 대여 불가능한 책과 동일 사용자의 활성 중복 요청을 거절한다.
 성공하면 `pending` request 하나와 `201 Created`를 반환한다.
+
+### D3 BorrowRequest collection reads
+
+```text
+GET /api/requests
+→ 현재 사용자가 보낸 request만 최신순으로 반환
+
+GET /api/listing-requests
+→ 현재 사용자가 소유한 책에 들어온 request만 최신순으로 반환
+```
+
+두 endpoint는 비로그인 사용자에게 JSON `401`을 반환한다. 각 row에는 React가
+Books/Sent/Received 화면을 만들 수 있도록 safe `listing`, `owner`, `borrower` 정보가
+포함되지만 email, password hash, 정확한 주소와 연락처는 포함되지 않는다.
 
 ### W2-03 BorrowRequest create/read vertical slice
 
@@ -265,16 +286,18 @@ POST /api/listings/<listing_id>/requests
 PATCH /api/requests/<request_id>
 ```
 
-임시 request body:
+request body:
 
 ```json
 {
-  "owner_id": 1,
   "status": "approved"
 }
 ```
 
-- listing owner만 상태를 변경한다.
+- listing owner는 `pending → approved/rejected`와 `approved → returned`를 변경한다.
+- borrower 본인은 owner 결정 전 `pending → cancelled`만 변경할 수 있다.
+- Flask-Login의 `current_user`로 역할을 판정한다.
+- body에 보낸 `owner_id`는 신원 확인에 사용하지 않는다.
 - `approved`가 되면 listing의 `availability`는 `false`가 된다.
 - `returned`가 되면 listing의 `availability`는 다시 `true`가 된다.
 - 허용되지 않은 상태 전환은 `409 Conflict`로 거절한다.
@@ -308,8 +331,23 @@ A-3.1 GET /api/listings
 → A-4.1 BorrowRequest create
 → A-4.2 approve/reject/return state transitions
 → A-4.3 GET one BorrowRequest for the W2-03 create/read slice
+→ D3.1 GET borrower and listing-owner request collections
+→ D3.2 lock request creation to Flask-Login current_user
 → React client integration
 ```
 
-현재는 A-3.1부터 A-4.3까지 코드와 테스트 케이스 작성을 마쳤다. A-4.3은
-Flask-Login session의 `current_user`를 사용해 borrower와 listing owner를 구분한다.
+현재는 A-3.1부터 D3.2까지 코드와 테스트 케이스 작성을 마쳤다. Jinja route는
+BorrowRequest service를 직접 호출하고, 미래 React client는 `api.py`를 거쳐 같은
+service와 SQLite 규칙을 재사용한다.
+# W3-14 return status transitions
+
+```text
+PATCH /api/requests/<request_id>
+{"status": "return_pending"}  # approved request의 borrower만
+
+PATCH /api/requests/<request_id>
+{"status": "returned"}       # return_pending request의 listing owner만
+```
+
+`return_pending` 동안 listing은 unavailable이고 연락처는 두 당사자에게 유지된다.
+owner가 `returned`를 확인하면 listing은 available로 돌아가며 상대 email 공개가 끝난다.

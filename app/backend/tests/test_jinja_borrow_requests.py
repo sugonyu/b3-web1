@@ -67,10 +67,21 @@ class JinjaBorrowRequestFlowTest(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"Signed in as tony", response.data)
+        self.assertIn("tony 👨".encode(), response.data)
         self.assertIn(b"User #2", response.data)
+        self.assertIn(b'class="data-table"', response.data)
+        self.assertIn(b'aria-label="BookLoop product navigation"', response.data)
+        self.assertIn(b'href="/requests/"', response.data)
+        self.assertIn(b'href="/listing-requests/"', response.data)
+        self.assertIn(b'aria-current="page"', response.data)
+        self.assertIn("Owner · Area".encode(), response.data)
         self.assertIn(b"The Odyssey", response.data)
+        self.assertIn("🌊 The Odyssey".encode(), response.data)
+        self.assertIn("mina 👩".encode(), response.data)
         self.assertIn(b"Homer", response.data)
-        self.assertIn(b"Request this book", response.data)
+        self.assertIn(b"Request", response.data)
+        self.assertIn("🙋 Sent requests (0)".encode(), response.data)
+        self.assertIn("📬 Received requests (0)".encode(), response.data)
         self.assertNotIn(b"mina@example.com", response.data)
 
     def test_unauthenticated_request_redirects_to_login(self):
@@ -129,9 +140,13 @@ class JinjaBorrowRequestFlowTest(unittest.TestCase):
         self.assertEqual(result_response.status_code, 200)
         self.assertIn(b"Request #1", result_response.data)
         self.assertIn(b"Pending", result_response.data)
+        self.assertIn(b"status-pending", result_response.data)
         self.assertIn(b"The Odyssey", result_response.data)
-        self.assertIn(b"saved successfully", result_response.data)
+        self.assertIn("🌊 The Odyssey".encode(), result_response.data)
+        self.assertIn(b"is currently Pending", result_response.data)
         self.assertNotIn(b"tony@example.com", result_response.data)
+        self.assertNotIn(b"mina@example.com", result_response.data)
+        self.assertNotIn(b"Approved contact exchange", result_response.data)
 
         # 새 GET이 같은 SQLite row를 읽으며 두 번째 request를 만들지 않는다.
         reopened_response = self.client.get("/requests/1")
@@ -147,7 +162,9 @@ class JinjaBorrowRequestFlowTest(unittest.TestCase):
         )
 
         self.assertEqual(response.status_code, 409)
-        self.assertIn(b"owner cannot borrow own listing", response.data)
+        self.assertIn(b"This is your book", response.data)
+        self.assertIn(b"You cannot request a book that you own.", response.data)
+        self.assertIn(b"<strong>409</strong>", response.data)
 
     def test_duplicate_active_request_is_blocked(self):
         self.login("tony")
@@ -158,12 +175,23 @@ class JinjaBorrowRequestFlowTest(unittest.TestCase):
         )
 
         self.assertEqual(response.status_code, 409)
-        self.assertIn(b"active borrow request already exists", response.data)
-        self.assertIn(b"BorrowRequest #1", response.data)
+        self.assertIn(b"Request already exists", response.data)
+        self.assertIn(b"You already have an active request for this book.", response.data)
+        self.assertIn(b"<strong>409</strong>", response.data)
         self.assertIn(b'href="/requests/1"', response.data)
         self.assertIn(b"View Request #1", response.data)
         with self.app.app_context():
             self.assertEqual(BorrowRequest.query.count(), 1)
+
+    def test_home_disables_request_button_for_active_request(self):
+        self.login("tony")
+        self.client.post(f"/listings/{self.listing_id}/request")
+
+        response = self.client.get("/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Requested", response.data)
+        self.assertRegex(response.data.decode(), r"<button[^>]+disabled[^>]*>\s*Requested")
 
     def test_unrelated_user_cannot_open_request_result(self):
         self.login("tony")
@@ -175,7 +203,8 @@ class JinjaBorrowRequestFlowTest(unittest.TestCase):
 
         self.assertEqual(response.status_code, 403)
         self.assertIn(b"<strong>403</strong>", response.data)
-        self.assertIn(b"borrow request access forbidden", response.data)
+        self.assertIn(b"Access denied", response.data)
+        self.assertIn(b"Only the borrower or book owner can view this request.", response.data)
 
     def test_missing_request_result_shows_404_code_and_message(self):
         self.login("tony")
@@ -184,7 +213,242 @@ class JinjaBorrowRequestFlowTest(unittest.TestCase):
 
         self.assertEqual(response.status_code, 404)
         self.assertIn(b"<strong>404</strong>", response.data)
-        self.assertIn(b"borrow request not found", response.data)
+        self.assertIn(b"Request not found", response.data)
+        self.assertIn(b"This borrowing request does not exist.", response.data)
+
+    def test_borrower_history_shows_only_current_users_requests(self):
+        self.login("tony")
+        self.client.post(f"/listings/{self.listing_id}/request")
+
+        response = self.client.get("/requests/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"My borrowing requests", response.data)
+        self.assertIn(b'class="data-table request-table"', response.data)
+        self.assertIn(b"Sent requests", response.data)
+        self.assertIn(b"Received requests", response.data)
+        self.assertIn(b"Signed in as tony", response.data)
+        self.assertIn(b"The Odyssey", response.data)
+        self.assertIn("🌊 The Odyssey".encode(), response.data)
+        self.assertIn(b'data-label="Request"', response.data)
+        self.assertIn(b'href="/requests/1"', response.data)
+        self.assertNotIn(b'<th scope="col">Decision</th>', response.data)
+        self.assertNotIn(b"tony@example.com", response.data)
+
+    def test_borrower_history_requires_login(self):
+        response = self.client.get("/requests/")
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.headers["Location"], "/login?next=/requests/")
+
+    def test_listing_owner_history_shows_requests_for_owned_books(self):
+        self.login("tony")
+        self.client.post(f"/listings/{self.listing_id}/request")
+        self.client.post("/logout")
+        self.login("mina")
+
+        response = self.client.get("/listing-requests/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Requests for my books", response.data)
+        self.assertIn(b'class="data-table request-table"', response.data)
+        self.assertIn(b"Signed in as mina", response.data)
+        self.assertIn("mina 👩".encode(), response.data)
+        self.assertIn(b"The Odyssey", response.data)
+        self.assertIn("🌊 The Odyssey".encode(), response.data)
+        self.assertIn("tony 👨".encode(), response.data)
+        self.assertIn(b'data-label="Request"', response.data)
+        self.assertIn(b'href="/requests/1"', response.data)
+        self.assertIn(b'<th scope="col">Decision</th>', response.data)
+        self.assertIn(b"Review &amp; decide", response.data)
+        self.assertNotIn(b"decision-approve", response.data)
+        self.assertNotIn(b"tony@example.com", response.data)
+
+    def test_listing_owner_reviews_decision_context_before_deciding(self):
+        self.login("tony")
+        self.client.post(f"/listings/{self.listing_id}/request")
+        self.client.post("/logout")
+        self.login("mina")
+
+        response = self.client.get("/requests/1")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Mina's Decision Context", response.data)
+        self.assertIn(b"Requested at", response.data)
+        self.assertIn(b"Member since", response.data)
+        self.assertIn(b"Completed exchanges", response.data)
+        self.assertIn(b"Active requests", response.data)
+        self.assertIn(b"First-time borrower", response.data)
+        self.assertIn(b"Private contact details", response.data)
+        self.assertIn(b"Approve", response.data)
+        self.assertIn(b"Reject", response.data)
+        self.assertNotIn(b"tony@example.com", response.data)
+
+    def test_borrower_does_not_see_owner_decision_context_or_buttons(self):
+        self.login("tony")
+        self.client.post(f"/listings/{self.listing_id}/request")
+
+        response = self.client.get("/requests/1")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(b"Mina's Decision Context", response.data)
+        self.assertNotIn(b"decision-approve", response.data)
+        self.assertNotIn(b"decision-reject", response.data)
+
+    def test_borrower_cancels_pending_request_before_owner_decision(self):
+        self.login("tony")
+        self.client.post(f"/listings/{self.listing_id}/request")
+
+        pending_page = self.client.get("/requests/")
+        self.assertIn(b"Cancel request", pending_page.data)
+
+        response = self.client.post(
+            "/requests/1/cancel",
+            follow_redirects=True,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Request #1 was cancelled.", response.data)
+        self.assertIn(b"Cancelled", response.data)
+        self.assertIn(b"status-cancelled", response.data)
+        self.assertNotIn(b"Cancel request", response.data)
+        with self.app.app_context():
+            self.assertEqual(db.session.get(BorrowRequest, 1).status, "cancelled")
+            self.assertTrue(db.session.get(BookListing, self.listing_id).availability)
+
+    def test_listing_owner_cannot_cancel_borrowers_request(self):
+        self.login("tony")
+        self.client.post(f"/listings/{self.listing_id}/request")
+        self.client.post("/logout")
+        self.login("mina")
+
+        response = self.client.post("/requests/1/cancel")
+
+        self.assertEqual(response.status_code, 403)
+        self.assertIn(b"Cancellation not allowed", response.data)
+        with self.app.app_context():
+            self.assertEqual(db.session.get(BorrowRequest, 1).status, "pending")
+
+    def test_borrower_cannot_cancel_after_request_is_approved(self):
+        self.login("tony")
+        self.client.post(f"/listings/{self.listing_id}/request")
+        self.client.post("/logout")
+        self.login("mina")
+        self.client.post("/requests/1/decision", data={"status": "approved"})
+        self.client.post("/logout")
+        self.login("tony")
+
+        response = self.client.post("/requests/1/cancel")
+
+        self.assertEqual(response.status_code, 409)
+        self.assertIn(b"Request cannot be cancelled", response.data)
+        with self.app.app_context():
+            self.assertEqual(db.session.get(BorrowRequest, 1).status, "approved")
+
+    def test_home_request_counts_follow_the_signed_in_users_role(self):
+        self.login("tony")
+        self.client.post(f"/listings/{self.listing_id}/request")
+
+        borrower_home = self.client.get("/")
+        self.assertIn("🙋 Sent requests (1)".encode(), borrower_home.data)
+        self.assertIn("📬 Received requests (0)".encode(), borrower_home.data)
+
+        self.client.post("/logout")
+        self.login("mina")
+
+        owner_home = self.client.get("/")
+        self.assertIn("🙋 Sent requests (0)".encode(), owner_home.data)
+        self.assertIn("📬 Received requests (1)".encode(), owner_home.data)
+
+    def test_unrelated_user_sees_empty_owner_history(self):
+        self.login("tony")
+        self.client.post(f"/listings/{self.listing_id}/request")
+        self.client.post("/logout")
+        self.login("alex")
+
+        response = self.client.get("/listing-requests/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"No one has requested one of your books yet.", response.data)
+        self.assertNotIn(b"The Odyssey", response.data)
+        self.assertNotIn(b"Request #1", response.data)
+
+    def test_listing_owner_approves_request_and_borrower_sees_result(self):
+        self.login("tony")
+        self.client.post(f"/listings/{self.listing_id}/request")
+        self.client.post("/logout")
+        self.login("mina")
+
+        decision_response = self.client.post(
+            "/requests/1/decision",
+            data={"status": "approved"},
+            follow_redirects=True,
+        )
+
+        self.assertEqual(decision_response.status_code, 200)
+        self.assertIn(b"Decision saved", decision_response.data)
+        self.assertIn(b"Request #1 was approved.", decision_response.data)
+        self.assertIn(b"Approved", decision_response.data)
+        self.assertIn(b"status-approved", decision_response.data)
+        self.assertNotIn(b"decision-approve", decision_response.data)
+
+        self.client.post("/logout")
+        self.login("tony")
+        borrower_response = self.client.get("/requests/")
+        self.assertIn(b"Approved", borrower_response.data)
+
+        borrower_detail = self.client.get("/requests/1")
+        self.assertIn(b"Approved contact exchange", borrower_detail.data)
+        self.assertIn(b"Contact mina", borrower_detail.data)
+        self.assertIn(b"mina@example.com", borrower_detail.data)
+        self.assertNotIn(b"tony@example.com", borrower_detail.data)
+
+        self.client.post("/logout")
+        self.login("mina")
+        owner_detail = self.client.get("/requests/1")
+        self.assertIn(b"Contact tony", owner_detail.data)
+        self.assertIn(b"tony@example.com", owner_detail.data)
+        self.assertNotIn(b"mina@example.com", owner_detail.data)
+
+        with self.app.app_context():
+            borrow_request = db.session.get(BorrowRequest, 1)
+            listing = db.session.get(BookListing, self.listing_id)
+            self.assertEqual(borrow_request.status, "approved")
+            self.assertFalse(listing.availability)
+
+    def test_listing_owner_rejects_request_and_listing_stays_available(self):
+        self.login("tony")
+        self.client.post(f"/listings/{self.listing_id}/request")
+        self.client.post("/logout")
+        self.login("mina")
+
+        response = self.client.post(
+            "/requests/1/decision",
+            data={"status": "rejected"},
+            follow_redirects=True,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Request #1 was rejected.", response.data)
+        self.assertIn(b"Rejected", response.data)
+        self.assertIn(b"status-rejected", response.data)
+        with self.app.app_context():
+            listing = db.session.get(BookListing, self.listing_id)
+            self.assertTrue(listing.availability)
+
+    def test_non_owner_cannot_decide_request_even_with_owner_form(self):
+        self.login("tony")
+        self.client.post(f"/listings/{self.listing_id}/request")
+
+        response = self.client.post(
+            "/requests/1/decision",
+            data={"status": "approved"},
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertIn(b"Decision not allowed", response.data)
+        with self.app.app_context():
+            self.assertEqual(db.session.get(BorrowRequest, 1).status, "pending")
 
 
 if __name__ == "__main__":

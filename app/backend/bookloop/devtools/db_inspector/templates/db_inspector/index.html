@@ -41,6 +41,29 @@
       th, td { padding: 0.65rem; border: 1px solid #b8b8ae; text-align: left; }
       th { background: #e4eee7; }
       .count { color: #5d665f; font-size: 0.9rem; }
+      .status-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 0.75rem 0 1rem;
+      }
+      .status-pill {
+        display: inline-block;
+        padding: 0.2rem 0.55rem;
+        border: 1px solid;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: capitalize;
+        white-space: nowrap;
+      }
+      /* Product UI와 같은 status 의미를 유지하되 Inspector는 독립 CSS를 사용한다. */
+      .status-pending { border-color: #996b00; color: #694a00; background: #fff5cc; }
+      .status-approved { border-color: #15803d; color: #14532d; background: #dcfce7; }
+      .status-return_pending { border-color: #2563eb; color: #1e3a8a; background: #dbeafe; }
+      .status-rejected { border-color: #b42318; color: #7a271a; background: #fee4e2; }
+      .status-cancelled { border-color: #667085; color: #344054; background: #eaecf0; }
+      .status-returned { border-color: #2457a7; color: #173f7a; background: #dbeafe; }
       .empty { padding: 1rem; border: 1px dashed #b8b8ae; background: #fff; }
       .resource-list { display: grid; gap: 0.75rem; }
       .resource-card { padding: 0.85rem 1rem; border: 1px solid #b8b8ae; background: #fff; }
@@ -70,14 +93,23 @@
           Demo reset is CLI-only: <code>python3 bl_cli.py reset-demo-requests</code>
           · Users and Book Listings are preserved.
         </p>
+        <div class="status-legend" aria-label="Borrow request status legend">
+          <span class="status-pill status-pending">Pending</span>
+          <span class="status-pill status-approved">Approved</span>
+          <span class="status-pill status-rejected">Rejected</span>
+          <span class="status-pill status-cancelled">Cancelled</span>
+          <span class="status-pill status-returned">Returned</span>
+        </div>
         {% if borrow_requests %}
           <table>
-            <thead><tr><th>ID</th><th>Status</th><th>Listing</th><th>Borrower</th></tr></thead>
+            <thead><tr><th>ID</th><th>Created</th><th>Status</th><th>Listing</th><th>Owner</th><th>Borrower</th></tr></thead>
             <tbody>
               {% for borrow_request in borrow_requests %}
                 <tr>
-                  <td>{{ borrow_request.id }}</td><td>{{ borrow_request.status }}</td>
+                  <td>{{ borrow_request.id }}</td><td>{{ format_request_time(borrow_request.created_at) }}</td>
+                  <td><span class="status-pill status-{{ borrow_request.status }}">{{ borrow_request.status }}</span></td>
                   <td><code>#{{ borrow_request.listing_id }}</code> · {{ borrow_request.listing.title }}</td>
+                  <td><code>#{{ borrow_request.listing.owner_id }}</code> · {{ borrow_request.listing.owner.username }}</td>
                   <td><code>#{{ borrow_request.borrower_id }}</code> · {{ borrow_request.borrower.username }}</td>
                 </tr>
               {% endfor %}
@@ -92,11 +124,11 @@
         <h2 id="listings-heading">Book Listings <span class="count">{{ listings|length }} rows</span></h2>
         {% if listings %}
           <table>
-            <thead><tr><th>ID</th><th>Title</th><th>Author</th><th>Available</th><th>Owner ID</th></tr></thead>
+            <thead><tr><th>ID</th><th>Created (Toronto)</th><th>Title</th><th>Author</th><th>Available</th><th>Owner ID</th></tr></thead>
             <tbody>
               {% for listing in listings %}
                 <tr>
-                  <td>{{ listing.id }}</td><td>{{ listing.title }}</td><td>{{ listing.author }}</td>
+                  <td>{{ listing.id }}</td><td>{{ format_created_at(listing.created_at) }}</td><td>{{ listing.title }}</td><td>{{ listing.author }}</td>
                   <td>{{ "yes" if listing.availability else "no" }}</td><td>{{ listing.owner_id }}</td>
                 </tr>
               {% endfor %}
@@ -111,10 +143,10 @@
         <h2 id="users-heading">Users <span class="count">{{ users|length }} rows</span></h2>
         {% if users %}
           <table>
-            <thead><tr><th>ID</th><th>Username</th><th>General area</th></tr></thead>
+            <thead><tr><th>ID</th><th>Created (Toronto)</th><th>Username</th><th>General area</th></tr></thead>
             <tbody>
               {% for user in users %}
-                <tr><td>{{ user.id }}</td><td>{{ user.username }}</td><td>{{ user.general_area }}</td></tr>
+                <tr><td>{{ user.id }}</td><td>{{ format_created_at(user.created_at) }}</td><td>{{ user.username }}</td><td>{{ user.general_area }}</td></tr>
               {% endfor %}
             </tbody>
           </table>
@@ -145,7 +177,7 @@
                 rel="noopener noreferrer"
               >🗺️ BookLoop Flask Package Code Map ↗</a>
             </h3>
-            <p>🐍 Flask 실행 진입점, 세 client Blueprint, API와 database의 전체 연결 구조를 확인한다.</p>
+            <p>🐍 Flask 실행 진입점, 두 제품 client와 개발 도구 Blueprint, API와 database의 전체 연결 구조를 확인한다.</p>
           </article>
 
           <article class="resource-card">

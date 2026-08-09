@@ -1,0 +1,17 @@
+<nav class="toc-nav product-footer" aria-label="BookLoop development pages">
+  <a href="{{ url_for('test_hub.index') }}">🧪 Test Hub</a>
+  <a href="{{ url_for('jinja_client.jinja_reference') }}">🐍 Jinja Reference</a>
+  <a href="{{ request.path }}" title="Reload current page" aria-label="Reload current page">↻</a>
+  {% if config.DEBUG and config.ENABLE_DEV_USER_SWITCHER %}
+    <button
+      id="dev-user-switcher-toggle"
+      class="dev-user-toggle"
+      type="button"
+      title="Developer user switcher"
+      aria-label="Toggle developer user switcher"
+      aria-controls="dev-user-switcher"
+      aria-expanded="false"
+    >◦</button>
+    <script src="{{ url_for('static', filename='bookloop/dev-user-switcher.js') }}" defer></script>
+  {% endif %}
+</nav>

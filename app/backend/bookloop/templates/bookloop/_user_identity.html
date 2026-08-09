@@ -1,0 +1,2 @@
+{# Demo 사용자는 기억하기 쉬운 아이콘, 일반 사용자는 기본 아이콘으로 표시한다. #}
+{% macro user_icon(user) -%}{{ {"tony": "👨", "mina": "👩", "alex": "🕵️"}.get(user.username|lower, "👤") }}{%- endmacro %}

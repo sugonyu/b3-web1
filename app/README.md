@@ -4,21 +4,24 @@ This folder contains the minimum reproducible source used to verify the current
 BookLoop backend and client progression.
 
 ```text
-🟨 Vanilla JavaScript → Flask JSON API
-🐍 Python/Jinja      → Flask service and database flow
-⚛️ React             → planned Deliverable 3 client
+🟨 Vanilla JavaScript → Flask JSON health boundary
+🐍 Python/Jinja      → current integrated product workflow
+⚛️ React             → planned parity client using the same JSON API
 ```
 
 The Vanilla client proves that an independent browser client can call the Flask
-JSON API through CORS. The Python/Jinja client provides the smaller Deliverable 2
-verification path. React will reuse the verified API in Deliverable 3.
+JSON API through CORS. The Python/Jinja client currently provides the integrated
+BorrowRequest, privacy, admin, and return workflow. React remains a documented
+parity path that will reuse the verified API and shared service rules.
 
 ## Structure
 
 ```text
 app/
-├── backend/          # Flask, SQLAlchemy, SQLite, Jinja and automated tests
-└── frontend/js-vanilla/ # Independent HTML, CSS and JavaScript API client
+├── backend/             # Flask, SQLAlchemy, SQLite, Jinja and tests
+└── frontend/
+    ├── js-vanilla/      # Independent HTML/CSS/JavaScript API check
+    └── react/           # React parity plan and future client boundary
 ```
 
 ## Run the Backend
@@ -50,8 +53,10 @@ cd app/backend
 flask --app run seed-demo
 ```
 
-The command creates Tony, Mina, Alex, and Mina's available Almond listing. It
-does not create a BorrowRequest; that record remains part of the browser demo.
+The command creates Tony, Mina, and Alex plus four available demo listings:
+Tony's *The Odyssey* and *The Iliad*, and Mina's *The Vegetarian* and
+*Human Acts*. It does not create a BorrowRequest; that record remains part of
+the browser demo.
 
 ## Test
 
@@ -68,11 +73,13 @@ user data.
 
 ## Current Boundary
 
-The current public source proves the backend foundation, relational models,
-reproducible demo seed, register/login/logout session, protected request reads,
-privacy-safe JSON, and a shared BorrowRequest create/read service. The complete
-backend suite passes 52 tests.
+The current public source proves the Flask application factory, relational
+models, reproducible demo seed, register/login/logout session, protected request
+reads, privacy-safe JSON, and shared services used by both Jinja routes and API
+adapters. The Python/Jinja product includes request history, owner decisions,
+approved-contact privacy, user profiles, a read-only Admin View, and the
+two-step return flow.
 
-The next Deliverable 2 step is the minimal Jinja product workflow: show Almond,
-submit Tony's request through the shared service, display Pending, and reopen the
-same saved request.
+The verified backend suite passes 124 tests. React is not presented as a finished
+product client; it remains the next parity implementation after the current
+Python/Jinja workflow.

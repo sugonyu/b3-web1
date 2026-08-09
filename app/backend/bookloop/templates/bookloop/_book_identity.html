@@ -1,0 +1,2 @@
+{# Demo 책은 제목만 보아도 구분되도록 상징 아이콘을 붙이고, 일반 책은 기본 아이콘을 쓴다. #}
+{% macro book_title(title) -%}{{ {"The Odyssey": "🌊", "The Iliad": "🛡️", "The Vegetarian": "🌱", "Human Acts": "🕯️"}.get(title, "📖") }} {{ title }}{%- endmacro %}

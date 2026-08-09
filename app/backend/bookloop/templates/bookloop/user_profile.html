@@ -1,0 +1,72 @@
+<!doctype html>
+{% from "bookloop/_user_identity.html" import user_icon %}
+{% from "bookloop/_book_identity.html" import book_title %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLoop · {{ profile.user.username }}</title>
+    <link rel="icon" href="{{ url_for('static', filename='bookloop/python-favicon.svg') }}" type="image/svg+xml">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
+  </head>
+  <body>
+    <main class="product-main">
+      {% include "bookloop/_dev_user_switcher.html" %}
+      <a class="brand-badge" href="{{ url_for('jinja_client.product_home') }}">BookLoop</a>
+      {% include "bookloop/_product_nav.html" %}
+
+      <p class="eyebrow">Privacy-safe member profile</p>
+      <h1>{{ profile.user.username }} {{ user_icon(profile.user) }}</h1>
+
+      <section class="profile-summary" aria-labelledby="profile-summary-heading">
+        <h2 id="profile-summary-heading">Member summary</h2>
+        <dl class="profile-metrics">
+          <div><dt>General area</dt><dd>{{ profile.user.general_area }}</dd></div>
+          <div><dt>Member since</dt><dd>{{ format_toronto_date(profile.user.created_at) }}</dd></div>
+          <div><dt>Completed exchanges</dt><dd>{{ profile.completed_exchanges }}</dd></div>
+          <div><dt>Available books</dt><dd>{{ profile.available_listings|length }}</dd></div>
+        </dl>
+        {% if profile.email %}
+          <div class="contact-policy contact-policy-visible" role="note" aria-label="Visible email information">
+            <h3>✉️ Email</h3>
+            <p><a href="mailto:{{ profile.email }}">{{ profile.email }}</a></p>
+            {% if profile.email_visibility == "own_profile" %}
+              <p>This is your private account email. Other members cannot see it without an approved exchange.</p>
+            {% else %}
+              <p>Visible because you and this member have an approved borrowing request.</p>
+            {% endif %}
+          </div>
+        {% else %}
+          <div class="contact-policy" role="note" aria-label="Email privacy policy">
+            <h3>🔒 Contact information protected</h3>
+            <p>Email is hidden until you and this member have an approved borrowing request.</p>
+          </div>
+        {% endif %}
+        <p class="privacy-note">Exact location and private request activity are also not part of this profile.</p>
+      </section>
+
+      <section aria-labelledby="profile-books-heading">
+        <h2 id="profile-books-heading">Available books</h2>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr><th scope="col">Book</th><th scope="col">Author</th><th scope="col">Listing</th></tr></thead>
+            <tbody>
+              {% for listing in profile.available_listings %}
+                <tr>
+                  <td data-label="Book"><strong>{{ book_title(listing.title) }}</strong></td>
+                  <td data-label="Author">{{ listing.author }}</td>
+                  <td data-label="Listing">Book #{{ listing.id }}</td>
+                </tr>
+              {% else %}
+                <tr><td colspan="3">No available books.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <a href="{{ url_for('jinja_client.product_home') }}">Back to books</a>
+      {% include "bookloop/_product_footer.html" %}
+    </main>
+  </body>
+</html>

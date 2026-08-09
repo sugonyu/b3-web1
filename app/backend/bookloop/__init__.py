@@ -14,10 +14,13 @@ from flask import Flask
 from flask_cors import CORS
 
 from .api import api
+from .admin import admin
 from .auth import auth, login_manager
 from .db import db
-from .clients import client_test, jinja_client, vanilla_client
+from .clients import jinja_client, vanilla_client
 from .devtools.db_inspector import db_inspector
+from .devtools.user_switcher import user_switcher
+from .devtools.test_hub import test_hub
 from .devtools.bl_cli.seed import register_seed_commands
 
 
@@ -37,6 +40,12 @@ def create_app(test_config=None):
         # DEBUG도 함께 검사하므로 운영 환경에서 실수로 내부 데이터가 노출되지 않는다.
         ENABLE_DEV_DB_INSPECTOR=os.getenv(
             "ENABLE_DEV_DB_INSPECTOR",
+            "false",
+        ).lower()
+        in {"1", "true", "yes", "on"},
+        # seed 사용자 관점 전환도 DEBUG와 별도 opt-in 설정이 모두 필요하다.
+        ENABLE_DEV_USER_SWITCHER=os.getenv(
+            "ENABLE_DEV_USER_SWITCHER",
             "false",
         ).lower()
         in {"1", "true", "yes", "on"},
@@ -67,13 +76,15 @@ def create_app(test_config=None):
     )
 
     app.register_blueprint(api)
+    app.register_blueprint(admin)
     app.register_blueprint(auth)
     app.register_blueprint(vanilla_client)
     app.register_blueprint(jinja_client)
-    app.register_blueprint(client_test)
+    app.register_blueprint(test_hub)
     # Blueprint는 항상 등록하고 route의 before_request에서 실행 시점 설정을 검사한다.
     # app.run(debug=True)가 create_app() 뒤에 DEBUG를 켜기 때문에 이 순서가 필요하다.
     app.register_blueprint(db_inspector)
+    app.register_blueprint(user_switcher)
     # 데모 시작 데이터는 HTTP route가 아니라 명시적인 Flask CLI 명령으로만 만든다.
     register_seed_commands(app)
 

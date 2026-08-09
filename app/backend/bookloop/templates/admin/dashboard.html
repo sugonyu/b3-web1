@@ -1,0 +1,107 @@
+<!doctype html>
+{% from "bookloop/_user_identity.html" import user_icon %}
+{% from "bookloop/_book_identity.html" import book_title %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLoop · Admin</title>
+    <link rel="icon" href="{{ url_for('static', filename='bookloop/python-favicon.svg') }}" type="image/svg+xml">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
+  </head>
+  <body>
+    <main class="product-main">
+      {% include "bookloop/_dev_user_switcher.html" %}
+      <a class="brand-badge" href="{{ url_for('jinja_client.product_home') }}">BookLoop</a>
+      {% include "bookloop/_product_nav.html" %}
+      <p class="eyebrow">🛡️ Authorized admin · {{ current_user.username }} {{ user_icon(current_user) }} · User #{{ current_user.id }}</p>
+      <h1>Admin dashboard</h1>
+      <p>Read-only system and moderation overview. Private contact details and report descriptions are not shown here.</p>
+
+      <section aria-labelledby="system-overview-title">
+        <p class="eyebrow">1 · System overview</p>
+        <h2 id="system-overview-title">BookLoop at a glance</h2>
+        <dl class="admin-metrics" aria-label="System status summary">
+          <div><dt>👥 Users</dt><dd>{{ system_counts.users }}</dd></div>
+          <div><dt>📚 Book listings</dt><dd>{{ system_counts.listings }}</dd></div>
+          <div><dt>✅ Available</dt><dd>{{ system_counts.available_listings }}</dd></div>
+          <div><dt>🔄 Active requests</dt><dd>{{ system_counts.active_requests }}</dd></div>
+          <div><dt>🚩 Open reports</dt><dd>{{ system_counts.open_reports }}</dd></div>
+        </dl>
+
+        <h3>Book sharing overview</h3>
+        <div class="data-table-wrap">
+          <table class="data-table request-table">
+            <thead><tr><th scope="col">Book</th><th scope="col">Owner</th><th scope="col">Current borrower</th><th scope="col">Availability</th><th scope="col">Requests</th><th scope="col">Current state</th></tr></thead>
+            <tbody>
+              {% for row in listing_rows %}
+                <tr>
+                  <td data-label="Book"><strong>{{ book_title(row.listing.title) }}</strong><br><small>{{ row.listing.author }}</small></td>
+                  <td data-label="Owner">{{ row.listing.owner.username }} {{ user_icon(row.listing.owner) }} · User #{{ row.listing.owner_id }}</td>
+                  <td data-label="Current borrower">{% if row.current_borrower %}{{ row.current_borrower.username }} {{ user_icon(row.current_borrower) }} · User #{{ row.current_borrower.id }}{% else %}—{% endif %}</td>
+                  <td data-label="Availability">{{ "Available" if row.listing.availability else "Unavailable" }}</td>
+                  <td data-label="Requests">{{ row.request_count }}</td>
+                  <td data-label="Current state">{{ row.active_request_count }} active</td>
+                </tr>
+              {% else %}
+                <tr><td colspan="6">No book listings are available.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Borrow request status</h3>
+        <dl class="admin-metrics admin-metrics-status" aria-label="Borrow request status summary">
+          <div><dt>Pending</dt><dd>{{ request_status_counts.pending }}</dd></div>
+          <div><dt>Approved</dt><dd>{{ request_status_counts.approved }}</dd></div>
+          <div><dt>Rejected</dt><dd>{{ request_status_counts.rejected }}</dd></div>
+          <div><dt>Cancelled</dt><dd>{{ request_status_counts.cancelled }}</dd></div>
+          <div><dt>Returned</dt><dd>{{ request_status_counts.returned }}</dd></div>
+        </dl>
+      </section>
+
+      <section aria-labelledby="reports-title">
+        <p class="eyebrow">2 · Reports &amp; moderation</p>
+        <h2 id="reports-title">Read-only report queue</h2>
+        <p>Only the minimum case summary appears in this queue.</p>
+
+        <dl class="admin-metrics" aria-label="Report status summary">
+          <div><dt>Open</dt><dd>{{ report_status_counts.open }}</dd></div>
+          <div><dt>Under review</dt><dd>{{ report_status_counts.under_review }}</dd></div>
+          <div><dt>Resolved</dt><dd>{{ report_status_counts.resolved }}</dd></div>
+          <div><dt>Dismissed</dt><dd>{{ report_status_counts.dismissed }}</dd></div>
+        </dl>
+
+      <div class="data-table-wrap">
+        <table class="data-table request-table">
+          <thead>
+            <tr>
+              <th scope="col">Report</th>
+              <th scope="col">Category</th>
+              <th scope="col">Request</th>
+              <th scope="col">Created</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for report in reports %}
+              <tr>
+                <td data-label="Report">#{{ report.id }}</td>
+                <td data-label="Category">{{ report.category.replace('_', ' ')|title }}</td>
+                <td data-label="Request">#{{ report.borrow_request_id }}</td>
+                <td data-label="Created">{{ format_toronto_datetime(report.created_at) }}</td>
+                <td data-label="Status"><span class="status-pill status-{{ report.status }}">{{ report.status.replace('_', ' ')|title }}</span></td>
+              </tr>
+            {% else %}
+              <tr><td colspan="5">No reports are waiting for review.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+        <p><small>Moderation actions and report details will be added only with an audit trail.</small></p>
+      </section>
+      {% include "bookloop/_product_footer.html" %}
+    </main>
+  </body>
+</html>

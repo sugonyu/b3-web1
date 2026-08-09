@@ -1,7 +1,6 @@
-"""BookLoop browser-facing Flask client Blueprints."""
+"""BookLoop의 제품 browser client Blueprints."""
 
-from .client_jinja import jinja_client
-from .client_test import client_test
-from .client_vanilla import vanilla_client
+from .flask_vanilla import vanilla_client
+from .jinja_product import jinja_client
 
-__all__ = ["jinja_client", "client_test", "vanilla_client"]
+__all__ = ["jinja_client", "vanilla_client"]

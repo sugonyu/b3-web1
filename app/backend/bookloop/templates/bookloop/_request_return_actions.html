@@ -1,0 +1,13 @@
+{% if current_user.id == borrow_request.borrower_id and borrow_request.status == "approved" %}
+  <form action="{{ url_for('jinja_client.request_book_return', request_id=borrow_request.id) }}" method="post">
+    <button class="decision-approve" type="submit">📦 I returned this book</button>
+  </form>
+{% elif current_user.id == borrow_request.borrower_id and borrow_request.status == "return_pending" %}
+  <small>⏳ Waiting for the book owner to confirm the return.</small>
+{% elif current_user.id == borrow_request.listing.owner_id and borrow_request.status == "approved" %}
+  <small>Waiting for the borrower to mark the book as returned.</small>
+{% elif current_user.id == borrow_request.listing.owner_id and borrow_request.status == "return_pending" %}
+  <form action="{{ url_for('jinja_client.confirm_return', request_id=borrow_request.id) }}" method="post">
+    <button class="decision-approve" type="submit">✅ Confirm book received</button>
+  </form>
+{% endif %}

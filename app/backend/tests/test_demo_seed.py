@@ -38,16 +38,26 @@ class DemoSeedCommandTest(unittest.TestCase):
         self.assertEqual(result.exit_code, 0, result.output)
         with self.app.app_context():
             self.assertEqual(User.query.count(), 3)
-            self.assertEqual(BookListing.query.count(), 1)
+            self.assertEqual(BookListing.query.count(), 4)
             self.assertEqual(BorrowRequest.query.count(), 0)
 
             tony = User.query.filter_by(username="tony").one()
             mina = User.query.filter_by(username="mina").one()
-            listing = BookListing.query.one()
+            odyssey = BookListing.query.filter_by(title="The Odyssey").one()
+            iliad = BookListing.query.filter_by(title="The Iliad").one()
+            vegetarian = BookListing.query.filter_by(title="The Vegetarian").one()
+            human_acts = BookListing.query.filter_by(title="Human Acts").one()
             self.assertTrue(check_password_hash(tony.password_hash, "test-demo-password"))
-            self.assertEqual(listing.title, "The Odyssey")
-            self.assertEqual(listing.author, "Homer")
-            self.assertEqual(listing.owner, mina)
+            self.assertTrue(tony.is_admin)
+            self.assertFalse(mina.is_admin)
+            self.assertEqual(odyssey.author, "Homer")
+            self.assertEqual(odyssey.owner, tony)
+            self.assertEqual(iliad.author, "Homer")
+            self.assertEqual(iliad.owner, tony)
+            self.assertEqual(vegetarian.author, "Han Kang")
+            self.assertEqual(vegetarian.owner, mina)
+            self.assertEqual(human_acts.author, "Han Kang")
+            self.assertEqual(human_acts.owner, mina)
 
     def test_second_seed_run_creates_no_duplicates(self):
         with patch.dict(
@@ -70,7 +80,7 @@ class DemoSeedCommandTest(unittest.TestCase):
 
         with self.app.app_context():
             self.assertEqual(User.query.count(), 3)
-            self.assertEqual(BookListing.query.count(), 1)
+            self.assertEqual(BookListing.query.count(), 4)
             self.assertEqual(BorrowRequest.query.count(), 0)
             for user in User.query.all():
                 self.assertTrue(check_password_hash(user.password_hash, "1111"))
@@ -84,7 +94,7 @@ class DemoSeedCommandTest(unittest.TestCase):
             self.runner.invoke(args=["seed-demo"])
 
             with self.app.app_context():
-                listing = BookListing.query.one()
+                listing = BookListing.query.filter_by(title="The Vegetarian").one()
                 listing_id = listing.id
                 listing.title = "Almond"
                 listing.author = "Sohn Won-pyung"
@@ -95,10 +105,13 @@ class DemoSeedCommandTest(unittest.TestCase):
         self.assertEqual(result.exit_code, 0, result.output)
         self.assertIn("created users=0, listings=0", result.output)
         with self.app.app_context():
-            listing = BookListing.query.one()
+            listing = BookListing.query.filter_by(
+                owner_id=User.query.filter_by(username="mina").one().id,
+                title="The Vegetarian",
+            ).one()
             self.assertEqual(listing.id, listing_id)
-            self.assertEqual(listing.title, "The Odyssey")
-            self.assertEqual(listing.author, "Homer")
+            self.assertEqual(listing.title, "The Vegetarian")
+            self.assertEqual(listing.author, "Han Kang")
 
     def test_reset_removes_only_the_demo_listing_requests(self):
         with patch.dict(
@@ -125,6 +138,7 @@ class DemoSeedCommandTest(unittest.TestCase):
                     BorrowRequest(listing=other_listing, borrower=mina),
                 ]
             )
+            demo_listing.availability = False
             db.session.commit()
             demo_listing_id = demo_listing.id
             other_listing_id = other_listing.id
@@ -143,8 +157,9 @@ class DemoSeedCommandTest(unittest.TestCase):
                 BorrowRequest.query.filter_by(listing_id=other_listing_id).count(),
                 1,
             )
+            self.assertTrue(db.session.get(BookListing, demo_listing_id).availability)
             self.assertEqual(User.query.count(), 3)
-            self.assertEqual(BookListing.query.count(), 2)
+            self.assertEqual(BookListing.query.count(), 5)
 
     def test_reset_is_safe_when_demo_data_does_not_exist(self):
         result = self.runner.invoke(args=["reset-demo-requests"])

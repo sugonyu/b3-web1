@@ -11,13 +11,19 @@ from flask import Blueprint, jsonify, request
 from flask_login import current_user, login_required
 
 from .db import db
-from .db.models import BookListing, BorrowRequest, User
+from .db.models import BookListing, User
 from .services.borrow_requests import (
     BorrowRequestServiceError,
-    create_borrow_request as create_borrow_request_service,
-    get_authorized_borrow_request,
+    cancel_borrow_request_service,
+    confirm_book_return_service,
+    create_borrow_request_service,
+    get_authorized_borrow_request_service,
+    list_borrower_requests_service,
+    list_listing_owner_requests_service,
+    request_return_confirmation_service,
+    update_borrow_request_status_service,
 )
-from .services.health import get_health_status
+from .services.health import get_health_status_service
 
 
 api = Blueprint("api", __name__, url_prefix="/api")
@@ -26,7 +32,7 @@ api = Blueprint("api", __name__, url_prefix="/api")
 @api.get("/health")
 def health():
     """frontend와 운영 검수가 사용할 최소 상태 endpoint."""
-    return jsonify(get_health_status())
+    return jsonify(get_health_status_service())
 
 
 def listing_to_dict(listing):
@@ -50,6 +56,7 @@ def borrow_request_to_dict(borrow_request):
         "id": borrow_request.id,
         "status": borrow_request.status,
         "listing_id": borrow_request.listing_id,
+        "listing": listing_to_dict(borrow_request.listing),
         "borrower": {
             "id": borrow_request.borrower.id,
             "username": borrow_request.borrower.username,
@@ -198,17 +205,13 @@ def delete_listing(listing_id):
 
 
 @api.post("/listings/<int:listing_id>/requests")
+@login_required
 def create_borrow_request(listing_id):
-    """대여 가능한 BookListing에 borrower의 pending 요청을 생성한다."""
-    data = request.get_json(silent=True)
-
-    if not isinstance(data, dict):
-        return jsonify({"error": "A JSON object is required"}), 400
-
+    """현재 로그인 사용자의 pending 요청을 생성한다."""
     try:
         borrow_request = create_borrow_request_service(
             listing_id,
-            data.get("borrower_id"),
+            current_user.id,
         )
     except BorrowRequestServiceError as error:
         return jsonify({"error": error.message}), error.status_code
@@ -216,12 +219,42 @@ def create_borrow_request(listing_id):
     return jsonify({"request": borrow_request_to_dict(borrow_request)}), 201
 
 
+@api.get("/requests")
+@login_required
+def get_borrower_requests():
+    """현재 사용자가 직접 만든 BorrowRequest만 최신순으로 반환한다."""
+    borrow_requests = list_borrower_requests_service(current_user.id)
+    return jsonify(
+        {
+            "requests": [
+                borrow_request_to_dict(borrow_request)
+                for borrow_request in borrow_requests
+            ]
+        }
+    )
+
+
+@api.get("/listing-requests")
+@login_required
+def get_listing_owner_requests():
+    """현재 사용자의 책에 들어온 BorrowRequest만 최신순으로 반환한다."""
+    borrow_requests = list_listing_owner_requests_service(current_user.id)
+    return jsonify(
+        {
+            "requests": [
+                borrow_request_to_dict(borrow_request)
+                for borrow_request in borrow_requests
+            ]
+        }
+    )
+
+
 @api.get("/requests/<int:request_id>")
 @login_required
 def get_borrow_request(request_id):
     """요청자 본인 또는 listing owner에게 BorrowRequest 하나를 반환한다."""
     try:
-        borrow_request = get_authorized_borrow_request(
+        borrow_request = get_authorized_borrow_request_service(
             request_id,
             current_user.id,
         )
@@ -232,46 +265,30 @@ def get_borrow_request(request_id):
 
 
 @api.patch("/requests/<int:request_id>")
+@login_required
 def update_borrow_request(request_id):
-    """listing owner만 허용된 순서로 BorrowRequest 상태를 변경한다."""
-    borrow_request = db.session.get(BorrowRequest, request_id)
-
-    if borrow_request is None:
-        return jsonify({"error": "borrow request not found"}), 404
-
+    """로그인 역할에 따라 취소 또는 owner decision 상태를 변경한다."""
     data = request.get_json(silent=True)
 
     if not isinstance(data, dict):
         return jsonify({"error": "A JSON object is required"}), 400
 
-    owner_id = data.get("owner_id")
     next_status = data.get("status")
 
-    if isinstance(owner_id, bool) or not isinstance(owner_id, int):
-        return jsonify({"error": "owner_id must be an integer"}), 400
-
-    if borrow_request.listing.owner_id != owner_id:
-        return jsonify({"error": "owner permission required"}), 403
-
-    allowed_transitions = {
-        "pending": {"approved", "rejected"},
-        "approved": {"returned"},
-    }
-    allowed_next_statuses = allowed_transitions.get(borrow_request.status, set())
-
-    if next_status not in allowed_next_statuses:
-        return jsonify({"error": "invalid borrow request transition"}), 409
-
-    if next_status == "approved" and not borrow_request.listing.availability:
-        return jsonify({"error": "listing is not available"}), 409
-
-    borrow_request.status = next_status
-
-    if next_status == "approved":
-        borrow_request.listing.availability = False
-    elif next_status == "returned":
-        borrow_request.listing.availability = True
-
-    db.session.commit()
+    try:
+        if next_status == "cancelled":
+            borrow_request = cancel_borrow_request_service(request_id, current_user.id)
+        elif next_status == "return_pending":
+            borrow_request = request_return_confirmation_service(request_id, current_user.id)
+        elif next_status == "returned":
+            borrow_request = confirm_book_return_service(request_id, current_user.id)
+        else:
+            borrow_request = update_borrow_request_status_service(
+                request_id,
+                current_user.id,
+                next_status,
+            )
+    except BorrowRequestServiceError as error:
+        return jsonify({"error": error.message}), error.status_code
 
     return jsonify({"request": borrow_request_to_dict(borrow_request)})

@@ -19,7 +19,7 @@ class BorrowRequestServiceError(Exception):
         self.request_id = request_id
 
 
-def create_borrow_request(listing_id, borrower_id):
+def create_borrow_request_service(listing_id, borrower_id):
     """검증된 pending BorrowRequest를 저장하고 model 객체를 반환한다."""
     listing = db.session.get(BookListing, listing_id)
 
@@ -43,7 +43,7 @@ def create_borrow_request(listing_id, borrower_id):
     active_request = BorrowRequest.query.filter(
         BorrowRequest.listing_id == listing.id,
         BorrowRequest.borrower_id == borrower.id,
-        BorrowRequest.status.in_(("pending", "approved")),
+        BorrowRequest.status.in_(("pending", "approved", "return_pending")),
     ).first()
 
     if active_request is not None:
@@ -60,7 +60,7 @@ def create_borrow_request(listing_id, borrower_id):
     return borrow_request
 
 
-def get_authorized_borrow_request(request_id, user_id):
+def get_authorized_borrow_request_service(request_id, user_id):
     """요청자 또는 listing owner에게만 지정된 BorrowRequest를 반환한다."""
     borrow_request = db.session.get(BorrowRequest, request_id)
 
@@ -78,4 +78,140 @@ def get_authorized_borrow_request(request_id, user_id):
             403,
         )
 
+    return borrow_request
+
+
+def list_borrower_requests_service(borrower_id):
+    """현재 사용자가 직접 만든 BorrowRequest만 최신순으로 반환한다."""
+    return (
+        BorrowRequest.query.filter_by(borrower_id=borrower_id)
+        .order_by(BorrowRequest.id.desc())
+        .all()
+    )
+
+
+def list_listing_owner_requests_service(owner_id):
+    """현재 사용자가 소유한 listing에 들어온 요청만 최신순으로 반환한다."""
+    return (
+        BorrowRequest.query.join(BookListing)
+        .filter(BookListing.owner_id == owner_id)
+        .order_by(BorrowRequest.id.desc())
+        .all()
+    )
+
+
+def get_borrower_decision_context_service(borrow_request):
+    """owner가 판단할 수 있는 privacy-safe borrower 집계만 반환한다."""
+    borrower_requests = BorrowRequest.query.filter_by(
+        borrower_id=borrow_request.borrower_id
+    )
+    completed_exchanges = borrower_requests.filter_by(status="returned").count()
+    active_requests = borrower_requests.filter(
+        BorrowRequest.status.in_(("pending", "approved", "return_pending"))
+    ).count()
+
+    return {
+        "request_created_at": borrow_request.created_at,
+        "member_since": borrow_request.borrower.created_at,
+        "completed_exchanges": completed_exchanges,
+        "active_requests": active_requests,
+        "is_first_time_borrower": completed_exchanges == 0,
+    }
+
+
+def get_approved_contact_context_service(borrow_request, viewer_id):
+    """승인된 요청의 두 당사자에게만 상대방 연락처를 반환한다."""
+    if borrow_request.status not in ("approved", "return_pending"):
+        return None
+
+    if viewer_id == borrow_request.borrower_id:
+        contact_user = borrow_request.listing.owner
+        contact_role = "Book owner"
+    elif viewer_id == borrow_request.listing.owner_id:
+        contact_user = borrow_request.borrower
+        contact_role = "Borrower"
+    else:
+        raise BorrowRequestServiceError(
+            "borrow request access forbidden",
+            403,
+        )
+
+    return {
+        "username": contact_user.username,
+        "email": contact_user.email,
+        "role": contact_role,
+    }
+
+
+def update_borrow_request_status_service(request_id, owner_id, next_status):
+    """listing owner의 허용된 결정만 저장하고 변경된 요청을 반환한다."""
+    borrow_request = db.session.get(BorrowRequest, request_id)
+
+    if borrow_request is None:
+        raise BorrowRequestServiceError("borrow request not found", 404)
+
+    # browser body가 주장하는 owner가 아니라 로그인 session ID를 받는다.
+    if borrow_request.listing.owner_id != owner_id:
+        raise BorrowRequestServiceError("owner permission required", 403)
+
+    allowed_transitions = {"pending": {"approved", "rejected"}}
+    if next_status not in allowed_transitions.get(borrow_request.status, set()):
+        raise BorrowRequestServiceError("invalid borrow request transition", 409)
+
+    if next_status == "approved" and not borrow_request.listing.availability:
+        raise BorrowRequestServiceError("listing is not available", 409)
+
+    borrow_request.status = next_status
+    if next_status == "approved":
+        borrow_request.listing.availability = False
+    db.session.commit()
+    return borrow_request
+
+
+def request_return_confirmation_service(request_id, borrower_id):
+    """borrower가 실제 반납 후 owner 확인을 요청한다."""
+    borrow_request = db.session.get(BorrowRequest, request_id)
+    if borrow_request is None:
+        raise BorrowRequestServiceError("borrow request not found", 404)
+    if borrow_request.borrower_id != borrower_id:
+        raise BorrowRequestServiceError("borrower permission required", 403)
+    if borrow_request.status != "approved":
+        raise BorrowRequestServiceError("return cannot be requested", 409)
+
+    borrow_request.status = "return_pending"
+    db.session.commit()
+    return borrow_request
+
+
+def confirm_book_return_service(request_id, owner_id):
+    """listing owner가 책을 받은 뒤 교환을 returned로 완료한다."""
+    borrow_request = db.session.get(BorrowRequest, request_id)
+    if borrow_request is None:
+        raise BorrowRequestServiceError("borrow request not found", 404)
+    if borrow_request.listing.owner_id != owner_id:
+        raise BorrowRequestServiceError("owner permission required", 403)
+    if borrow_request.status != "return_pending":
+        raise BorrowRequestServiceError("return cannot be confirmed", 409)
+
+    borrow_request.status = "returned"
+    borrow_request.listing.availability = True
+    db.session.commit()
+    return borrow_request
+
+
+def cancel_borrow_request_service(request_id, borrower_id):
+    """요청자 본인이 아직 pending인 요청만 취소한다."""
+    borrow_request = db.session.get(BorrowRequest, request_id)
+
+    if borrow_request is None:
+        raise BorrowRequestServiceError("borrow request not found", 404)
+
+    if borrow_request.borrower_id != borrower_id:
+        raise BorrowRequestServiceError("borrower permission required", 403)
+
+    if borrow_request.status != "pending":
+        raise BorrowRequestServiceError("borrow request cannot be cancelled", 409)
+
+    borrow_request.status = "cancelled"
+    db.session.commit()
     return borrow_request

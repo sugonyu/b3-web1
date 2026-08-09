@@ -8,13 +8,17 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
   </head>
   <body>
-    <main>
+    <main class="product-main">
+      {% include "bookloop/_dev_user_switcher.html" %}
       <a class="brand-badge" href="{{ url_for('jinja_client.product_home') }}">BookLoop</a>
-      <h1>Request unavailable</h1>
-      <p class="error-message" role="alert">
-        <strong>{{ error.status_code }}</strong> · {{ error.message }}
-      </p>
-      <a href="{{ url_for('jinja_client.product_home') }}">Back to books</a>
+      {% include "bookloop/_product_nav.html" %}
+      <h1>Request result</h1>
+      <section class="feedback feedback-{{ feedback.tone }}" role="alert">
+        <h2>{{ feedback.icon }} {{ feedback.title }}</h2>
+        <p><strong>{{ feedback.status_code }}</strong> · {{ feedback.message }}</p>
+        <a href="{{ url_for('jinja_client.product_home') }}">Back to books</a>
+      </section>
+      {% include "bookloop/_product_footer.html" %}
     </main>
   </body>
 </html>

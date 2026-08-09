@@ -1,6 +1,6 @@
 """재현 가능한 BookLoop 데모 시작 데이터를 만드는 Flask CLI 명령.
 
-이 명령은 User 세 명과 BookListing 한 권만 준비한다. 발표에서 생성 과정을
+이 명령은 User 세 명과 BookListing 네 권을 준비한다. 발표에서 생성 과정을
 증명해야 하는 BorrowRequest는 의도적으로 만들지 않는다.
 """
 
@@ -8,6 +8,7 @@ import os
 
 import click
 from flask import Flask
+from sqlalchemy import inspect, text
 from werkzeug.security import generate_password_hash
 
 from ....db import db
@@ -19,30 +20,72 @@ DEMO_USERS = (
         "username": "tony",
         "email": "tony.demo@bookloop.local",
         "general_area": "Montreal",
+        "is_admin": True,
     },
     {
         "username": "mina",
         "email": "mina.demo@bookloop.local",
         "general_area": "Montreal",
+        "is_admin": False,
     },
     {
         "username": "alex",
         "email": "alex.demo@bookloop.local",
         "general_area": "Montreal",
+        "is_admin": False,
     },
 )
 
-DEMO_LISTING = {
-    "title": "The Odyssey",
-    "author": "Homer",
-}
+DEMO_LISTINGS = (
+    {
+        "title": "The Odyssey",
+        "author": "Homer",
+        "owner_username": "tony",
+    },
+    {
+        "title": "The Iliad",
+        "author": "Homer",
+        "owner_username": "tony",
+    },
+    {
+        "title": "The Vegetarian",
+        "author": "Han Kang",
+        "owner_username": "mina",
+    },
+    {
+        "title": "Human Acts",
+        "author": "Han Kang",
+        "owner_username": "mina",
+    },
+)
 
 # W2-08 이전 demo DB를 다시 seed할 때 같은 listing row를 새 책으로 갱신한다.
 LEGACY_DEMO_LISTING_TITLE = "Almond"
 
 
+def ensure_user_admin_column():
+    """기존 SQLite User table에 관리자 flag를 비파괴 방식으로 추가한다."""
+    inspector = inspect(db.engine)
+    if "user" not in inspector.get_table_names():
+        return False
+
+    column_names = {column["name"] for column in inspector.get_columns("user")}
+    if "is_admin" in column_names:
+        return False
+
+    with db.engine.begin() as connection:
+        connection.execute(
+            text(
+                'ALTER TABLE "user" ADD COLUMN '
+                "is_admin BOOLEAN NOT NULL DEFAULT 0"
+            )
+        )
+    return True
+
+
 def seed_demo_data(password):
     """시작 데이터가 없을 때만 생성하고 생성·전체 개수를 반환한다."""
+    ensure_user_admin_column()
     created_users = 0
     users_by_name = {}
 
@@ -59,35 +102,42 @@ def seed_demo_data(password):
             # 로컬 데모 계정은 seed를 다시 실행할 때 같은 데모 암호로 동기화한다.
             # 실제 사용자 암호를 다루는 운영용 reset 기능으로 확장하지 않는다.
             user.password_hash = generate_password_hash(password)
+            user.email = user_data["email"]
+            user.general_area = user_data["general_area"]
+            user.is_admin = user_data["is_admin"]
         users_by_name[user_data["username"]] = user
 
-    # Mina의 id가 listing 조회에 필요하므로 먼저 flush한다. 아직 commit은 하지 않는다.
+    # owner ID가 listing 조회에 필요하므로 먼저 flush한다. 아직 commit은 하지 않는다.
     db.session.flush()
-    mina = users_by_name["mina"]
-    listing = BookListing.query.filter_by(
-        title=DEMO_LISTING["title"],
-        owner_id=mina.id,
-    ).one_or_none()
-
-    if listing is None:
+    created_listings = 0
+    for listing_data in DEMO_LISTINGS:
+        owner = users_by_name[listing_data["owner_username"]]
         listing = BookListing.query.filter_by(
-            title=LEGACY_DEMO_LISTING_TITLE,
-            owner_id=mina.id,
+            title=listing_data["title"],
+            owner_id=owner.id,
         ).one_or_none()
 
-    created_listings = 0
-    if listing is None:
-        listing = BookListing(
-            **DEMO_LISTING,
-            availability=True,
-            owner=mina,
-        )
-        db.session.add(listing)
-        created_listings = 1
-    else:
-        listing.title = DEMO_LISTING["title"]
-        listing.author = DEMO_LISTING["author"]
-        listing.availability = True
+        # 이전 Mina demo book row는 한강의 The Vegetarian으로 재사용한다.
+        if listing is None and listing_data["title"] == "The Vegetarian":
+            listing = BookListing.query.filter_by(
+                owner_id=owner.id,
+            ).filter(
+                BookListing.title.in_(("The Odyssey", LEGACY_DEMO_LISTING_TITLE))
+            ).first()
+
+        if listing is None:
+            listing = BookListing(
+                title=listing_data["title"],
+                author=listing_data["author"],
+                availability=True,
+                owner=owner,
+            )
+            db.session.add(listing)
+            created_listings += 1
+        else:
+            listing.title = listing_data["title"]
+            listing.author = listing_data["author"]
+            listing.availability = True
 
     db.session.commit()
 
@@ -101,23 +151,43 @@ def seed_demo_data(password):
 
 
 def reset_demo_requests():
-    """Mina의 demo listing에 연결된 BorrowRequest만 삭제한다."""
+    """네 demo listing에 연결된 BorrowRequest만 삭제한다."""
     mina = User.query.filter_by(username="mina").one_or_none()
-    if mina is None:
+    tony = User.query.filter_by(username="tony").one_or_none()
+    if mina is None and tony is None:
         return {"deleted_requests": 0, "remaining_requests": BorrowRequest.query.count()}
 
-    listing = BookListing.query.filter(
-        BookListing.owner_id == mina.id,
-        BookListing.title.in_(
-            (DEMO_LISTING["title"], LEGACY_DEMO_LISTING_TITLE)
-        ),
-    ).first()
-    if listing is None:
+    demo_listing_ids = []
+    if mina is not None:
+        demo_listing_ids.extend(
+            listing.id
+            for listing in BookListing.query.filter(
+                BookListing.owner_id == mina.id,
+                BookListing.title.in_(
+                    ("The Vegetarian", "Human Acts", "The Odyssey", LEGACY_DEMO_LISTING_TITLE)
+                ),
+            ).all()
+        )
+    if tony is not None:
+        demo_listing_ids.extend(
+            listing.id
+            for listing in BookListing.query.filter(
+                BookListing.owner_id == tony.id,
+                BookListing.title.in_(("The Odyssey", "The Iliad")),
+            ).all()
+        )
+
+    if not demo_listing_ids:
         return {"deleted_requests": 0, "remaining_requests": BorrowRequest.query.count()}
 
-    deleted_requests = BorrowRequest.query.filter_by(
-        listing_id=listing.id,
+    deleted_requests = BorrowRequest.query.filter(
+        BorrowRequest.listing_id.in_(demo_listing_ids)
     ).delete(synchronize_session=False)
+    # 승인 데모 뒤에도 다음 리허설이 같은 available 상태에서 시작되게 한다.
+    BookListing.query.filter(BookListing.id.in_(demo_listing_ids)).update(
+        {BookListing.availability: True},
+        synchronize_session=False,
+    )
     db.session.commit()
 
     return {
@@ -127,11 +197,11 @@ def reset_demo_requests():
 
 
 def register_seed_commands(app: Flask):
-    """애플리케이션에 D2 demo 준비·초기화 CLI 명령을 등록한다."""
+    """애플리케이션에 BookLoop demo 준비·초기화 CLI 명령을 등록한다."""
 
     @app.cli.command("seed-demo")
     def seed_demo_command():
-        """Tony, Mina, Alex와 Mina의 The Odyssey listing을 준비한다."""
+        """Tony·Mina·Alex와 Homer·Han Kang demo listing을 준비한다."""
         password = os.getenv("BOOKLOOP_DEMO_PASSWORD")
         if not password:
             raise click.ClickException(
@@ -151,7 +221,7 @@ def register_seed_commands(app: Flask):
 
     @app.cli.command("reset-demo-requests")
     def reset_demo_requests_command():
-        """Mina의 The Odyssey demo 요청만 삭제하고 시작 상태로 되돌린다."""
+        """네 demo listing의 요청만 삭제하고 시작 상태로 되돌린다."""
         db.create_all()
         result = reset_demo_requests()
         click.echo(

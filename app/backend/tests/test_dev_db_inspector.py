@@ -1,6 +1,7 @@
 """개발 전용 read-only database inspector의 접근과 노출 경계 테스트."""
 
 import unittest
+from datetime import datetime, timezone
 
 from bookloop import create_app
 from bookloop.db import db
@@ -89,7 +90,16 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
         self.assertIn(b"tony", response.data)
         self.assertIn(b"The Odyssey", response.data)
         self.assertIn(b"pending", response.data)
+        self.assertIn(b'aria-label="Borrow request status legend"', response.data)
+        self.assertIn(b'class="status-pill status-pending"', response.data)
+        self.assertIn(b'class="status-pill status-approved"', response.data)
+        self.assertIn(b'class="status-pill status-rejected"', response.data)
+        self.assertIn(b'class="status-pill status-cancelled"', response.data)
+        self.assertIn(b'class="status-pill status-returned"', response.data)
+        self.assertIn(b"<th>Created</th><th>Status</th><th>Listing</th><th>Owner</th><th>Borrower</th>", response.data)
+        self.assertIn(b"Created (Toronto)", response.data)
         self.assertIn(b"<code>#1</code> \xc2\xb7 The Odyssey", response.data)
+        self.assertIn(b"<code>#1</code> \xc2\xb7 mina", response.data)
         self.assertIn(b"<code>#2</code> \xc2\xb7 tony", response.data)
 
         # 자주 확인하는 거래 흐름부터 위에 보이도록 model section 순서를 고정한다.
@@ -104,6 +114,33 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
         self.assertNotIn(b"tony.private@example.com", response.data)
         self.assertNotIn(b"never-render-this-hash", response.data)
         self.assertNotIn(b"another-private-hash", response.data)
+        response.close()
+
+    def test_inspector_shows_newest_rows_first_with_toronto_time(self):
+        app = self.create_test_app(inspector_enabled=True, debug=True)
+        self.seed_database(app)
+
+        with app.app_context():
+            listing = BookListing.query.one()
+            borrower = User.query.filter_by(username="tony").one()
+            first_request = BorrowRequest.query.one()
+            first_request.created_at = datetime(
+                2026, 8, 5, 16, 0, tzinfo=timezone.utc
+            )
+            newest_request = BorrowRequest(
+                listing=listing,
+                borrower=borrower,
+                created_at=datetime(2026, 8, 6, 21, 30, tzinfo=timezone.utc),
+            )
+            db.session.add(newest_request)
+            db.session.commit()
+
+        response = app.test_client().get("/dev/db")
+        html = response.get_data(as_text=True)
+
+        self.assertLess(html.index("<td>2</td>"), html.index("<td>1</td>"))
+        self.assertIn("Aug 6 · 5:30 PM", html)
+        self.assertIn("Aug 5 · 12:00 PM", html)
         response.close()
 
     def test_inspector_get_does_not_change_database_rows(self):

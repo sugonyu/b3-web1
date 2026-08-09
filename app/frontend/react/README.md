@@ -56,3 +56,6 @@ frontend/react/
 4. Tony가 React 구현 시작을 명시적으로 결정한다.
 
 그전까지 이 폴더는 Vanilla → React 전환 계획을 보여주는 문서 경계로만 유지한다.
+
+Jinja 제품 기능을 React로 같은 순서에 따라 재현할 때는
+[`JINJA_PARITY_REPLAY_PLAN.md`](JINJA_PARITY_REPLAY_PLAN.md)를 기준으로 사용한다.

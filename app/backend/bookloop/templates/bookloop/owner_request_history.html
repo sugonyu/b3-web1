@@ -1,0 +1,74 @@
+<!doctype html>
+{% from "bookloop/_user_identity.html" import user_icon %}
+{% from "bookloop/_book_identity.html" import book_title %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLoop · Requests for My Books</title>
+    <link rel="icon" href="{{ url_for('static', filename='bookloop/python-favicon.svg') }}" type="image/svg+xml">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
+  </head>
+  <body>
+    <main class="product-main">
+      {% include "bookloop/_dev_user_switcher.html" %}
+      <a class="brand-badge" href="{{ url_for('jinja_client.product_home') }}">BookLoop</a>
+      {% include "bookloop/_product_nav.html" %}
+      <p class="eyebrow">Signed in as {{ current_user.username }} {{ user_icon(current_user) }} · User #{{ current_user.id }}</p>
+      <h1>Requests for my books</h1>
+      <p>Only requests for listings owned by this account are shown.</p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <section class="feedback feedback-{{ category }}" role="status">
+            <h2>✅ Decision saved</h2>
+            <p>{{ message }}</p>
+          </section>
+        {% endfor %}
+      {% endwith %}
+
+      <div class="data-table-wrap">
+        <table class="data-table request-table">
+          <thead>
+            <tr>
+              <th scope="col">Request</th>
+              <th scope="col">Book</th>
+              <th scope="col">Borrower · Area</th>
+              <th scope="col">Status</th>
+              <th scope="col">Decision</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for borrow_request in borrow_requests %}
+              <tr>
+                <td data-label="Request">
+                  <a href="{{ url_for('jinja_client.request_detail', request_id=borrow_request.id) }}">#{{ borrow_request.id }}</a>
+                </td>
+                <td data-label="Book">
+                  <strong>{{ book_title(borrow_request.listing.title) }}</strong><br>
+                  <small>{{ borrow_request.listing.author }}</small>
+                </td>
+                <td data-label="Borrower · Area"><a href="{{ url_for('jinja_client.user_profile', user_id=borrow_request.borrower.id) }}">{{ borrow_request.borrower.username }} {{ user_icon(borrow_request.borrower) }}</a> · {{ borrow_request.borrower.general_area }}</td>
+                <td data-label="Status"><span class="status-pill status-{{ borrow_request.status }}">{{ borrow_request.status.replace('_', ' ')|title }}</span></td>
+                <td data-label="Decision">
+                  <a href="{{ url_for('jinja_client.request_detail', request_id=borrow_request.id) }}">
+                    {{ "Review & decide" if borrow_request.status == "pending" else ("Confirm return" if borrow_request.status == "return_pending" else "View status") }}
+                  </a>
+                </td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="5">No one has requested one of your books yet.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <a href="{{ url_for('jinja_client.borrower_request_history') }}">View my borrowing requests</a>
+      ·
+      <a href="{{ url_for('jinja_client.product_home') }}">Back to books</a>
+      {% include "bookloop/_product_footer.html" %}
+    </main>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+{% from "bookloop/_user_identity.html" import user_icon %}
+{% if config.DEBUG and config.ENABLE_DEV_USER_SWITCHER %}
+  <aside id="dev-user-switcher" class="dev-user-switcher" aria-label="Developer user view switcher" hidden>
+    <strong>DEV · Viewing as {{ current_user.username if current_user.is_authenticated else "guest" }}{% if current_user.is_authenticated %} {{ user_icon(current_user) }}{% endif %}</strong>
+    <div class="dev-user-switcher-actions">
+      {% for username, icon, label in [("tony", "👨", "Tony"), ("mina", "👩", "Mina"), ("alex", "🕵️", "Alex")] %}
+        <form action="{{ url_for('user_switcher.switch_user', username=username) }}" method="post">
+          <button type="submit"{% if current_user.is_authenticated and current_user.username == username %} disabled{% endif %}>{{ icon }} {{ label }}</button>
+        </form>
+      {% endfor %}
+    </div>
+  </aside>
+{% endif %}

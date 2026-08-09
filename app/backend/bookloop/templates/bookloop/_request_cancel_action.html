@@ -1,0 +1,5 @@
+{% if current_user.id == borrow_request.borrower_id and borrow_request.status == "pending" %}
+  <form class="request-cancel-action" action="{{ url_for('jinja_client.cancel_request', request_id=borrow_request.id) }}" method="post">
+    <button class="request-cancel-button" type="submit">↩ Cancel request</button>
+  </form>
+{% endif %}

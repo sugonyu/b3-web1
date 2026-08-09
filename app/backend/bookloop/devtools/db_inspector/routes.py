@@ -7,6 +7,7 @@ database를 변경하는 POST, PATCH, DELETE route를 의도적으로 제공하�
 from flask import Blueprint, abort, current_app, render_template
 
 from ...db.models import BookListing, BorrowRequest, User
+from ...services.time_display import format_short_local_datetime, format_toronto_datetime
 
 
 db_inspector = Blueprint(
@@ -40,20 +41,28 @@ def protect_developer_tool():
 @db_inspector.get("")
 @db_inspector.get("/")
 def index():
-    """세 핵심 model을 ID 순서로 읽어 Inspector template에 전달한다.
+    """세 핵심 model을 newest-first로 읽어 Inspector template에 전달한다.
 
     query 결과는 SQLAlchemy 객체이지만 template은 허용된 field만 명시적으로
     출력한다. 특히 User의 email과 password_hash는 절대로 화면에 표시하지 않는다.
     이 route에는 commit, flush, add, delete 호출이 없으므로 GET 전후 database
     상태가 바뀌지 않는다.
     """
-    users = User.query.order_by(User.id).all()
-    listings = BookListing.query.order_by(BookListing.id).all()
-    borrow_requests = BorrowRequest.query.order_by(BorrowRequest.id).all()
+    users = User.query.order_by(User.created_at.desc(), User.id.desc()).all()
+    listings = BookListing.query.order_by(
+        BookListing.created_at.desc(),
+        BookListing.id.desc(),
+    ).all()
+    borrow_requests = BorrowRequest.query.order_by(
+        BorrowRequest.created_at.desc(),
+        BorrowRequest.id.desc(),
+    ).all()
 
     return render_template(
         "db_inspector/index.html",
         users=users,
         listings=listings,
         borrow_requests=borrow_requests,
+        format_created_at=format_toronto_datetime,
+        format_request_time=format_short_local_datetime,
     )

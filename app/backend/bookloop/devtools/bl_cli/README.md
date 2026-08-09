@@ -5,7 +5,7 @@ BL-CLI는 BookLoop의 로컬 개발·발표 준비 명령을 한 입구로 제�
 
 코드 맵 버전은 다음처럼 관리한다.
 
-- `bookloop/README-v1.0.html`: v1.0 기준선 — Flask package 중심의 원래 구조
+- `bookloop/README-v1.0-d2.html`: D2 v1.0 기준선 — Flask package 중심의 원래 구조
 - `bookloop/README.html`: v1.1 현재본 — `bl_cli.py`와 `bl_cli/seed/` 흐름 포함
 
 따라서 v1.0은 과거 구조를 비교할 때 보존하고, 일상적인 현재 구조 확인은 항상
@@ -18,7 +18,8 @@ backend/bl_cli.py
 └── bookloop/devtools/bl_cli/
     ├── commands.py
     │   ├── seed-demo → seed.seed_demo_data()
-    │   └── reset-demo-requests → seed.reset_demo_requests()
+    │   ├── reset-demo-requests → seed.reset_demo_requests()
+    │   └── upgrade-created-at → 기존 DB의 timestamp schema 보완
     └── seed/
         └── commands.py
 ```
@@ -43,7 +44,16 @@ python3 bl_cli.py --help
 ```text
 BL-CLI
 ├── seed-demo
-└── reset-demo-requests
+├── reset-demo-requests
+└── upgrade-created-at
+```
+
+기존 SQLite를 새 `created_at` model과 맞출 때 한 번 실행한다. table과 row를 삭제하지
+않고 세 table에 nullable column만 추가한다. 가상환경을 활성화하지 않았다면 프로젝트
+interpreter를 직접 사용한다.
+
+```bash
+.venv/bin/python bl_cli.py upgrade-created-at
 ```
 
 Seed는 BL-CLI가 제공하는 기능이므로 `bl_cli/seed/`에 포함한다. 다만 상위

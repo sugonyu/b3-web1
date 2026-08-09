@@ -1,4 +1,6 @@
 <!doctype html>
+{% from "bookloop/_user_identity.html" import user_icon %}
+{% from "bookloop/_book_identity.html" import book_title %}
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -8,26 +10,69 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
   </head>
   <body>
-    <main>
+    <main class="product-main">
+      {% include "bookloop/_dev_user_switcher.html" %}
       <a class="brand-badge" href="{{ url_for('jinja_client.product_home') }}">BookLoop</a>
+      {% include "bookloop/_product_nav.html" %}
       <p class="eyebrow">Saved in SQLite</p>
       <h1>Request #{{ borrow_request.id }}</h1>
 
       <article class="request-card">
-        <p class="status-pill">{{ borrow_request.status|capitalize }}</p>
-        <h2>{{ borrow_request.listing.title }}</h2>
+        <p class="status-pill status-{{ borrow_request.status }}">{{ borrow_request.status.replace('_', ' ')|title }}</p>
+        <h2>{{ book_title(borrow_request.listing.title) }}</h2>
         <dl>
           <dt>Borrower</dt>
-          <dd>{{ borrow_request.borrower.username }}</dd>
+          <dd><a href="{{ url_for('jinja_client.user_profile', user_id=borrow_request.borrower.id) }}">{{ borrow_request.borrower.username }} {{ user_icon(borrow_request.borrower) }}</a> · User #{{ borrow_request.borrower.id }}</dd>
           <dt>Owner</dt>
-          <dd>{{ borrow_request.listing.owner.username }}</dd>
-          <dt>General area</dt>
-          <dd>{{ borrow_request.listing.owner.general_area }}</dd>
+          <dd><a href="{{ url_for('jinja_client.user_profile', user_id=borrow_request.listing.owner.id) }}">{{ borrow_request.listing.owner.username }} {{ user_icon(borrow_request.listing.owner) }}</a></dd>
+          <dt>Borrower area</dt>
+          <dd>{{ borrow_request.borrower.general_area }}</dd>
         </dl>
       </article>
 
-      <p>The request was saved successfully. Reopen this URL to read the same request.</p>
-      <a href="{{ url_for('jinja_client.product_home') }}">Back to books</a>
+      {% if decision_context %}
+        <section class="decision-context" aria-labelledby="decision-context-heading">
+          <p class="eyebrow">Privacy-safe decision information</p>
+          <h2 id="decision-context-heading">Mina's Decision Context</h2>
+          <dl class="decision-context-grid">
+            <div><dt>Requested at</dt><dd>{{ format_toronto_datetime(decision_context.request_created_at, "Unknown") }}</dd></div>
+            <div><dt>Member since</dt><dd>{{ format_toronto_date(decision_context.member_since) }}</dd></div>
+            <div><dt>Completed exchanges</dt><dd>{{ decision_context.completed_exchanges }}</dd></div>
+            <div><dt>Active requests</dt><dd>{{ decision_context.active_requests }}</dd></div>
+          </dl>
+          {% if decision_context.is_first_time_borrower %}
+            <p class="context-note">First-time borrower · No completed exchange history yet.</p>
+          {% endif %}
+          {% if borrow_request.status == "approved" %}
+            <p class="privacy-note">Approved contact details are shared separately below. Unrelated book activity remains private.</p>
+          {% else %}
+            <p class="privacy-note">Private contact details and unrelated book activity are not shown.</p>
+          {% endif %}
+          {% include "bookloop/_request_decision_actions.html" %}
+        </section>
+      {% endif %}
+
+      {% include "bookloop/_request_cancel_action.html" %}
+      {% include "bookloop/_request_return_actions.html" %}
+
+      {% if approved_contact %}
+        <section class="approved-contact" aria-labelledby="approved-contact-heading">
+          <p class="eyebrow">Approved contact exchange</p>
+          <h2 id="approved-contact-heading">✉️ Contact {{ approved_contact.username }}</h2>
+          <p><strong>{{ approved_contact.role }}</strong></p>
+          <p><a href="mailto:{{ approved_contact.email }}">{{ approved_contact.email }}</a></p>
+          <p class="privacy-note">Visible only to the borrower and book owner after approval.</p>
+        </section>
+      {% endif %}
+
+      <section class="feedback feedback-success" role="status">
+        <h2>✅ Request status</h2>
+        <p>Request #{{ borrow_request.id }} is currently {{ borrow_request.status.replace('_', ' ')|title }}.</p>
+        <a href="{{ url_for('jinja_client.borrower_request_history') }}">🙋 Sent requests</a>
+        ·
+        <a href="{{ url_for('jinja_client.product_home') }}">Back to books</a>
+      </section>
+      {% include "bookloop/_product_footer.html" %}
     </main>
   </body>
 </html>

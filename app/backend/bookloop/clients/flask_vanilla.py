@@ -1,4 +1,4 @@
-"""Flask 전용 Vanilla client 파일을 `/vanilla/` 경로로 제공한다.
+"""JSON API client 방향을 시험하는 Flask Vanilla 파일을 `/vanilla/`에서 제공한다.
 
 AWP 참조:
 /home/sugonyu/jd/b2/test/test_py/b3-awp/classes/class19-jul-07-tue-flask-blueprints/
@@ -7,7 +7,8 @@ AWP 참조:
 보관한 Flask 전용 HTML/CSS/JavaScript 복사본을 `/vanilla/` 경로로 전달하는
 Blueprint다. 독립 JS Vanilla client는 `app/frontend/js-vanilla/`에서
 Port 8080으로 실행한다.
-Jinja 렌더링과 JSON API 처리도 담당하지 않는다.
+Jinja 렌더링과 JSON API 처리도 담당하지 않는다. 현재 JavaScript는
+`/api/health` 연결만 확인하며 제품 endpoint 소비는 미래 확장이다.
 """
 
 from pathlib import Path

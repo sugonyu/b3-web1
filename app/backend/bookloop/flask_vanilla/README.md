@@ -15,7 +15,7 @@ flask_vanilla/
 http://127.0.0.1:5000/vanilla/
 ```
 
-- `backend/bookloop/clients/client_vanilla.py`가 이 폴더를 제공한다.
+- `backend/bookloop/clients/flask_vanilla.py`가 이 폴더를 제공한다.
 - Jinja를 사용하지 않고 브라우저에서 순수 JavaScript를 실행한다.
 - 같은 origin의 Flask JSON API를 `fetch()`한다.
 

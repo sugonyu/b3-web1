@@ -1,11 +1,11 @@
-"""BookLoop client 비교 hub route와 핵심 링크 테스트."""
+"""BookLoop 개발용 비교 hub route와 핵심 링크 테스트."""
 
 import unittest
 
 from bookloop import create_app
 
 
-class ClientTestHubTest(unittest.TestCase):
+class DeveloperTestHubTest(unittest.TestCase):
     def setUp(self):
         self.app = create_app(
             {
@@ -15,7 +15,7 @@ class ClientTestHubTest(unittest.TestCase):
         )
         self.client = self.app.test_client()
 
-    def test_client_test_hub_groups_clients_api_and_tools(self):
+    def test_dev_test_hub_groups_clients_api_and_tools(self):
         response = self.client.get("/test")
 
         self.assertEqual(response.status_code, 200)

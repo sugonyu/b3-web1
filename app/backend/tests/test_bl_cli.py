@@ -30,6 +30,7 @@ class BookLoopCliTest(unittest.TestCase):
         self.assertIn("python3 bl_cli.py <command>", result.output)
         self.assertIn("seed-demo", result.output)
         self.assertIn("reset-demo-requests", result.output)
+        self.assertIn("upgrade-created-at", result.output)
 
     def test_seed_demo_command_uses_the_shared_seed_function(self):
         with patch.dict(
@@ -43,7 +44,8 @@ class BookLoopCliTest(unittest.TestCase):
         self.assertIn("Demo seed complete", result.output)
         with self.app.app_context():
             self.assertEqual(User.query.count(), 3)
-            self.assertEqual(BookListing.query.count(), 1)
+            self.assertEqual(BookListing.query.count(), 4)
+            self.assertTrue(User.query.filter_by(username="tony").one().is_admin)
             self.assertEqual(BorrowRequest.query.count(), 0)
 
     def test_reset_demo_requests_keeps_users_and_listing(self):
@@ -56,7 +58,7 @@ class BookLoopCliTest(unittest.TestCase):
 
         with self.app.app_context():
             tony = User.query.filter_by(username="tony").one()
-            listing = BookListing.query.one()
+            listing = BookListing.query.filter_by(title="The Odyssey").one()
             db.session.add(BorrowRequest(listing=listing, borrower=tony))
             db.session.commit()
 
@@ -67,7 +69,13 @@ class BookLoopCliTest(unittest.TestCase):
         with self.app.app_context():
             self.assertEqual(BorrowRequest.query.count(), 0)
             self.assertEqual(User.query.count(), 3)
-            self.assertEqual(BookListing.query.count(), 1)
+            self.assertEqual(BookListing.query.count(), 4)
+
+    def test_upgrade_created_at_is_safe_when_schema_is_current(self):
+        result = self.runner.invoke(self.cli, ["upgrade-created-at"])
+
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertIn("already current", result.output)
 
 
 if __name__ == "__main__":

@@ -25,13 +25,32 @@ ENABLE_DEV_DB_INSPECTOR=true
 그 외 환경에서는 같은 주소가 `404`를 반환한다. `.env.example`의 기본값은
 `false`이며 실제 `.env`는 Git에 기록하지 않는다.
 
-## v0.1이 보여주는 값
+## v0.2가 보여주는 값
 
 | Model | 표시 필드 |
 | --- | --- |
-| User | `id`, `username`, `general_area` |
-| BookListing | `id`, `title`, `author`, `availability`, `owner_id` |
-| BorrowRequest | `id`, `status`, `listing_id`, `borrower_id` |
+| User | `id`, `created_at`, `username`, `general_area` |
+| BookListing | `id`, `created_at`, `title`, `author`, `availability`, `owner_id` |
+| BorrowRequest | `id`, `created_at`, `status`, `listing_id`, `borrower_id` |
+
+BorrowRequest의 `status`는 제품 화면과 같은 색상 배지로 표시한다. 테이블 위 레전드에서
+`Pending`(amber), `Approved`(green), `Rejected`(red), `Cancelled`(gray),
+`Returned`(blue)를 한 번에 확인할 수 있다. 색상만으로 상태를 전달하지 않도록 각 배지의
+텍스트 label도 항상 유지한다.
+
+각 table은 `created_at DESC`, 같은 시각이면 `id DESC`로 표시해 최신 row가 가장
+위에 온다. Borrow Requests 시간은 지역명과 초를 생략한 짧은 현지 시간으로 표시한다.
+timestamp 도입 전의 기존 row는 정확한 과거 생성 시점을 추측하지 않고 `Legacy row`로
+표시한다.
+
+기존 SQLite DB에는 table 삭제 없이 다음 명령으로 nullable timestamp column을
+한 번 추가한다.
+
+```bash
+python3 bl_cli.py upgrade-created-at
+```
+
+새 DB는 `db.create_all()`이 처음부터 컬럼을 생성하므로 이 명령이 no-op이다.
 
 `User.email`과 `User.password_hash`는 query 결과 객체에 존재하더라도 template에
 전달된 화면에서 읽거나 출력하지 않는다.
@@ -64,6 +83,20 @@ v0.1 이후 개선은 BorrowRequest 제품 UI와 D2 evidence가 끝난 뒤 검�
 - 무제한 CRUD
 - database reset
 - 제품용 Admin 또는 moderation 기능
+
+### BorrowRequest Reset 버튼을 두지 않는 이유
+
+Inspector의 계약은 **관찰만 하고 변경하지 않는 것**이다. 브라우저 Reset 버튼은
+실수로 demo evidence를 삭제할 수 있고, CSRF가 적용된 POST, 2단계 확인과 audit log가
+필요해진다. 따라서 화면에는 명령을 안내하되 실제 변경은 다음 BL-CLI로만 실행한다.
+
+```bash
+python3 bl_cli.py reset-demo-requests
+```
+
+향후 브라우저 변경 도구가 필요하면 Inspector가 아닌 별도 Danger Zone으로 분리한다.
+운영 원칙은 [`Admin & Operator Manual`](../../../BOOKLOOP_ADMIN_OPERATOR_MANUAL.md)을
+따른다.
 
 ## 확인
 

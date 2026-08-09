@@ -69,9 +69,9 @@ class BorrowRequestWorkflowEndpointTest(unittest.TestCase):
             session["_fresh"] = True
 
     def test_post_request_creates_pending_request(self):
+        self.login_as(self.borrower)
         response = self.client.post(
             f"/api/listings/{self.listing.id}/requests",
-            json={"borrower_id": self.borrower.id},
         )
 
         self.assertEqual(response.status_code, 201)
@@ -79,15 +79,39 @@ class BorrowRequestWorkflowEndpointTest(unittest.TestCase):
         self.assertEqual(BorrowRequest.query.count(), 1)
 
     def test_post_request_rejects_listing_owner(self):
+        self.login_as(self.owner)
         response = self.client.post(
             f"/api/listings/{self.listing.id}/requests",
-            json={"borrower_id": self.owner.id},
         )
 
         self.assertEqual(response.status_code, 409)
         self.assertEqual(
             response.get_json(),
             {"error": "owner cannot borrow own listing"},
+        )
+
+    def test_post_request_requires_login(self):
+        response = self.client.post(
+            f"/api/listings/{self.listing.id}/requests",
+            json={"borrower_id": self.borrower.id},
+        )
+
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.get_json(), {"error": "authentication required"})
+        self.assertEqual(BorrowRequest.query.count(), 0)
+
+    def test_post_request_uses_session_identity_not_body_user_id(self):
+        self.login_as(self.borrower)
+
+        response = self.client.post(
+            f"/api/listings/{self.listing.id}/requests",
+            json={"borrower_id": self.owner.id},
+        )
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(
+            response.get_json()["request"]["borrower"]["id"],
+            self.borrower.id,
         )
 
     def test_get_request_allows_borrower_and_hides_private_fields(self):
@@ -149,12 +173,67 @@ class BorrowRequestWorkflowEndpointTest(unittest.TestCase):
             {"error": "borrow request not found"},
         )
 
+    def test_get_borrower_requests_returns_only_session_users_rows(self):
+        first_request = self.create_pending_request()
+        other_request = BorrowRequest(
+            listing=self.listing,
+            borrower=self.other_user,
+        )
+        db.session.add(other_request)
+        db.session.commit()
+        self.login_as(self.borrower)
+
+        response = self.client.get("/api/requests")
+
+        self.assertEqual(response.status_code, 200)
+        request_rows = response.get_json()["requests"]
+        self.assertEqual([row["id"] for row in request_rows], [first_request.id])
+        self.assertEqual(request_rows[0]["listing"]["title"], "Almond")
+        self.assertNotIn("email", request_rows[0]["borrower"])
+        self.assertNotIn(self.borrower.email, response.get_data(as_text=True))
+
+    def test_get_listing_requests_returns_only_session_owners_rows(self):
+        owned_request = self.create_pending_request()
+        other_listing = BookListing(
+            title="The Odyssey",
+            author="Homer",
+            owner=self.other_user,
+        )
+        unrelated_request = BorrowRequest(
+            listing=other_listing,
+            borrower=self.borrower,
+        )
+        db.session.add_all([other_listing, unrelated_request])
+        db.session.commit()
+        self.login_as(self.owner)
+
+        response = self.client.get("/api/listing-requests")
+
+        self.assertEqual(response.status_code, 200)
+        request_rows = response.get_json()["requests"]
+        self.assertEqual([row["id"] for row in request_rows], [owned_request.id])
+        self.assertEqual(request_rows[0]["listing"]["owner"]["id"], self.owner.id)
+        self.assertNotIn("email", request_rows[0]["listing"]["owner"])
+        self.assertNotIn(self.owner.email, response.get_data(as_text=True))
+
+    def test_request_collection_endpoints_require_login(self):
+        sent_response = self.client.get("/api/requests")
+        received_response = self.client.get("/api/listing-requests")
+
+        self.assertEqual(sent_response.status_code, 401)
+        self.assertEqual(received_response.status_code, 401)
+        self.assertEqual(
+            sent_response.get_json(),
+            {"error": "authentication required"},
+        )
+
     def test_patch_request_approves_and_reserves_listing(self):
         borrow_request = self.create_pending_request()
+        self.login_as(self.owner)
 
         response = self.client.patch(
             f"/api/requests/{borrow_request.id}",
-            json={"owner_id": self.owner.id, "status": "approved"},
+            json={"status": "approved"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -163,13 +242,14 @@ class BorrowRequestWorkflowEndpointTest(unittest.TestCase):
 
     def test_patch_request_returns_book_and_restores_availability(self):
         borrow_request = self.create_pending_request()
-        borrow_request.status = "approved"
+        borrow_request.status = "return_pending"
         self.listing.availability = False
         db.session.commit()
+        self.login_as(self.owner)
 
         response = self.client.patch(
             f"/api/requests/{borrow_request.id}",
-            json={"owner_id": self.owner.id, "status": "returned"},
+            json={"status": "returned"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -178,30 +258,72 @@ class BorrowRequestWorkflowEndpointTest(unittest.TestCase):
 
     def test_patch_request_rejects_invalid_transition(self):
         borrow_request = self.create_pending_request()
+        self.login_as(self.owner)
 
         response = self.client.patch(
             f"/api/requests/{borrow_request.id}",
-            json={"owner_id": self.owner.id, "status": "returned"},
+            json={"status": "returned"},
         )
 
         self.assertEqual(response.status_code, 409)
         self.assertEqual(
             response.get_json(),
-            {"error": "invalid borrow request transition"},
+            {"error": "return cannot be confirmed"},
         )
 
     def test_patch_request_rejects_non_owner(self):
         borrow_request = self.create_pending_request()
+        self.login_as(self.borrower)
 
         response = self.client.patch(
             f"/api/requests/{borrow_request.id}",
-            json={"owner_id": self.borrower.id, "status": "approved"},
+            json={"owner_id": self.owner.id, "status": "approved"},
         )
 
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
             response.get_json(),
             {"error": "owner permission required"},
+        )
+
+    def test_patch_request_requires_login(self):
+        borrow_request = self.create_pending_request()
+
+        response = self.client.patch(
+            f"/api/requests/{borrow_request.id}",
+            json={"owner_id": self.owner.id, "status": "approved"},
+        )
+
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.get_json(), {"error": "authentication required"})
+        self.assertEqual(borrow_request.status, "pending")
+
+    def test_patch_request_allows_borrower_to_cancel_pending_request(self):
+        borrow_request = self.create_pending_request()
+        self.login_as(self.borrower)
+
+        response = self.client.patch(
+            f"/api/requests/{borrow_request.id}",
+            json={"status": "cancelled"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json()["request"]["status"], "cancelled")
+        self.assertTrue(self.listing.availability)
+
+    def test_patch_request_rejects_owner_cancelling_borrowers_request(self):
+        borrow_request = self.create_pending_request()
+        self.login_as(self.owner)
+
+        response = self.client.patch(
+            f"/api/requests/{borrow_request.id}",
+            json={"status": "cancelled"},
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.get_json(),
+            {"error": "borrower permission required"},
         )
 
 
