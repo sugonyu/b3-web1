@@ -3,3 +3,6 @@ http://ctm.crouchingtigerhiddenfruitbat.org/pub/cygwin/circa/2022/11/23/174308
 
 Other commands:
 ...
+
+Cygwin setup:
+setup-x86.exe --allow-unsupported-windows --site http://ctm.crouchingtigerhiddenfruitbat.org/pub/cygwin/circa/2022/11/23/063457
