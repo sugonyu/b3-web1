@@ -48,3 +48,137 @@ cmd.exe /c "netsh firewall add portopening protocol=TCP port=22 name=Cygwin-SSHD
 # 8. Return to Main and test the real remote connection.
 # Run this on Main, not Dell:
 ssh -o ConnectTimeout=6 dell
+
+
+============================================================
+DELL CYGWIN SSH AUTOMATIC DIAGNOSTIC SCRIPT
+Copy only the text between the two cut lines into dell-ssh-check.sh
+============================================================
+
+-------------8<------------------
+#!/usr/bin/env bash
+
+# Dell Vista + Cygwin SSH diagnostic helper
+# Read-only checks: this script does not change services or firewall rules.
+
+SERVICE_NAME="cygsshd"
+SSH_PORT="22"
+
+section() {
+    printf '\n============================================================\n'
+    printf '%s\n' "$1"
+    printf '============================================================\n'
+}
+
+ok() {
+    printf '[OK] %s\n' "$1"
+}
+
+warn() {
+    printf '[WARN] %s\n' "$1"
+}
+
+fix() {
+    printf '  FIX: %s\n' "$1"
+}
+
+section "1. DELL IDENTITY"
+printf 'Host: '
+hostname
+printf 'Time: '
+date
+
+section "2. NETWORK ADDRESS"
+IP_OUTPUT=$(ipconfig 2>&1 | tr -d '\r')
+printf '%s\n' "$IP_OUTPUT" | grep -E -i 'IPv4|IP Address|Subnet Mask|Default Gateway' || true
+
+if printf '%s\n' "$IP_OUTPUT" | grep -q '192\.168\.1\.12'; then
+    ok "Dell still has the expected IP 192.168.1.12."
+elif printf '%s\n' "$IP_OUTPUT" | grep -q '169\.254\.'; then
+    warn "Dell has a 169.254.x.x self-assigned address. DHCP/network is unavailable."
+    fix "Reconnect Ethernet/Wi-Fi, then run: ipconfig /renew"
+else
+    warn "Expected IP 192.168.1.12 was not found."
+    fix "Find the current IPv4 address above and update Main ~/.ssh/config Host dell."
+fi
+
+section "3. CYGWIN SSH SERVICE"
+if cygrunsrv -L 2>/dev/null | grep -qi "^${SERVICE_NAME}$"; then
+    ok "${SERVICE_NAME} is registered as a Windows service."
+else
+    warn "${SERVICE_NAME} is not registered."
+    fix "Run Cygwin as Administrator, then run: ssh-host-config"
+fi
+
+SERVICE_OUTPUT=$(cygrunsrv -Q "$SERVICE_NAME" 2>&1)
+printf '%s\n' "$SERVICE_OUTPUT"
+
+if printf '%s\n' "$SERVICE_OUTPUT" | grep -qi 'Running'; then
+    ok "${SERVICE_NAME} is running."
+else
+    warn "${SERVICE_NAME} is not running."
+    fix "Run Cygwin as Administrator: cygrunsrv -S ${SERVICE_NAME}"
+fi
+
+section "4. SSHD PROCESS"
+if ps -ef | grep '[s]shd' >/dev/null 2>&1; then
+    ps -ef | grep '[s]shd'
+    ok "An sshd process exists."
+else
+    warn "No sshd process was found."
+    fix "Check config with: sshd -t"
+    fix "Then restart: cygrunsrv -E ${SERVICE_NAME}; cygrunsrv -S ${SERVICE_NAME}"
+fi
+
+section "5. SSH CONFIGURATION"
+SSHD_TEST=$(sshd -t 2>&1)
+SSHD_STATUS=$?
+
+if [ "$SSHD_STATUS" -eq 0 ]; then
+    ok "sshd configuration syntax is valid."
+else
+    warn "sshd configuration has an error:"
+    printf '%s\n' "$SSHD_TEST"
+    fix "Edit /etc/sshd_config and run sshd -t again."
+fi
+
+section "6. TCP PORT ${SSH_PORT}"
+PORT_OUTPUT=$(netstat -an 2>/dev/null | tr -d '\r' | grep ":${SSH_PORT}" || true)
+printf '%s\n' "$PORT_OUTPUT"
+
+if printf '%s\n' "$PORT_OUTPUT" | grep -E -q '0\.0\.0\.0:22 .*LISTENING|\[?::\]?:22 .*LISTENING'; then
+    ok "SSH is listening for remote connections on port ${SSH_PORT}."
+elif printf '%s\n' "$PORT_OUTPUT" | grep -E -q '127\.0\.0\.1:22 .*LISTENING'; then
+    warn "SSH is listening only on localhost. Main cannot connect."
+    fix "Check ListenAddress in /etc/sshd_config, then restart ${SERVICE_NAME}."
+elif printf '%s\n' "$PORT_OUTPUT" | grep -q 'LISTENING'; then
+    warn "Port ${SSH_PORT} is listening, but verify the bound address above."
+else
+    warn "Nothing is listening on TCP port ${SSH_PORT}."
+    fix "Run: sshd -t"
+    fix "Then run as Administrator: cygrunsrv -E ${SERVICE_NAME}; cygrunsrv -S ${SERVICE_NAME}"
+fi
+
+section "7. WINDOWS VISTA FIREWALL"
+cmd.exe /c "netsh firewall show state" 2>&1 | tr -d '\r'
+printf '\n'
+fix "If port 22 is blocked, run Cygwin as Administrator:"
+fix "cmd.exe /c \"netsh firewall add portopening protocol=TCP port=22 name=Cygwin-SSHD mode=ENABLE\""
+
+section "8. MAIN CONNECTION TEST"
+printf 'Return to Main and run:\n'
+printf '  ssh -o ConnectTimeout=6 dell\n'
+printf '\nIf it still times out:\n'
+printf '  1. Confirm Dell IPv4 did not change.\n'
+printf '  2. Confirm port 22 shows LISTENING on 0.0.0.0 or ::.\n'
+printf '  3. Confirm the Vista firewall exception exists.\n'
+printf '  4. Confirm Dell is awake and connected to the same LAN as Main.\n'
+
+section "CHECK COMPLETE"
+printf 'Copy WARN and FIX lines back to Main if help is needed.\n'
+-------------8<------------------
+
+Save and run on Dell Cygwin:
+
+chmod +x dell-ssh-check.sh
+./dell-ssh-check.sh
