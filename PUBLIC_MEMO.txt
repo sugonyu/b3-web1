@@ -6,3 +6,45 @@ Other commands:
 
 Cygwin setup:
 setup-x86.exe --allow-unsupported-windows --site http://ctm.crouchingtigerhiddenfruitbat.org/pub/cygwin/circa/2022/11/23/063457
+
+
+============================================================
+DELL CYGWIN SSH SERVER CHECK
+Run these commands in Dell Cygwin, from top to bottom.
+============================================================
+
+# 1. Confirm the Dell name, time, and current network address.
+hostname
+date
+ipconfig
+
+# 2. Confirm the registered SSH service name and status.
+cygrunsrv -L | grep -i ssh
+cygrunsrv -Q cygsshd
+
+# 3. Confirm sshd process and TCP port 22.
+ps -ef | grep '[s]shd'
+netstat -an | grep ':22'
+
+# Expected result:
+# Current State: Running
+# 0.0.0.0:22 or [::]:22 ... LISTENING
+
+# 4. Validate the sshd configuration.
+sshd -t && echo "sshd config: OK"
+
+# 5. If cygsshd is stopped, start it and check again.
+cygrunsrv -S cygsshd
+cygrunsrv -Q cygsshd
+netstat -an | grep ':22'
+
+# 6. Show the Windows Vista firewall state.
+cmd.exe /c "netsh firewall show state"
+
+# 7. Only if port 22 is blocked, run Cygwin as Administrator
+#    and add the firewall exception.
+cmd.exe /c "netsh firewall add portopening protocol=TCP port=22 name=Cygwin-SSHD mode=ENABLE"
+
+# 8. Return to Main and test the real remote connection.
+# Run this on Main, not Dell:
+ssh -o ConnectTimeout=6 dell
