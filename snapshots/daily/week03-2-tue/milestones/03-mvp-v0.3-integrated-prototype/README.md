@@ -73,8 +73,8 @@ documentation recovery. W3-14 still requires Tony's browser confirmation.
 ## Git Checkpoint
 
 The August 7 naming refactor was recorded as scoped commit `da1980e7` in the
-private action tracker. Public documentation changes from this recovery remain
-uncommitted until Tony reviews them.
+private action tracker. Tony reviewed and approved the August 11 recovery
+documentation for a scoped commit on August 12.
 
 ## Snapshot Status
 
