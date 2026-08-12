@@ -53,6 +53,7 @@ book is produced before the Kindle edition.
 
 ## Entries
 
+- [2026-08-11 (Tuesday) — Week 3 recovery and D3 evidence restart](2026-08-11.md)
 - [2026-08-07 (Friday) — route and service naming checkpoint](2026-08-07.md)
 - [2026-08-06 (Thursday) — Deliverable 2 feedback and Week 2 closeout](2026-08-06.md) · [Thursday Kanban](../week02-4-thu-kanban.html) · [Week 2 final Kanban](../week02-kanban.html)
 - [2026-08-05 (Wednesday) — structure boundaries, Code Map and Stage A2 snapshot](2026-08-05.md)
