@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLoop — EJS</title>
+    <style>
+      body {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 48px 24px;
+        color: #202124;
+        font-family: system-ui, sans-serif;
+        line-height: 1.6;
+      }
+
+      section {
+        margin-top: 24px;
+        padding: 20px;
+        border: 1px solid #d8dce3;
+        border-radius: 12px;
+      }
+
+      dt {
+        color: #5f6368;
+        font-weight: 600;
+      }
+
+      dd {
+        margin: 0 0 12px;
+      }
+
+      code {
+        padding: 2px 6px;
+        background: #f1f3f4;
+        border-radius: 4px;
+      }
+
+      .framework-logo {
+        display: block;
+        width: 13rem;
+        height: 4.5rem;
+        margin-bottom: 1rem;
+        object-fit: contain;
+        object-position: left center;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img class="framework-logo" src="/static/express-logo.svg" alt="Express logo">
+      <!--
+        Jinja 대응: bookloop/templates/jinja_reference/index.html의 {{ health.app }}.
+        둘 다 route가 전달한 health 값을 HTML에 안전하게 출력한다.
+      -->
+      <h1>🟨 <%= health.app %></h1>
+      <p>Express / EJS reference</p>
+
+      <section aria-labelledby="flow-heading">
+        <h2 id="flow-heading">Server-rendered comparison</h2>
+        <p>
+          Express Router → shared health service →
+          <code>response.render()</code> → EJS → HTML
+        </p>
+        <p>
+          Flask의 <code>/jinja/</code>와 같은 역할을 하는 병렬공부용 화면이다.
+        </p>
+        <p><a href="/api/health">📤 View Express JSON API</a></p>
+        <p>
+          <a href="http://127.0.0.1:5000/jinja/" target="_blank" rel="noopener">
+            🐍 Open Flask / Jinja reference ↗
+          </a>
+        </p>
+      </section>
+
+      <section aria-labelledby="status-heading">
+        <h2 id="status-heading">Express Service</h2>
+        <!-- Jinja의 health.status/service/version 출력 block과 같은 view 역할이다. -->
+        <dl>
+          <dt>Status</dt>
+          <dd><%= health.status %></dd>
+
+          <dt>Service</dt>
+          <dd><%= health.service %></dd>
+
+          <dt>Version</dt>
+          <dd><%= health.version %></dd>
+        </dl>
+      </section>
+    </main>
+  </body>
+</html>

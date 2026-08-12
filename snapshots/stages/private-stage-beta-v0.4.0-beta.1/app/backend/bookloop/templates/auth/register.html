@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLoop — Register</title>
+    <link rel="icon" href="{{ url_for('static', filename='bookloop/python-favicon.svg') }}" type="image/svg+xml">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
+  </head>
+  <body>
+    <main>
+      <a class="brand-badge" href="{{ url_for('jinja_client.product_home') }}">📚 BookLoop</a>
+      <h1>Create an account</h1>
+      <p class="client-type">D2 registration · Python / Jinja</p>
+
+      {% if error %}
+        <p class="error-message" role="alert">{{ error }}</p>
+      {% endif %}
+
+      <form method="post">
+        <p>
+          <label for="username">Username</label><br>
+          <input id="username" name="username" type="text" autocomplete="username" required>
+        </p>
+        <p>
+          <label for="email">Email</label><br>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+        </p>
+        <p>
+          <label for="general_area">General area</label><br>
+          <input id="general_area" name="general_area" type="text" autocomplete="address-level2" required>
+        </p>
+        <p>
+          <label for="password">Password</label><br>
+          <input id="password" name="password" type="password" autocomplete="new-password" required>
+        </p>
+        <button type="submit">Register</button>
+      </form>
+
+      <p class="action-note">Classroom demo convention: use password 1111.</p>
+      <p><a href="{{ url_for('auth.login') }}">Already registered? Log in</a></p>
+    </main>
+  </body>
+</html>

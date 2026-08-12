@@ -1,0 +1,53 @@
+<!doctype html>
+{% from "bookloop/_user_identity.html" import user_icon %}
+{% from "bookloop/_book_identity.html" import book_title %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLoop · Report #{{ report.id }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
+  </head>
+  <body>
+    <main class="product-main">
+      {% include "bookloop/_dev_user_switcher.html" %}
+      {% include "bookloop/_product_nav.html" %}
+      <p class="eyebrow">Read-only moderation detail</p>
+      <h1>Report #{{ report.id }}</h1>
+      <section class="report-detail-card" aria-labelledby="report-detail-heading">
+        <h2 id="report-detail-heading">Case information</h2>
+        <dl>
+          <dt>Status</dt><dd><span class="status-pill status-{{ report.status }}">{{ report.status.replace('_', ' ')|title }}</span></dd>
+          <dt>Category</dt><dd>{{ report.category.replace('_', ' ')|title }}</dd>
+          <dt>Created</dt><dd>{{ format_toronto_datetime(report.created_at) }}</dd>
+          <dt>Request</dt><dd>Request #{{ report.borrow_request_id }} · {{ book_title(report.borrow_request.listing.title) }}</dd>
+          <dt>Details</dt><dd class="report-detail-text">{{ report.details }}</dd>
+        </dl>
+      </section>
+      <section class="report-detail-card" aria-labelledby="report-parties-heading">
+        <h2 id="report-parties-heading">Exchange parties</h2>
+        <dl>
+          <dt>Reporter</dt><dd>{{ report.reporter.username }} {{ user_icon(report.reporter) }} · User #{{ report.reporter_id }} · <a href="mailto:{{ report.reporter.email }}">{{ report.reporter.email }}</a></dd>
+          <dt>Reported user</dt><dd>{{ report.reported_user.username }} {{ user_icon(report.reported_user) }} · User #{{ report.reported_user_id }} · <a href="mailto:{{ report.reported_user.email }}">{{ report.reported_user.email }}</a></dd>
+        </dl>
+        <p class="privacy-note">Use these contacts for follow-up outside BookLoop. Automatic email notifications are not part of the beta.</p>
+      </section>
+      <section class="report-detail-card" aria-labelledby="report-status-heading">
+        <h2 id="report-status-heading">Review decision</h2>
+        <p>Save the current moderation status after reviewing the report. Contact the involved members separately when needed.</p>
+        <form action="{{ url_for('admin.update_report_status', report_id=report.id) }}" method="post">
+          <label for="report-status">Status</label>
+          <select id="report-status" name="status" required>
+            {% for status in ("open", "under_review", "resolved", "dismissed") %}
+              <option value="{{ status }}"{% if report.status == status %} selected{% endif %}>{{ status.replace('_', ' ')|title }}</option>
+            {% endfor %}
+          </select>
+          <button class="decision-approve" type="submit">Save status</button>
+        </form>
+      </section>
+      <p class="privacy-note">Read-only view. Status changes and moderation actions require a later audit trail.</p>
+      <p><a href="{{ url_for('admin.dashboard') }}">← Back to Admin dashboard</a></p>
+      {% include "bookloop/_product_footer.html" %}
+    </main>
+  </body>
+</html>

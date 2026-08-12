@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BookLoop iterative architecture evidence index">
+    <title>BookLoop — Architecture Index</title>
+    <style>
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        max-width: 960px;
+        margin: 32px auto;
+        padding: 0 16px;
+        color: #222;
+        background: #fff;
+        font-family: Arial, sans-serif;
+        line-height: 1.5;
+      }
+      header, nav, section, footer { margin-bottom: 32px; }
+      nav { display: flex; flex-wrap: wrap; gap: 16px; }
+      section { padding-top: 16px; border-top: 1px solid #aaa; }
+      article { padding: 16px; border: 1px solid #aaa; }
+      article h3 { margin-top: 0; }
+      .version-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+      .status { display: inline-block; padding: 4px 8px; border: 1px solid #777; }
+      .action {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 8px 12px;
+        border: 1px solid #315c43;
+        color: #fff;
+        background: #315c43;
+        font-weight: bold;
+        text-decoration: none;
+      }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { padding: 9px; border: 1px solid #aaa; text-align: left; vertical-align: top; }
+      th { background: #eee; }
+      pre { overflow-x: auto; padding: 16px; border: 1px solid #aaa; background: #f7f7f7; }
+      @media (max-width: 640px) {
+        .version-grid { grid-template-columns: 1fr; }
+        table, thead, tbody, tr, th, td { display: block; }
+        thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+        tr { margin-bottom: 12px; border: 1px solid #aaa; }
+        td { border: 0; border-bottom: 1px solid #ddd; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p>BookLoop · Technical design evidence</p>
+      <h1>Architecture Index</h1>
+      <p>
+        Model, API, authentication and client/server boundaries evolve with the
+        application instead of being frozen as a one-time planning document.
+      </p>
+      <span class="status">Current: Architecture v1.1 · English translation of the D1 foundation</span>
+    </header>
+
+    <nav aria-label="Architecture index sections">
+      <a href="#current">Current version</a>
+      <a href="#boundary">Folder boundary</a>
+      <a href="#naming">Naming</a>
+      <a href="#lifecycle">Agile lifecycle</a>
+      <a href="#references">References</a>
+    </nav>
+
+    <main>
+      <section id="current">
+        <h2>Architecture versions</h2>
+        <p>
+          v1.0과 v1.1은 같은 D1 기술 구조를 설명한다. v1.1은 발표에 사용할 수 있도록
+          v1.0 한국어 기준선을 영어로 번역한 버전이며 새로운 기능을 주장하지 않는다.
+        </p>
+        <div class="version-grid">
+          <article>
+            <p>Baseline · Korean</p>
+            <h3>Architecture v1.0 — D1 Foundation</h3>
+            <p>모델 관계, 개인정보 경계와 현재/목표 project structure의 한국어 기준선이다.</p>
+            <p><a href="drafts/v1.0-d1-foundation-ko/README.md">Read v1.0 notes</a></p>
+            <a class="action" href="drafts/v1.0-d1-foundation-ko/">Open v1.0 Korean</a>
+          </article>
+          <article>
+            <p>Current · English</p>
+            <h3>Architecture v1.1 — English Translation</h3>
+            <p>The same D1 model and architecture evidence translated for presentation use.</p>
+            <p><a href="drafts/v1.1-d1-foundation-en/README.md">Read v1.1 notes</a></p>
+            <a class="action" href="drafts/v1.1-d1-foundation-en/">Open v1.1 English</a>
+          </article>
+        </div>
+      </section>
+
+      <section id="boundary">
+        <h2>Folder boundary</h2>
+        <table>
+          <thead><tr><th>Folder</th><th>Responsibility</th></tr></thead>
+          <tbody>
+            <tr><td><code>architecture/</code></td><td>기술 구조, 관계와 결정 이유</td></tr>
+            <tr><td><code>design-system/</code></td><td>시각 규칙, UI components와 states</td></tr>
+            <tr><td><code>backend/</code></td><td>실제 Flask, SQLAlchemy와 JSON API</td></tr>
+            <tr><td><code>frontend-*</code></td><td>실제 browser client 구현</td></tr>
+            <tr><td><code>docs/planning/</code></td><td>일정, handoff, 결정과 다음 행동</td></tr>
+          </tbody>
+        </table>
+        <p>
+          Architecture evidence는 코드를 대신하지 않는다. 현재 구현과 비교해 차이가
+          발견될 때 이유를 기록하고 다음 버전으로 업데이트한다.
+        </p>
+      </section>
+
+      <section id="naming">
+        <h2>Shared naming convention</h2>
+        <p>Design System과 Architecture 버전 폴더는 같은 형식을 사용한다.</p>
+        <pre><code>vMAJOR.MINOR-dNN-topic[-lang]</code></pre>
+        <p>
+          각 버전은 기본적으로 <code>README.md</code>와 <code>index.html</code>을 가지며,
+          별도 스타일시트가 필요할 때만 <code>style.css</code>를 추가한다.
+        </p>
+        <p><a href="../ARTIFACT_NAMING_CONVENTION.md">Open the complete naming convention</a></p>
+      </section>
+
+      <section id="lifecycle">
+        <h2>Agile architecture lifecycle</h2>
+        <pre><code>D1 v1.0  Korean architecture baseline
+→ D1 v1.1  English translation of the same evidence
+→ D2 v2.x  authentication + database workflow
+→ D3 v3.x  React–Flask data flow
+→ D4 v4.x  testing + errors + deployment structure
+→ Final v5.x  stable architecture matching the current app</code></pre>
+        <p>
+          각 Deliverable에서 별도 architecture 발표가 없어도 실제 코드가 변하면
+          architecture evidence도 계속 iteration한다.
+        </p>
+      </section>
+
+      <section id="references">
+        <h2>Connected evidence</h2>
+        <ul>
+          <li><a href="../backend/API_CONTRACT.md">Backend API contract</a></li>
+          <li><a href="../backend/bookloop/models.py">Current SQLAlchemy models</a></li>
+          <li><a href="../design-system/">Design System Index</a></li>
+          <li><a href="../ARTIFACT_NAMING_CONVENTION.md">Shared artifact naming convention</a></li>
+          <li><a href="../../docs/planning/WEEK01_DELIVERABLE_HANDOFF.md">Week 1 Deliverable handoff</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <a href="../">Back to BookLoop App</a>
+    </footer>
+  </body>
+</html>

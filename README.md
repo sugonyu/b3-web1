@@ -10,7 +10,8 @@ directory for sharing Korean-language books in Montreal.
 ## Current Status
 
 - Deliverable 1 definition and design: complete
-- Deliverable 2: backend foundation and first vertical slice in progress
+- Deliverable 2: backend foundation and first vertical slice complete
+- Internal Beta checkpoint: `BookLoop Beta v0.4.0-beta.1` recorded
 - Public source: Flask, SQLAlchemy, SQLite, Jinja, Vanilla API client, and tests
 - Working stack: React + Flask JSON API + Flask-SQLAlchemy + SQLite
 
@@ -31,6 +32,7 @@ Vanilla JavaScript API check
 - [Minimum Reproducible Application Source](app/README.md)
 - [MVP v0.1 — Project Definition](milestones/01-mvp-v0.1-definition/README.md)
 - [MVP v0.2 — Backend Foundation](milestones/02-mvp-v0.2-backend-foundation/README.md)
+- [MVP v0.4 — Feature-Complete Beta Candidate](milestones/04-mvp-v0.4-feature-complete-beta/README.md)
 
 ## Brain-first operating rule
 

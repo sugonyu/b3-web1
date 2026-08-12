@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BookLoop design system draft index">
+    <title>BookLoop — Design System Draft Index</title>
+    <style>
+      body {
+        max-width: 960px;
+        margin: 32px auto;
+        padding: 0 16px;
+        color: #222;
+        background: #fff;
+        font-family: Arial, sans-serif;
+        line-height: 1.5;
+      }
+
+      header,
+      nav,
+      section {
+        margin-bottom: 32px;
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      section {
+        padding-top: 16px;
+        border-top: 1px solid #aaa;
+      }
+
+      .status {
+        display: inline-block;
+        padding: 4px 8px;
+        border: 1px solid #777;
+      }
+
+      .draft-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .course-map {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      article {
+        padding: 16px;
+        border: 1px solid #aaa;
+      }
+
+      article h3 {
+        margin-top: 0;
+      }
+
+      .open-link {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 8px 12px;
+        border: 1px solid #315c43;
+        color: #fff;
+        background: #315c43;
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 8px;
+        border: 1px solid #aaa;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: #eee;
+      }
+
+      code {
+        overflow-wrap: anywhere;
+      }
+
+      @media (max-width: 640px) {
+        .draft-grid,
+        .course-map {
+          grid-template-columns: 1fr;
+        }
+
+        table,
+        thead,
+        tbody,
+        tr,
+        th,
+        td {
+          display: block;
+        }
+
+        thead {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          clip: rect(0 0 0 0);
+        }
+
+        tr {
+          margin-bottom: 12px;
+          border: 1px solid #aaa;
+        }
+
+        td {
+          border: 0;
+          border-bottom: 1px solid #ddd;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p>BookLoop · 🧩 Deliverable 1 evidence</p>
+      <h1>Design System Draft Index</h1>
+      <p>
+        Select and compare independent HTML/CSS design drafts before choosing
+        the version to refine for the public milestone.
+      </p>
+      <span class="status">Draft v1.1: adopted as Thursday 🧩 D1 Design System MVP v0.1 · iteration continues</span>
+    </header>
+
+    <nav aria-label="Design system index sections">
+      <a href="#drafts">Drafts</a>
+      <a href="#style-reference">Style reference</a>
+      <a href="#comparison">Version comparison</a>
+      <a href="#parallel-study">UIUX → CMS → Web1</a>
+      <a href="#agile-lifecycle">Agile lifecycle</a>
+      <a href="#naming">Naming</a>
+      <a href="#review-order">Review order</a>
+      <a href="#boundary">Current boundary</a>
+    </nav>
+
+    <main>
+      <section id="drafts" aria-labelledby="drafts-heading">
+        <h2 id="drafts-heading">Choose a draft</h2>
+        <div class="draft-grid">
+          <article>
+            <p>Baseline</p>
+            <h3>Draft v1.0 — Web1 Foundation</h3>
+            <p>
+              The first BookLoop visual direction based on the Class 2 design-system
+              lesson, API models, privacy boundary, and three low-fi screens.
+            </p>
+            <ul>
+              <li>Warm paper and community-green palette</li>
+              <li>Foundations, components, states</li>
+              <li>Browse, Detail, and My Requests sketches</li>
+              <li>No explicit B3 UIUX course bridge</li>
+            </ul>
+            <p><a href="drafts/v1.0-d1-foundation/README.md">Read v1.0 notes</a></p>
+            <a class="open-link" href="drafts/v1.0-d1-foundation/index.html">Open Draft v1.0</a>
+          </article>
+
+          <article>
+            <p>Selected direction</p>
+            <h3>Draft v1.1 — UIUX Bridge</h3>
+            <p>
+              A separate copy that applies earlier B3 Applied UI/UX learning while
+              preserving BookLoop's own product identity.
+            </p>
+            <ul>
+              <li>60/30/10 colour rule</li>
+              <li>Gestalt proximity and figure-ground</li>
+              <li>Browse → Detail → Request → My Requests</li>
+              <li>CSS token → React theme/component direction</li>
+              <li>Presentation-ready BookLoop colour rationale</li>
+            </ul>
+            <p><a href="drafts/v1.1-d1-uiux-bridge/README.md">Read v1.1 notes</a></p>
+            <a class="open-link" href="drafts/v1.1-d1-uiux-bridge/index.html">Open Draft v1.1</a>
+          </article>
+        </div>
+      </section>
+
+      <section id="style-reference" aria-labelledby="reference-heading">
+        <h2 id="reference-heading">Reference library</h2>
+        <article>
+          <p>Documentation UI</p>
+          <h3>Minimal Documentation Index</h3>
+          <p>
+            Reusable plain HTML/CSS for repository indexes, course dashboards,
+            version selectors, and project documentation. This is not a BookLoop
+            product design candidate.
+          </p>
+          <p><a href="references/minimal-documentation-index/README.md">Read the style notes</a></p>
+          <a class="open-link" href="references/minimal-documentation-index/index.html">Open style reference</a>
+        </article>
+        <article>
+          <p>Verified UI/UX course sources</p>
+          <h3>Define → Ideate (HMW) Source Map</h3>
+          <p>
+            Opens the physical B3 UI/UX source files and separates direct course
+            evidence from the BookLoop PRD·FRD·development parallel-study analysis.
+          </p>
+          <p><a href="references/uiux-define-ideate-hmw-source-map/README.md">Read the source-map notes</a></p>
+          <a class="open-link" href="references/uiux-define-ideate-hmw-source-map/index.html">Open source map</a>
+        </article>
+      </section>
+
+      <section id="comparison" aria-labelledby="comparison-heading">
+        <h2 id="comparison-heading">Version comparison</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Decision</th>
+              <th>Draft v1.0</th>
+              <th>Draft v1.1</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Starting point</td>
+              <td>Web1 Class 2 + BookLoop domain</td>
+              <td>v1.0 + verified B3 UIUX sources</td>
+            </tr>
+            <tr>
+              <td>Colour rationale</td>
+              <td>Paper, trust, community, bookmark</td>
+              <td>Same palette explained through 60/30/10</td>
+            </tr>
+            <tr>
+              <td>Visual grouping</td>
+              <td>Card specimens</td>
+              <td>Cards explained with proximity and figure-ground</td>
+            </tr>
+            <tr>
+              <td>User flow</td>
+              <td>Three low-fi screen specimens</td>
+              <td>Explicit four-step primary workflow</td>
+            </tr>
+            <tr>
+              <td>React bridge</td>
+              <td>General component direction</td>
+              <td>Theme, component ownership, and API boundary</td>
+            </tr>
+            <tr>
+              <td>Current status</td>
+              <td>Historical baseline · preserved</td>
+              <td>Adopted · Thursday D1 Design System MVP v0.1 baseline</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="parallel-study" aria-labelledby="parallel-heading">
+        <h2 id="parallel-heading">UIUX → CMS → Web1 parallel-study bridge</h2>
+        <p>
+          Draft v1.1 connects design principles learned in B3 Applied UI/UX,
+          a completed CMS design-system document, and a new dynamic Web1 product.
+          The connection reuses design reasoning, not another project's visual identity.
+        </p>
+
+        <div class="course-map">
+          <article>
+            <p>B3 Applied UI/UX</p>
+            <h3>Principle source</h3>
+            <p>
+              Bombom Games provides the earlier 60/30/10, Gestalt, user-flow,
+              prototype, and React implementation lessons.
+            </p>
+            <h4>Reference documents</h4>
+            <ul>
+              <li>
+                <a href="../../../b3-uiux/uiux-final/README.md">UIUX Final overview</a>
+              </li>
+              <li>
+                <a href="../../../b3-uiux/uiux-final/presentation/pt2-final-react-app-demo/bombom-games-react-store-vite-dev/UIUX_DESIGN_PRINCIPLES.md">
+                  Bombom Games UIUX design principles
+                </a>
+              </li>
+              <li>
+                <a href="../../../b3-uiux/B3_UIUX_COURSE_CLOSEOUT_2026-07-24.md">
+                  B3 UIUX course closeout
+                </a>
+              </li>
+            </ul>
+            <h4>Completed HTML documents</h4>
+            <ul>
+              <li>
+                <a href="../../../b3-uiux/uiux-final/presentation/pt1-prototype-core-demo/PT__uiux_presentation1_PrototypeDesign-v1.1-light.html">
+                  Prototype Design presentation v1.1
+                </a>
+              </li>
+              <li>
+                <a href="../../../b3-uiux/uiux-final/presentation/pt2-final-react-app-demo/final-report/bombom-games-react-store-pt2-final-report-v1.1.html">
+                  Bombom Games final React report v1.1
+                </a>
+              </li>
+            </ul>
+          </article>
+
+          <article>
+            <p>B3 CMS</p>
+            <h3>Completed documentation reference</h3>
+            <p>
+              La Bella Vita shows how a design system can mature into a detailed
+              brand and operating guide covering logo, typography, layout,
+              navigation, buttons, product cards, images, and accessibility.
+            </p>
+            <h4>Reference documents</h4>
+            <ul>
+              <li>
+                <a href="../../../b3-cms/cms-final/la-bella-vita-design-and-architecture/DESIGN.md">
+                  La Bella Vita design system
+                </a>
+              </li>
+              <li>
+                <a href="../../../b3-cms/cms-final/la-bella-vita-design-and-architecture/README.md">
+                  Design and architecture overview
+                </a>
+              </li>
+              <li>
+                <a href="../../../b3-cms/cms-final/la-bella-vita-design-and-architecture/la-bella-vita-footer-design-audit.md">
+                  Footer design audit
+                </a>
+              </li>
+            </ul>
+            <h4>Completed HTML documents</h4>
+            <ul>
+              <li>
+                <a href="../../../b3-cms/cms-final/final-report/final-report-final.html">
+                  La Bella Vita final report
+                </a>
+              </li>
+              <li>
+                <a href="../../../b3-cms/cms-final/presentation/presentation-20min-live-demo-v1.1.html">
+                  CMS final presentation v1.1
+                </a>
+              </li>
+              <li>
+                <a href="../../../b3-cms/cms-final/project-brief-and-guides/cms-finla-guide-v1.2.html">
+                  CMS final project guide v1.2
+                </a>
+              </li>
+            </ul>
+          </article>
+
+          <article>
+            <p>Web Project 1</p>
+            <h3>New product application</h3>
+            <p>
+              BookLoop Draft v1.1 applies the shared principles to a privacy-conscious
+              community library, with app states, a borrowing workflow, and a future
+              CSS-token-to-React-component bridge.
+            </p>
+            <h4>Reference documents</h4>
+            <ul>
+              <li><a href="drafts/v1.1-d1-uiux-bridge/README.md">Draft v1.1 design notes</a></li>
+              <li><a href="drafts/v1.1-d1-uiux-bridge/index.html">Draft v1.1 implementation</a></li>
+              <li><a href="drafts/v1.0-d1-foundation/README.md">Draft v1.0 baseline notes</a></li>
+            </ul>
+          </article>
+        </div>
+
+        <h3>La Bella Vita and BookLoop v1.1</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Decision area</th>
+              <th>La Bella Vita</th>
+              <th>BookLoop Draft v1.1</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Product context</td>
+              <td>Italian-Mediterranean restaurant and online ordering</td>
+              <td>Privacy-conscious Korean book sharing in Montreal</td>
+            </tr>
+            <tr>
+              <td>Document role</td>
+              <td>Completed brand and CMS operating guide</td>
+              <td>Pre-implementation design evidence and UIUX bridge</td>
+            </tr>
+            <tr>
+              <td>Warm palette meaning</td>
+              <td>Cream, tomato, and olive express food, appetite, and freshness</td>
+              <td>Paper, green, and orange express books, trust, and bookmarks</td>
+            </tr>
+            <tr>
+              <td>Strongest evidence</td>
+              <td>Logo, typography, layout, navigation, imagery, and accessibility rules</td>
+              <td>User flow, interface states, privacy rules, and React-ready components</td>
+            </tr>
+            <tr>
+              <td>Transfer decision</td>
+              <td colspan="2">
+                Reuse La Bella Vita's documentation completeness; preserve BookLoop's
+                own product rationale, workflow, colour meaning, and visual identity.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          <strong>Next refinement:</strong> use the CMS reference to strengthen
+          BookLoop's brand keywords, typography hierarchy, logo or wordmark rules,
+          responsive layout rules, component usage rules, and accessibility checklist.
+        </p>
+      </section>
+
+      <section id="agile-lifecycle" aria-labelledby="agile-heading">
+        <h2 id="agile-heading">Agile design-system lifecycle</h2>
+        <p>
+          Thursday's Deliverable 1 does not freeze a final design. Draft v1.1 is
+          the first usable Design System MVP, and it continues to evolve with the app.
+        </p>
+        <ol>
+          <li><strong>D1:</strong> present the v0.1 foundation, components, states, and low-fi flow.</li>
+          <li><strong>D2:</strong> add discoveries from real data, forms, validation, and API states.</li>
+          <li><strong>D3:</strong> verify responsive screens and the integrated frontend workflow.</li>
+          <li><strong>D4:</strong> refine accessibility, errors, feedback, and component consistency.</li>
+          <li><strong>Final:</strong> present the stable version that matches the current application.</li>
+        </ol>
+        <p>
+          A separate design-system presentation is not required for iteration to continue.
+          Each version records what changed, why it changed, and which implementation evidence
+          triggered the decision.
+        </p>
+      </section>
+
+      <section id="naming" aria-labelledby="naming-heading">
+        <h2 id="naming-heading">Shared naming convention</h2>
+        <p>Design System과 Architecture 버전 폴더는 같은 형식을 사용한다.</p>
+        <p><code>vMAJOR.MINOR-dNN-topic[-lang]</code></p>
+        <p>
+          각 버전은 기본적으로 <code>README.md</code>와 <code>index.html</code>을 가지며,
+          별도 스타일시트가 필요할 때만 <code>style.css</code>를 추가한다.
+        </p>
+        <p><a href="../ARTIFACT_NAMING_CONVENTION.md">Open the complete naming convention</a></p>
+      </section>
+
+      <section id="review-order" aria-labelledby="review-heading">
+        <h2 id="review-heading">Review order</h2>
+        <ol>
+          <li>Open Draft v1.0 only to understand the original BookLoop baseline.</li>
+          <li>Final-review the selected Draft v1.1 and its UIUX explanation.</li>
+          <li>Check Draft v1.1 in desktop and narrow mobile layouts.</li>
+          <li>Make only presentation-critical revisions without overwriting the v1.0 baseline.</li>
+          <li>Promote the reviewed v1.1 MVP evidence to the Thursday Deliverable 1 milestone.</li>
+        </ol>
+      </section>
+
+      <section id="boundary" aria-labelledby="boundary-heading">
+        <h2 id="boundary-heading">Current boundary</h2>
+        <ul>
+          <li>These pages use static mock data.</li>
+          <li>They are not connected to Flask or React.</li>
+          <li>Neither version is refined or instructor-approved.</li>
+          <li>Bombom Games concepts are reused; its dark theme and game content are not copied.</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

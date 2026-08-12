@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLoop — Log in</title>
+    <link rel="icon" href="{{ url_for('static', filename='bookloop/python-favicon.svg') }}" type="image/svg+xml">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
+  </head>
+  <body>
+    <main>
+      <a class="brand-badge" href="{{ url_for('jinja_client.product_home') }}">📚 BookLoop</a>
+      <h1>Log in</h1>
+      <p class="client-type">D2 borrower session · Python / Jinja</p>
+
+      {% if error %}
+        <p class="error-message" role="alert">{{ error }}</p>
+      {% endif %}
+
+      <form method="post">
+        {% if next_url %}
+          <input name="next" type="hidden" value="{{ next_url }}">
+          <p class="action-note">After login, return to <code>{{ next_url }}</code>.</p>
+        {% endif %}
+        <p>
+          <label for="username">Username</label><br>
+          <input id="username" name="username" type="text" autocomplete="username" required>
+        </p>
+        <p>
+          <label for="password">Password</label><br>
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+        </p>
+        <button type="submit">Log in</button>
+      </form>
+
+      <p class="action-note">Local demo accounts: 👨 Tony · 👩 Mina · 🕵️ Alex</p>
+      <p><a href="{{ url_for('auth.register') }}">Create an account</a></p>
+    </main>
+  </body>
+</html>

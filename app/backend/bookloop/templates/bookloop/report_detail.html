@@ -1,0 +1,39 @@
+<!doctype html>
+{% from "bookloop/_user_identity.html" import user_icon %}
+{% from "bookloop/_book_identity.html" import book_title %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLoop · Report #{{ report.id }}</title>
+    <link rel="icon" href="{{ url_for('static', filename='bookloop/python-favicon.svg') }}" type="image/svg+xml">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
+  </head>
+  <body>
+    <main class="product-main">
+      {% include "bookloop/_dev_user_switcher.html" %}
+      {% include "bookloop/_product_nav.html" %}
+      <p class="eyebrow">Submitted by you · Report #{{ report.id }}</p>
+      <h1>Report detail</h1>
+
+      <section class="report-detail-card" aria-labelledby="report-status-heading">
+        <h2 id="report-status-heading">Review status</h2>
+        <p class="status-pill status-{{ report.status }}">{{ report.status.replace('_', ' ')|title }}</p>
+        <dl>
+          <dt>Category</dt><dd>{{ report.category.replace('_', ' ')|title }}</dd>
+          <dt>Submitted</dt><dd>{{ report.created_at.strftime("%Y-%m-%d") }}</dd>
+          <dt>Book</dt><dd>{{ book_title(report.borrow_request.listing.title) }} · Request #{{ report.borrow_request_id }}</dd>
+          <dt>Reported user</dt><dd>{{ report.reported_user.username }} {{ user_icon(report.reported_user) }}</dd>
+        </dl>
+      </section>
+
+      <section class="report-detail-card" aria-labelledby="report-details-heading">
+        <h2 id="report-details-heading">Your submitted details</h2>
+        <p class="report-detail-text">{{ report.details }}</p>
+      </section>
+
+      <p><a href="{{ url_for('jinja_client.report_history') }}">← Back to My reports</a></p>
+      {% include "bookloop/_product_footer.html" %}
+    </main>
+  </body>
+</html>

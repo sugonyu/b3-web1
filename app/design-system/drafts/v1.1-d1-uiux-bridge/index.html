@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BookLoop design system draft and low-fidelity screen evidence">
+    <title>BookLoop — Design System Draft v1.1 UIUX Bridge</title>
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="page-width header-layout">
+        <div>
+          <p class="eyebrow">B3 UIUX → 🧩 Deliverable 1</p>
+          <h1>BookLoop Design System</h1>
+          <p class="lede">A privacy-conscious foundation for sharing Korean books in Montreal.</p>
+        </div>
+        <span class="draft-label">Draft v1.1 · Adopted D1 Design System MVP v0.1</span>
+      </div>
+    </header>
+
+    <nav class="section-nav" aria-label="Design system sections">
+      <div class="page-width nav-links">
+        <a href="#foundations">Foundations</a>
+        <a href="#uiux-bridge">UIUX bridge</a>
+        <a href="#components">Components</a>
+        <a href="#states">States</a>
+        <a href="#screens">Low-fi screens</a>
+        <a href="#rationale">Rationale</a>
+      </div>
+    </nav>
+
+    <main class="page-width">
+      <section id="foundations" class="system-section">
+        <div class="section-heading">
+          <p class="eyebrow">01 · Foundations</p>
+          <h2>Shared visual decisions</h2>
+          <p>Warm paper tones keep book content readable; green signals safe, local exchange.</p>
+        </div>
+
+        <h3>Colour tokens</h3>
+        <div class="swatch-grid">
+          <article class="swatch">
+            <div class="swatch-colour colour-ink"></div>
+            <strong>Ink</strong>
+            <code>--colour-ink</code>
+          </article>
+          <article class="swatch">
+            <div class="swatch-colour colour-paper"></div>
+            <strong>Paper</strong>
+            <code>--colour-paper</code>
+          </article>
+          <article class="swatch">
+            <div class="swatch-colour colour-brand"></div>
+            <strong>Leaf</strong>
+            <code>--colour-brand</code>
+          </article>
+          <article class="swatch">
+            <div class="swatch-colour colour-accent"></div>
+            <strong>Bookmark</strong>
+            <code>--colour-accent</code>
+          </article>
+        </div>
+
+        <div class="foundation-grid">
+          <article class="specimen">
+            <h3>Typography</h3>
+            <p class="type-display">Find your next Korean book.</p>
+            <p class="type-heading">A clear section heading</p>
+            <p>Body text stays simple and readable for listings, forms, and request details.</p>
+            <small>Supporting text gives context without competing with the main action.</small>
+          </article>
+
+          <article class="specimen">
+            <h3>Spacing scale</h3>
+            <div class="space-row"><span class="space space-1"></span><code>4px</code></div>
+            <div class="space-row"><span class="space space-2"></span><code>8px</code></div>
+            <div class="space-row"><span class="space space-3"></span><code>16px</code></div>
+            <div class="space-row"><span class="space space-4"></span><code>24px</code></div>
+            <div class="space-row"><span class="space space-5"></span><code>40px</code></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="uiux-bridge" class="system-section">
+        <div class="section-heading">
+          <p class="eyebrow">02 · B3 Applied UIUX bridge</p>
+          <h2>Previous learning, new product context</h2>
+          <p>BookLoop reuses proven design reasoning without copying the Bombom Games visual theme.</p>
+        </div>
+
+        <div class="principle-grid">
+          <article class="specimen">
+            <h3>60 / 30 / 10 colour rule</h3>
+            <div class="ratio-bar" aria-label="60 percent paper, 30 percent surface, 10 percent action">
+              <span class="ratio-60">60% paper</span>
+              <span class="ratio-30">30% surface</span>
+              <span class="ratio-10">10% action</span>
+            </div>
+            <p>Warm paper dominates, white surfaces organize content, and green or orange is reserved for actions and meaning.</p>
+          </article>
+
+          <article class="specimen">
+            <h3>Gestalt: proximity</h3>
+            <p>Cover, title, author, general area, availability, and CTA stay inside one BookListing card so they read as one resource.</p>
+          </article>
+
+          <article class="specimen">
+            <h3>Gestalt: figure-ground</h3>
+            <p>White cards with borders sit above the warm paper background. Important content is visible without decorative shadows.</p>
+          </article>
+
+          <article class="specimen">
+            <h3>User flow before decoration</h3>
+            <p>Browse → Detail → Request → My Requests defines the screen order. Colour and components support this workflow.</p>
+          </article>
+          <article class="specimen">
+            <h3>Presentation colour rationale</h3>
+            <ul>
+              <li><strong>Warm paper:</strong> connects the interface with books and reduces visual fatigue.</li>
+              <li><strong>White surface:</strong> separates listings and forms from the page background.</li>
+              <li><strong>Community green:</strong> represents trust, safety, and local connection.</li>
+              <li><strong>Bookmark orange:</strong> provides limited secondary emphasis without competing with the primary action.</li>
+              <li><strong>Ink:</strong> keeps body text readable while feeling softer than pure black.</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="flow-line" aria-label="BookLoop primary user flow">
+          <strong>Browse Books</strong><span aria-hidden="true">→</span>
+          <strong>Book Detail</strong><span aria-hidden="true">→</span>
+          <strong>Request</strong><span aria-hidden="true">→</span>
+          <strong>My Requests</strong>
+        </div>
+      </section>
+
+      <section id="components" class="system-section">
+        <div class="section-heading">
+          <p class="eyebrow">03 · Components</p>
+          <h2>Reusable product parts</h2>
+          <p>These specimens come from the current BookListing and BorrowRequest API shapes.</p>
+        </div>
+
+        <div class="component-grid">
+          <article class="specimen">
+            <h3>Buttons</h3>
+            <div class="component-row">
+              <button class="button button-primary" type="button">Request this book</button>
+              <button class="button button-secondary" type="button">View details</button>
+              <button class="button button-primary" type="button" disabled>Request sent</button>
+            </div>
+          </article>
+
+          <article class="specimen">
+            <h3>Status badges</h3>
+            <div class="component-row">
+              <span class="badge badge-available">Available</span>
+              <span class="badge badge-pending">Pending</span>
+              <span class="badge badge-approved">Approved</span>
+              <span class="badge badge-unavailable">Unavailable</span>
+            </div>
+          </article>
+
+          <article class="specimen">
+            <h3>Form field</h3>
+            <label for="area">General area</label>
+            <input id="area" name="area" type="text" value="NDG" aria-describedby="area-help">
+            <small id="area-help">Share a neighbourhood only, never a precise address.</small>
+          </article>
+        </div>
+
+        <h3>BookListing cards</h3>
+        <div class="listing-grid">
+          <article class="book-card">
+            <div class="book-cover" aria-hidden="true">아몬드</div>
+            <div class="book-card-body">
+              <div class="card-heading-row">
+                <div>
+                  <h4>Almond</h4>
+                  <p>Sohn Won-pyung</p>
+                </div>
+                <span class="badge badge-available">Available</span>
+              </div>
+              <p class="area-label">📍 NDG · Shared by mina</p>
+              <button class="button button-primary" type="button">Request this book</button>
+            </div>
+          </article>
+
+          <article class="book-card">
+            <div class="book-cover alternate-cover" aria-hidden="true">채식주의자</div>
+            <div class="book-card-body">
+              <div class="card-heading-row">
+                <div>
+                  <h4>The Vegetarian</h4>
+                  <p>Han Kang</p>
+                </div>
+                <span class="badge badge-unavailable">Unavailable</span>
+              </div>
+              <p class="area-label">📍 Verdun · Shared by jisu</p>
+              <button class="button button-primary" type="button" disabled>Not available</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="states" class="system-section">
+        <div class="section-heading">
+          <p class="eyebrow">04 · Interface states</p>
+          <h2>Visible feedback</h2>
+        </div>
+
+        <div class="state-grid">
+          <article class="state-card state-loading" aria-label="Loading example">
+            <span class="spinner" aria-hidden="true"></span>
+            <h3>Loading books</h3>
+            <p>Keep the user informed while listings arrive.</p>
+          </article>
+          <article class="state-card">
+            <span class="state-icon" aria-hidden="true">📚</span>
+            <h3>No books found</h3>
+            <p>Try another title, author, or neighbourhood.</p>
+          </article>
+          <article class="state-card state-success" role="status">
+            <span class="state-icon" aria-hidden="true">✓</span>
+            <h3>Request sent</h3>
+            <p>The owner can now approve or reject your request.</p>
+          </article>
+          <article class="state-card state-error" role="alert">
+            <span class="state-icon" aria-hidden="true">!</span>
+            <h3>Request not sent</h3>
+            <p>Check the required information and try again.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="screens" class="system-section">
+        <div class="section-heading">
+          <p class="eyebrow">05 · Low-fi screens</p>
+          <h2>Three workflow sketches</h2>
+          <p>Structure only. Content hierarchy and actions are under review.</p>
+        </div>
+
+        <div class="screen-grid">
+          <article class="screen-frame">
+            <p class="screen-label">Screen 1 · Browse Books</p>
+            <div class="screen-header"><strong>BookLoop</strong><span>My requests</span></div>
+            <div class="wire-search">Search title or author</div>
+            <div class="wire-filter">Area: All · Availability: Available</div>
+            <div class="wire-card"><span class="wire-cover"></span><span>Book listing</span></div>
+            <div class="wire-card"><span class="wire-cover"></span><span>Book listing</span></div>
+          </article>
+
+          <article class="screen-frame">
+            <p class="screen-label">Screen 2 · Book Detail / Request</p>
+            <div class="screen-header"><strong>BookLoop</strong><span>Back</span></div>
+            <div class="wire-detail">
+              <span class="wire-cover wire-cover-large"></span>
+              <div>
+                <strong>Title and author</strong>
+                <p>General area · Availability</p>
+                <div class="wire-button">Request this book</div>
+              </div>
+            </div>
+            <div class="wire-panel">Privacy note and request expectations</div>
+          </article>
+
+          <article class="screen-frame">
+            <p class="screen-label">Screen 3 · My Requests</p>
+            <div class="screen-header"><strong>BookLoop</strong><span>Browse</span></div>
+            <div class="wire-tabs">Borrowing · Lending</div>
+            <div class="wire-request"><span>Almond</span><span>Pending</span></div>
+            <div class="wire-request"><span>The Vegetarian</span><span>Approved</span></div>
+            <div class="wire-panel">Contact details remain hidden until approval.</div>
+          </article>
+        </div>
+      </section>
+
+      <section id="rationale" class="system-section rationale-section">
+        <div class="section-heading">
+          <p class="eyebrow">06 · Rationale</p>
+          <h2>Why this direction</h2>
+        </div>
+        <div class="rationale-grid">
+          <article>
+            <h3>Privacy first</h3>
+            <p>Cards show only a general area. Exact address and contact information are not public listing content.</p>
+          </article>
+          <article>
+            <h3>Calm and readable</h3>
+            <p>A small colour system and clear hierarchy keep attention on titles, availability, and the primary action.</p>
+          </article>
+          <article>
+            <h3>Accessible defaults</h3>
+            <p>Visible labels, keyboard focus, text-backed status, and readable contrast are component requirements.</p>
+          </article>
+          <article>
+            <h3>React-ready</h3>
+            <p>Tokens and repeated component shapes can later become React components without changing the Flask API contract.</p>
+          </article>
+          <article>
+            <h3>UIUX continuity</h3>
+            <p>The 60/30/10, Gestalt, and user-flow lessons move forward while BookLoop keeps its own audience, content, and visual identity.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="page-width">
+        <strong>BookLoop Design System Draft v1.1 — UIUX Bridge</strong>
+        <p>Adopted as the Thursday Deliverable 1 Design System MVP v0.1 baseline · Iteration continues</p>
+      </div>
+    </footer>
+  </body>
+</html>
