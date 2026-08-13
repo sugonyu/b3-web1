@@ -41,6 +41,8 @@
           <nav class="request-links" aria-label="Borrowing request views">
             <a href="{{ url_for('jinja_client.borrower_request_history') }}">🙋 Sent requests ({{ borrower_request_count }})</a>
             <a href="{{ url_for('jinja_client.listing_owner_request_history') }}">📬 Received requests ({{ owner_request_count }})</a>
+            <a href="{{ url_for('jinja_client.my_books') }}">📚 My books</a>
+            <a href="{{ url_for('jinja_client.new_book') }}">Add a book</a>
           </nav>
         </section>
       {% else %}

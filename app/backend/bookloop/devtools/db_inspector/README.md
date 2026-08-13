@@ -1,6 +1,6 @@
-# Developer Database Inspector v0.3
+# Developer Database Inspector v0.4
 
-BookLoop의 `User`, `BookListing`, `BorrowRequest` row와 관계 ID를 브라우저에서
+BookLoop의 `User`, `BookListing`, `BorrowRequest`, `Report` row와 관계 ID를 브라우저에서
 빠르게 확인하는 **개발 전용 read-only 화면**이다.
 
 전체 계획과 제품 UI 우선순위는
@@ -45,13 +45,14 @@ http://MAIN_LAN_IP:5000/dev/db/
 ChromeOS Wi-Fi 화면의 현재 Main LAN IP를 사용하며 `100.115.92.x` Crostini 내부 IP를
 브라우저 주소로 사용하지 않는다.
 
-## v0.2가 보여주는 값
+## v0.4가 보여주는 값
 
 | Model | 표시 필드 |
 | --- | --- |
 | User | `id`, `created_at`, `username`, `general_area` |
-| BookListing | `id`, `created_at`, `title`, `author`, `availability`, `owner_id` |
+| BookListing | `id`, `created_at`, `title`, `author`, `availability`, owner ID + username |
 | BorrowRequest | `id`, `created_at`, `status`, `listing_id`, `borrower_id` |
+| Report | `id`, `created_at`, `reporter`, `reported user`, `category`, `details`, `status` |
 
 BorrowRequest의 `status`는 제품 화면과 같은 색상 배지로 표시한다. 테이블 위 레전드에서
 `Pending`(amber), `Approved`(green), `Rejected`(red), `Cancelled`(gray),
@@ -59,7 +60,8 @@ BorrowRequest의 `status`는 제품 화면과 같은 색상 배지로 표시한�
 텍스트 label도 항상 유지한다.
 
 각 table은 `created_at DESC`, 같은 시각이면 `id DESC`로 표시해 최신 row가 가장
-위에 온다. Borrow Requests 시간은 지역명과 초를 생략한 짧은 현지 시간으로 표시한다.
+위에 온다. 모든 생성 시간은 지역명과 초를 생략한 `Aug 12 · 12:51 PM` 형식으로
+통일한다.
 timestamp 도입 전의 기존 row는 정확한 과거 생성 시점을 추측하지 않고 `Legacy row`로
 표시한다.
 
@@ -73,7 +75,9 @@ python3 bl_cli.py upgrade-created-at
 새 DB는 `db.create_all()`이 처음부터 컬럼을 생성하므로 이 명령이 no-op이다.
 
 `User.email`과 `User.password_hash`는 query 결과 객체에 존재하더라도 template에
-전달된 화면에서 읽거나 출력하지 않는다.
+전달된 화면에서 읽거나 출력하지 않는다. Report의 `details`는 moderation case
+내용이므로 내부 Inspector에서만 표시하며, 제품 사용자 화면이나 공개 JSON API에는
+추가하지 않는다.
 
 ## 파일 역할
 
@@ -83,7 +87,7 @@ db_inspector/
 ├── __init__.py                 # Blueprint 공개
 ├── routes.py                   # 접근 gate와 read-only query
 └── templates/db_inspector/
-    └── index.html              # 세 model table과 empty state
+    └── index.html              # 네 model table과 empty state
 ```
 
 ## 업그레이드 포인트

@@ -160,6 +160,11 @@ configuration and environment
 
 ```text
 Books
+→ owner adds a book
+→ owner reviews My books
+→ owner edits title or author
+→ owner changes availability
+→ owner deletes a listing without request history
 → Tony sends request
 → Pending
 → Mina reviews Received request
@@ -172,8 +177,8 @@ Books
 ```
 
 Admin UI는 system overview, book-sharing state와 read-only Report queue를 보여준다.
-Report model persistence는 존재하지만 사용자 Reporting form과 validation service는
-아직 다음 D3 구현 단계다.
+로그인 사용자는 `My books`에서 자신의 책을 등록·수정하고 availability를 전환할 수
+있다. 사용자 책 관리와 Report workflow는 현재 Beta의 검증된 Jinja 흐름이다.
 
 ## 7. Intentional boundaries and known gaps
 
@@ -184,10 +189,36 @@ Report model persistence는 존재하지만 사용자 Reporting form과 validati
   경계로 이동할 수 있다.
 - Listing API write route는 아직 request JSON의 `owner_id`를 사용한다. session-based
   authorization을 적용하기 전에는 React write consumer와 연결하지 않는다.
+- 사용자 책 관리 Jinja route는 request body의 owner ID를 신뢰하지 않고
+  `current_user.id`와 listing owner를 service에서 비교한다.
 - React는 D3 필수 기능이 아니다. 시작할 경우 기존 API의 read-only consumer
   slice로 제한한다.
 
-## 8. Next implementation boundary
+## 8. Current user book management boundary
+
+```text
+My books / Add a book / Edit
+→ login_required Jinja route
+→ services/book_listings.py
+→ current_user ownership check
+→ BookListing transaction
+→ My books template
+```
+
+현재 화면 경로:
+
+- `/my-books/` — 본인 책 목록
+- `/my-books/new` — 책 등록
+- `/my-books/<listing_id>/edit` — 제목·저자 수정
+- `/my-books/<listing_id>/availability` — availability 전환
+- `/my-books/<listing_id>/delete` — request history가 없는 본인 책 삭제
+
+availability가 `Unavailable`인 책은 새로운 borrow request를 받을 수 없다. 기존
+borrow request history는 삭제하지 않으며, 다른 회원의 listing은 수정하거나
+availability를 바꿀 수 없다.
+borrow request history가 있는 책은 기록 보존을 위해 삭제할 수 없다.
+
+## 9. Next implementation boundary
 
 Reporting logic을 기존 route나 Admin Dashboard에 섞지 않는다.
 
@@ -207,7 +238,7 @@ Jinja Report form
 - category와 details server-side validation
 - Report transaction과 예상 가능한 service error
 
-## 9. Review order
+## 10. Review order
 
 오래 뒤 다시 볼 때는 다음 순서로 읽는다.
 

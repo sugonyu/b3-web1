@@ -9,8 +9,8 @@ from ipaddress import ip_address, ip_network
 from flask import Blueprint, abort, current_app, redirect, render_template, request, url_for
 from flask_login import current_user
 
-from ...db.models import BookListing, BorrowRequest, User
-from ...services.time_display import format_short_local_datetime, format_toronto_datetime
+from ...db.models import BookListing, BorrowRequest, Report, User
+from ...services.time_display import format_short_local_datetime
 
 
 db_inspector = Blueprint(
@@ -96,7 +96,7 @@ def protect_developer_tool():
 @db_inspector.get("")
 @db_inspector.get("/")
 def index():
-    """세 핵심 model을 newest-first로 읽어 Inspector template에 전달한다.
+    """네 핵심 model을 newest-first로 읽어 Inspector template에 전달한다.
 
     query 결과는 SQLAlchemy 객체이지만 template은 허용된 field만 명시적으로
     출력한다. 특히 User의 email과 password_hash는 절대로 화면에 표시하지 않는다.
@@ -112,12 +112,16 @@ def index():
         BorrowRequest.created_at.desc(),
         BorrowRequest.id.desc(),
     ).all()
+    reports = Report.query.order_by(
+        Report.created_at.desc(),
+        Report.id.desc(),
+    ).all()
 
     return render_template(
         "db_inspector/index.html",
         users=users,
         listings=listings,
         borrow_requests=borrow_requests,
-        format_created_at=format_toronto_datetime,
-        format_request_time=format_short_local_datetime,
+        reports=reports,
+        format_time=format_short_local_datetime,
     )

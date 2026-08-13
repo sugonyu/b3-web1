@@ -42,6 +42,15 @@ from ..services.reports import (
     get_reporter_report_detail_service,
     list_reporter_reports_service,
 )
+from ..services.book_listings import (
+    BookListingServiceError,
+    create_book_listing_service,
+    delete_book_listing_service,
+    get_owner_book_listing_service,
+    list_owner_book_listings_service,
+    update_book_listing_availability_service,
+    update_book_listing_service,
+)
 from ..services.health import get_health_status_service
 from ..services.time_display import format_toronto_date, format_toronto_datetime
 from ..services.user_profiles import get_public_user_profile_service
@@ -160,10 +169,181 @@ def get_product_home_context():
     return context
 
 
+def get_book_listing_form_feedback(error):
+    """BookListing service 오류를 등록·수정 화면 메시지로 바꾼다."""
+    messages = {
+        "title cannot be blank": "Book title is required.",
+        "author cannot be blank": "Author is required.",
+        "listing not found": "This book listing does not exist.",
+        "owner permission required": "Only the book owner can manage this listing.",
+    }
+    return messages.get(error.message, "The book listing could not be saved.")
+
+
 @jinja_client.get("/")
 def product_home():
     """로그인 상태와 공유 가능한 책 목록을 보여주는 D2 제품 홈."""
     return render_template("bookloop/index.html", **get_product_home_context())
+
+
+@jinja_client.get("/my-books/", endpoint="my_books")
+@login_required
+def my_books():
+    """현재 로그인 사용자의 책 목록만 보여준다."""
+    return render_template(
+        "bookloop/my_books.html",
+        listings=list_owner_book_listings_service(current_user.id),
+    )
+
+
+@jinja_client.route("/my-books/new", methods=["GET", "POST"], endpoint="new_book")
+@login_required
+def new_book():
+    """현재 로그인 사용자가 새 책 listing을 등록한다."""
+    form_data = {"title": "", "author": ""}
+
+    if request.method == "POST":
+        form_data = {
+            "title": request.form.get("title", ""),
+            "author": request.form.get("author", ""),
+        }
+        try:
+            create_book_listing_service(
+                current_user.id,
+                form_data["title"],
+                form_data["author"],
+            )
+        except BookListingServiceError as error:
+            return render_template(
+                "bookloop/book_form.html",
+                form_data=form_data,
+                form_title="Add a book",
+                submit_label="Add book",
+                error=get_book_listing_form_feedback(error),
+            ), error.status_code
+
+        flash("Your book was added.", "success")
+        return redirect(url_for("jinja_client.my_books"))
+
+    return render_template(
+        "bookloop/book_form.html",
+        form_data=form_data,
+        form_title="Add a book",
+        submit_label="Add book",
+    )
+
+
+@jinja_client.route(
+    "/my-books/<int:listing_id>/edit",
+    methods=["GET", "POST"],
+    endpoint="edit_book",
+)
+@login_required
+def edit_book(listing_id):
+    """현재 로그인 사용자의 책 제목과 저자를 수정한다."""
+    try:
+        listing = get_owner_book_listing_service(listing_id, current_user.id)
+    except BookListingServiceError as error:
+        return render_template(
+            "bookloop/request_error.html",
+            feedback={
+                "title": "Book management unavailable",
+                "message": get_book_listing_form_feedback(error),
+                "status_code": error.status_code,
+                "tone": "error",
+                "icon": "⛔",
+            },
+        ), error.status_code
+
+    form_data = {"title": listing.title, "author": listing.author}
+    if request.method == "POST":
+        form_data = {
+            "title": request.form.get("title", ""),
+            "author": request.form.get("author", ""),
+        }
+        try:
+            update_book_listing_service(
+                listing_id,
+                current_user.id,
+                form_data["title"],
+                form_data["author"],
+            )
+        except BookListingServiceError as error:
+            return render_template(
+                "bookloop/book_form.html",
+                form_data=form_data,
+                form_title="Edit your book",
+                submit_label="Save changes",
+                error=get_book_listing_form_feedback(error),
+            ), error.status_code
+
+        flash("Your book was updated.", "success")
+        return redirect(url_for("jinja_client.my_books"))
+
+    return render_template(
+        "bookloop/book_form.html",
+        form_data=form_data,
+        form_title="Edit your book",
+        submit_label="Save changes",
+    )
+
+
+@jinja_client.post(
+    "/my-books/<int:listing_id>/availability",
+    endpoint="change_book_availability",
+)
+@login_required
+def change_book_availability(listing_id):
+    """현재 로그인 사용자가 자신의 책 availability를 전환한다."""
+    try:
+        listing = get_owner_book_listing_service(listing_id, current_user.id)
+        update_book_listing_availability_service(
+            listing_id,
+            current_user.id,
+            not listing.availability,
+        )
+    except BookListingServiceError as error:
+        return render_template(
+            "bookloop/request_error.html",
+            feedback={
+                "title": "Availability change unavailable",
+                "message": get_book_listing_form_feedback(error),
+                "status_code": error.status_code,
+                "tone": "error",
+                "icon": "⛔",
+            },
+        ), error.status_code
+
+    flash("Book availability was updated.", "success")
+    return redirect(url_for("jinja_client.my_books"))
+
+
+@jinja_client.post(
+    "/my-books/<int:listing_id>/delete",
+    endpoint="delete_book",
+)
+@login_required
+def delete_book(listing_id):
+    """현재 사용자의 request history가 없는 책을 삭제한다."""
+    try:
+        delete_book_listing_service(listing_id, current_user.id)
+    except BookListingServiceError as error:
+        feedback_message = get_book_listing_form_feedback(error)
+        if error.message == "listing has borrow request history":
+            feedback_message = "A book with borrow request history cannot be deleted."
+        return render_template(
+            "bookloop/request_error.html",
+            feedback={
+                "title": "Book cannot be deleted",
+                "message": feedback_message,
+                "status_code": error.status_code,
+                "tone": "warning" if error.status_code == 409 else "error",
+                "icon": "⚠️" if error.status_code == 409 else "⛔",
+            },
+        ), error.status_code
+
+    flash("Your book was deleted.", "success")
+    return redirect(url_for("jinja_client.my_books"))
 
 
 @jinja_client.post("/listings/<int:listing_id>/request", endpoint="request_book")

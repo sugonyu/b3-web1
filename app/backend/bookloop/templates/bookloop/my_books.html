@@ -1,0 +1,74 @@
+<!doctype html>
+{% from "bookloop/_user_identity.html" import user_icon %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLoop · My books</title>
+    <link rel="icon" href="{{ url_for('static', filename='bookloop/python-favicon.svg') }}" type="image/svg+xml">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
+  </head>
+  <body>
+    <main class="product-main">
+      {% include "bookloop/_dev_user_switcher.html" %}
+      <header class="product-header">
+        <h1>My books</h1>
+        <div class="product-account" aria-label="Signed-in user">
+          <span>{{ current_user.username }} {{ user_icon(current_user) }} · User #{{ current_user.id }}</span>
+          <a href="{{ url_for('jinja_client.user_profile', user_id=current_user.id) }}">Profile</a>
+          <form action="{{ url_for('auth.logout') }}" method="post">
+            <button type="submit">Log out</button>
+          </form>
+        </div>
+      </header>
+      {% include "bookloop/_product_nav.html" %}
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <p class="feedback feedback-{{ 'success' if category == 'success' else 'warning' }}" role="status">{{ message }}</p>
+        {% endfor %}
+      {% endwith %}
+
+      <section class="home-actions">
+        <p>Manage the books you own and choose whether each one is available to borrow.</p>
+        <a class="button-link" href="{{ url_for('jinja_client.new_book') }}">Add a book</a>
+      </section>
+
+      <section aria-labelledby="my-books-title">
+        <h2 id="my-books-title">Your book listings</h2>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th scope="col">Book</th>
+                <th scope="col">Availability</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for listing in listings %}
+                <tr>
+                  <td data-label="Book"><strong>{{ listing.title }}</strong><br><small>{{ listing.author }} · Book #{{ listing.id }}</small></td>
+                  <td data-label="Availability">{{ "Available" if listing.availability else "Unavailable" }}</td>
+                  <td data-label="Actions">
+                    <a href="{{ url_for('jinja_client.edit_book', listing_id=listing.id) }}">Edit</a>
+                    <form action="{{ url_for('jinja_client.change_book_availability', listing_id=listing.id) }}" method="post">
+                      <button type="submit">{{ "Make unavailable" if listing.availability else "Make available" }}</button>
+                    </form>
+                    <form action="{{ url_for('jinja_client.delete_book', listing_id=listing.id) }}" method="post">
+                      <button type="submit">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              {% else %}
+                <tr><td colspan="3">You have not added a book yet.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {% include "bookloop/_product_footer.html" %}
+    </main>
+  </body>
+</html>

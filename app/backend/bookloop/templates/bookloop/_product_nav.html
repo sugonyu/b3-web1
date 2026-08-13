@@ -11,6 +11,10 @@
     href="{{ url_for('jinja_client.listing_owner_request_history') }}"
     {% if request.endpoint == 'jinja_client.listing_owner_request_history' %}aria-current="page"{% endif %}
   >📬 Received requests</a>
+  <a
+    href="{{ url_for('jinja_client.my_books') }}"
+    {% if request.endpoint in ('jinja_client.my_books', 'jinja_client.new_book', 'jinja_client.edit_book') %}aria-current="page"{% endif %}
+  >📚 My books</a>
   {% if current_user.is_authenticated and current_user.is_admin %}
     <a
       href="{{ url_for('admin.dashboard') }}"

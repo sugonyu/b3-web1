@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash
 
 from bookloop import create_app
 from bookloop.db import db
-from bookloop.db.models import BookListing, BorrowRequest, User
+from bookloop.db.models import BookListing, BorrowRequest, Report, User
 
 
 class DeveloperDatabaseInspectorTest(unittest.TestCase):
@@ -55,7 +55,15 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
                 listing=listing,
                 borrower=borrower,
             )
-            db.session.add_all([owner, borrower, listing, borrow_request])
+            report = Report(
+                reporter=borrower,
+                reported_user=owner,
+                borrow_request=borrow_request,
+                category="no_show",
+                details="The reported user did not arrive at the agreed place.",
+                status="under_review",
+            )
+            db.session.add_all([owner, borrower, listing, borrow_request, report])
             db.session.commit()
 
     def login(self, client, username):
@@ -154,7 +162,7 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
         response.close()
 
-    def test_inspector_lists_safe_fields_for_three_models(self):
+    def test_inspector_lists_safe_fields_for_four_models(self):
         app = self.create_test_app(inspector_enabled=True, debug=True)
         self.seed_database(app)
 
@@ -164,6 +172,7 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
         self.assertIn(b"Users", response.data)
         self.assertIn(b"Book Listings", response.data)
         self.assertIn(b"Borrow Requests", response.data)
+        self.assertIn(b"Reports", response.data)
         self.assertIn(b'href="/dev/db/"', response.data)
         self.assertIn(b"Reload", response.data)
         self.assertIn(b"Server:", response.data)
@@ -179,6 +188,11 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
         self.assertIn(b"mina", response.data)
         self.assertIn(b"tony", response.data)
         self.assertIn(b"The Odyssey", response.data)
+        self.assertIn(b"no_show", response.data)
+        self.assertIn(b"The reported user did not arrive", response.data)
+        self.assertIn(b"under_review", response.data)
+        self.assertIn(b"Reporter", response.data)
+        self.assertIn(b"Reported user", response.data)
         self.assertIn(b"pending", response.data)
         self.assertIn(b'aria-label="Borrow request status legend"', response.data)
         self.assertIn(b'class="status-pill status-pending"', response.data)
@@ -186,11 +200,15 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
         self.assertIn(b'class="status-pill status-rejected"', response.data)
         self.assertIn(b'class="status-pill status-cancelled"', response.data)
         self.assertIn(b'class="status-pill status-returned"', response.data)
-        self.assertIn(b"<th>Created</th><th>Status</th><th>Listing</th><th>Owner</th><th>Borrower</th>", response.data)
-        self.assertIn(b"Created (Toronto)", response.data)
+        self.assertIn(b'class="status-pill status-under_review"', response.data)
+        self.assertIn(b"<th>ID</th><th>Status</th><th>Listing</th><th>Owner</th><th>Borrower</th><th>Created</th>", response.data)
+        self.assertNotIn(b"Created (Toronto)", response.data)
+        self.assertIn(b"<th>ID</th><th>Reporter</th><th>Reported user</th><th>Category</th><th>Details</th><th>Status</th><th>Created</th>", response.data)
+        self.assertIn(b"<th>ID</th><th>Title</th><th>Author</th><th>Available</th><th>Owner</th><th>Created</th>", response.data)
         self.assertIn(b"<code>#1</code> \xc2\xb7 The Odyssey", response.data)
         self.assertIn(b"<code>#1</code> \xc2\xb7 mina", response.data)
         self.assertIn(b"<code>#2</code> \xc2\xb7 tony", response.data)
+        self.assertIn(b"<code>#1</code> \xc2\xb7 mina</td>", response.data)
 
         # 자주 확인하는 거래 흐름부터 위에 보이도록 model section 순서를 고정한다.
         requests_position = response.data.index(b'id="requests-heading"')
@@ -202,6 +220,7 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
         # 실제 private 값이 HTML 어디에도 섞이지 않았는지 값 자체로 검사한다.
         self.assertNotIn(b"mina.private@example.com", response.data)
         self.assertNotIn(b"tony.private@example.com", response.data)
+        self.assertNotIn(b"mina.private@example.com", response.data)
         self.assertNotIn(b"never-render-this-hash", response.data)
         self.assertNotIn(b"another-private-hash", response.data)
         response.close()
@@ -228,9 +247,12 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
         response = app.test_client().get("/dev/db")
         html = response.get_data(as_text=True)
 
-        self.assertLess(html.index("<td>2</td>"), html.index("<td>1</td>"))
-        self.assertIn("Aug 6 · 5:30 PM", html)
-        self.assertIn("Aug 5 · 12:00 PM", html)
+        requests_table = html.split('<section aria-labelledby="requests-heading">', 1)[1]
+        requests_table = requests_table.split('<section aria-labelledby="listings-heading">', 1)[0]
+        self.assertLess(requests_table.index("<td>2</td>"), requests_table.index("<td>1</td>"))
+        self.assertIn("Aug 6 · 5:30 PM", requests_table)
+        self.assertIn("Aug 5 · 12:00 PM", requests_table)
+        self.assertIn("Aug 12 ·", html)
         response.close()
 
     def test_inspector_get_does_not_change_database_rows(self):

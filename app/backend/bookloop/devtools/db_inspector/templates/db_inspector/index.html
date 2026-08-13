@@ -64,6 +64,10 @@
       .status-rejected { border-color: #b42318; color: #7a271a; background: #fee4e2; }
       .status-cancelled { border-color: #667085; color: #344054; background: #eaecf0; }
       .status-returned { border-color: #2457a7; color: #173f7a; background: #dbeafe; }
+      .status-open { border-color: #996b00; color: #694a00; background: #fff5cc; }
+      .status-under_review { border-color: #2563eb; color: #1e3a8a; background: #dbeafe; }
+      .status-resolved { border-color: #15803d; color: #14532d; background: #dcfce7; }
+      .status-dismissed { border-color: #667085; color: #344054; background: #eaecf0; }
       .empty { padding: 1rem; border: 1px dashed #b8b8ae; background: #fff; }
       .resource-list { display: grid; gap: 0.75rem; }
       .resource-card { padding: 0.85rem 1rem; border: 1px solid #b8b8ae; background: #fff; }
@@ -87,6 +91,41 @@
     </header>
 
     <main>
+      <section aria-labelledby="reports-heading">
+        <h2 id="reports-heading">Reports <span class="count">{{ reports|length }} rows</span></h2>
+        <p class="warning">
+          Report details are moderation content. This read-only internal screen shows
+          the case text for authorized inspection, but never shows either user's email
+          or password hash.
+        </p>
+        <div class="status-legend" aria-label="Report status legend">
+          <span class="status-pill status-open">Open</span>
+          <span class="status-pill status-under_review">Under review</span>
+          <span class="status-pill status-resolved">Resolved</span>
+          <span class="status-pill status-dismissed">Dismissed</span>
+        </div>
+        {% if reports %}
+          <table>
+            <thead><tr><th>ID</th><th>Reporter</th><th>Reported user</th><th>Category</th><th>Details</th><th>Status</th><th>Created</th></tr></thead>
+            <tbody>
+              {% for report in reports %}
+                <tr>
+                  <td>{{ report.id }}</td>
+                  <td><code>#{{ report.reporter_id }}</code> · {{ report.reporter.username }}</td>
+                  <td><code>#{{ report.reported_user_id }}</code> · {{ report.reported_user.username }}</td>
+                  <td>{{ report.category }}</td>
+                  <td>{{ report.details }}</td>
+                  <td><span class="status-pill status-{{ report.status }}">{{ report.status }}</span></td>
+                  <td>{{ format_time(report.created_at) }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="empty">No Report rows.</p>
+        {% endif %}
+      </section>
+
       <section aria-labelledby="requests-heading">
         <h2 id="requests-heading">Borrow Requests <span class="count">{{ borrow_requests|length }} rows</span></h2>
         <p class="count">
@@ -102,15 +141,16 @@
         </div>
         {% if borrow_requests %}
           <table>
-            <thead><tr><th>ID</th><th>Created</th><th>Status</th><th>Listing</th><th>Owner</th><th>Borrower</th></tr></thead>
+            <thead><tr><th>ID</th><th>Status</th><th>Listing</th><th>Owner</th><th>Borrower</th><th>Created</th></tr></thead>
             <tbody>
               {% for borrow_request in borrow_requests %}
                 <tr>
-                  <td>{{ borrow_request.id }}</td><td>{{ format_request_time(borrow_request.created_at) }}</td>
+                  <td>{{ borrow_request.id }}</td>
                   <td><span class="status-pill status-{{ borrow_request.status }}">{{ borrow_request.status }}</span></td>
                   <td><code>#{{ borrow_request.listing_id }}</code> · {{ borrow_request.listing.title }}</td>
                   <td><code>#{{ borrow_request.listing.owner_id }}</code> · {{ borrow_request.listing.owner.username }}</td>
                   <td><code>#{{ borrow_request.borrower_id }}</code> · {{ borrow_request.borrower.username }}</td>
+                  <td>{{ format_time(borrow_request.created_at) }}</td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -124,12 +164,12 @@
         <h2 id="listings-heading">Book Listings <span class="count">{{ listings|length }} rows</span></h2>
         {% if listings %}
           <table>
-            <thead><tr><th>ID</th><th>Created (Toronto)</th><th>Title</th><th>Author</th><th>Available</th><th>Owner ID</th></tr></thead>
+            <thead><tr><th>ID</th><th>Title</th><th>Author</th><th>Available</th><th>Owner</th><th>Created</th></tr></thead>
             <tbody>
               {% for listing in listings %}
                 <tr>
-                  <td>{{ listing.id }}</td><td>{{ format_created_at(listing.created_at) }}</td><td>{{ listing.title }}</td><td>{{ listing.author }}</td>
-                  <td>{{ "yes" if listing.availability else "no" }}</td><td>{{ listing.owner_id }}</td>
+                  <td>{{ listing.id }}</td><td>{{ listing.title }}</td><td>{{ listing.author }}</td>
+                  <td>{{ "yes" if listing.availability else "no" }}</td><td><code>#{{ listing.owner_id }}</code> · {{ listing.owner.username }}</td><td>{{ format_time(listing.created_at) }}</td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -143,10 +183,10 @@
         <h2 id="users-heading">Users <span class="count">{{ users|length }} rows</span></h2>
         {% if users %}
           <table>
-            <thead><tr><th>ID</th><th>Created (Toronto)</th><th>Username</th><th>General area</th></tr></thead>
+            <thead><tr><th>ID</th><th>Username</th><th>General area</th><th>Created</th></tr></thead>
             <tbody>
               {% for user in users %}
-                <tr><td>{{ user.id }}</td><td>{{ format_created_at(user.created_at) }}</td><td>{{ user.username }}</td><td>{{ user.general_area }}</td></tr>
+                <tr><td>{{ user.id }}</td><td>{{ user.username }}</td><td>{{ user.general_area }}</td><td>{{ format_time(user.created_at) }}</td></tr>
               {% endfor %}
             </tbody>
           </table>

@@ -150,6 +150,29 @@ Tony에게는 본인의 request가 `Pending`일 때만 `Cancel request`가 보�
 승인하거나 거절한 뒤에는 취소할 수 없다. 취소된 요청은 history에 `Cancelled`로
 남고 책은 available 상태를 유지한다.
 
+### My Books — Add, Edit and Availability
+
+로그인 후 `📚 My books`에서 본인이 소유한 책을 관리할 수 있다.
+
+```text
+My books
+→ Add a book
+→ 제목과 저자 입력
+→ My books 목록 확인
+→ Edit, Make unavailable / Make available 또는 Delete
+```
+
+- 책 등록 시 제목과 저자는 필수다.
+- 책 정보 수정은 제목과 저자만 가능하다.
+- `Unavailable`로 바꾸면 새 borrow request를 받지 않는다.
+- 다른 회원의 책은 목록에 나타나지 않으며 수정할 수 없다.
+- 책을 다시 공유하려면 `Make available`을 선택한다.
+- borrow request history가 없는 책은 `Delete`로 삭제할 수 있다.
+- request history가 있는 책은 거래 기록 보존을 위해 삭제할 수 없다.
+
+실제 권한 검사는 화면 버튼이 아니라 backend의 `current_user.id`와 listing
+`owner_id` 비교로 수행한다.
+
 ### Approved Contact Exchange
 
 내장 메시징 대신 request가 `Approved`가 된 뒤 두 당사자의 상세 화면에서만 상대방

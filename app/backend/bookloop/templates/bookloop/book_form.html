@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLoop · {{ form_title }}</title>
+    <link rel="icon" href="{{ url_for('static', filename='bookloop/python-favicon.svg') }}" type="image/svg+xml">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
+  </head>
+  <body>
+    <main class="product-main">
+      <a class="brand-badge" href="{{ url_for('jinja_client.product_home') }}">📚 BookLoop</a>
+      <p class="eyebrow">Book management · {{ current_user.username }}</p>
+      <h1>{{ form_title }}</h1>
+
+      {% if error %}
+        <p class="error-message" role="alert">{{ error }}</p>
+      {% endif %}
+
+      <form method="post">
+        <p>
+          <label for="title">Book title</label><br>
+          <input id="title" name="title" type="text" value="{{ form_data.title }}" maxlength="150" required>
+        </p>
+        <p>
+          <label for="author">Author</label><br>
+          <input id="author" name="author" type="text" value="{{ form_data.author }}" maxlength="120" required>
+        </p>
+        <button type="submit">{{ submit_label }}</button>
+        <a href="{{ url_for('jinja_client.my_books') }}">Cancel</a>
+      </form>
+    </main>
+  </body>
+</html>

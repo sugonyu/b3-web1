@@ -1,8 +1,8 @@
 # MVP v0.4 — Feature-Complete Beta Candidate
 
 Official checkpoint: 🔗 Deliverable 4 — Feature-Complete Beta
-Review date: pending
-Status: Beta checkpoint recorded — feature completion in progress
+Review date: August 12, 2026
+Status: Beta v0.4.0-beta.2 feature-complete candidate — release review pending
 
 Roadmap: [BookLoop Web1 Roadmap](../../docs/bookloop-web1-roadmap.md)
 
@@ -13,9 +13,9 @@ the remaining user book-management and operator-inspection gaps.
 
 ## Current Beta checkpoint
 
-`BookLoop Beta v0.4.0-beta.1` is frozen in the Beta snapshot copied into this
-public project folder. The Report workflow is connected from user submission
-through Admin review and reporter status tracking.
+`BookLoop Beta v0.4.0-beta.2` is frozen in the private lab snapshot. The public
+application source has been updated from that verified lab state; no code snapshot
+is stored in the public repository.
 
 ## Completed at this checkpoint
 
@@ -24,15 +24,14 @@ through Admin review and reporter status tracking.
 - [x] Admin can open Report detail and change its status.
 - [x] Reporter can see their own Report status and detail.
 - [x] Admin can use external email links for follow-up outside BookLoop.
-- [x] Backend regression suite: `146 passed`.
-- [x] Beta snapshot copied into the public project folder.
+- [x] User can add, view, edit, change availability, and safely delete their book listing.
+- [x] DB Inspector shows the Report table with privacy-safe fields and status.
+- [x] Backend regression suite: `157 passed`.
+- [x] Private lab snapshot created for Beta v0.4.0-beta.2.
+- [x] Public application source synchronized from the lab without a public code snapshot.
 
 ## Remaining Beta work
 
-- [ ] User can add a book listing.
-- [ ] User can edit their own book listing.
-- [ ] DB Inspector shows the Report table with safe fields and status.
-- [ ] Run focused and full verification after the remaining features.
 - [ ] Review browser evidence and decide whether this is feature-complete.
 
 ## Explicitly out of current Beta scope
@@ -44,12 +43,12 @@ through Admin review and reporter status tracking.
 
 ## Snapshot and evidence
 
-- Beta snapshot: `../../snapshots/stages/private-stage-beta-v0.4.0-beta.1/`
+- Private lab Beta2 snapshot: created outside this public repository from source commit `b667edd9`
 - Current journal: [August 12, 2026](../../docs/journal/2026-08-12.md)
 - Current board: [Project weekly Kanban](../../docs/project-weekly-kanban-board.html)
 - Application source: [`app/`](../../app/)
 
 ## Verification boundary
 
-The `146 passed` result verifies the current internal Beta checkpoint. It does not
-complete the remaining book-management or DB Inspector Report requirements.
+The `157 passed` result verifies the current internal Beta2 candidate. Browser
+evidence and the release decision remain before calling it a public release.
