@@ -55,7 +55,7 @@ class DeveloperUserSwitcherTest(unittest.TestCase):
         response = client.post("/dev/user-view/mina", follow_redirects=True)
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Signed in as mina 👩".encode(), response.data)
+        self.assertIn("mina 👩".encode(), response.data)
         self.assertIn("DEV · Viewing as mina 👩".encode(), response.data)
         self.assertIn(b'action="/dev/user-view/tony"', response.data)
         self.assertIn(b'id="dev-user-switcher"', response.data)

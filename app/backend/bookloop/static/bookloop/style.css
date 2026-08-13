@@ -78,8 +78,15 @@ h1 {
   gap: 1rem;
 }
 
-.product-header h1 {
+.product-logo {
   margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.25rem);
+}
+
+.page-title {
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+  font-size: clamp(1.4rem, 3vw, 1.75rem);
 }
 
 .product-account {

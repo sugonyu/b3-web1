@@ -12,9 +12,10 @@
   <body>
     <main class="product-main">
       {% include "bookloop/_dev_user_switcher.html" %}
+      {% include "bookloop/_product_header.html" %}
       {% include "bookloop/_product_nav.html" %}
       <p class="eyebrow">🛡️ Authorized admin · {{ current_user.username }} {{ user_icon(current_user) }} · User #{{ current_user.id }}</p>
-      <h1>Admin dashboard</h1>
+      <h1 class="page-title">Admin dashboard</h1>
       <p>Read-only system and moderation overview. Authorized administrators can review member contact information for operations and support.</p>
 
       <section aria-labelledby="system-overview-title">

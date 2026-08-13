@@ -29,7 +29,7 @@ class JinjaEntryRoutesTest(unittest.TestCase):
         response = self.client.get("/")
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b"<h1>BookLoop</h1>", response.data)
+        self.assertIn(b'<h1 class="product-logo">BookLoop</h1>', response.data)
         self.assertIn(b"Sign in before requesting a book.", response.data)
         self.assertIn(b"Books", response.data)
         self.assertIn(b"Log in", response.data)

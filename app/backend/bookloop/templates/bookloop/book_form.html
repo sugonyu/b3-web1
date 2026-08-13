@@ -11,16 +11,8 @@
   <body>
     <main class="product-main">
       {% include "bookloop/_dev_user_switcher.html" %}
-      <header class="product-header">
-        <h1>{{ form_title }}</h1>
-        <div class="product-account" aria-label="Signed-in user">
-          <span>{{ current_user.username }} {{ user_icon(current_user) }} · User #{{ current_user.id }}</span>
-          <a href="{{ url_for('jinja_client.user_profile', user_id=current_user.id) }}">Profile</a>
-          <form action="{{ url_for('auth.logout') }}" method="post">
-            <button type="submit">Log out</button>
-          </form>
-        </div>
-      </header>
+      {% include "bookloop/_product_header.html" %}
+      <h1 class="page-title">{{ form_title }}</h1>
       <p class="eyebrow">Book management · {{ current_user.username }}</p>
       {% include "bookloop/_product_nav.html" %}
 

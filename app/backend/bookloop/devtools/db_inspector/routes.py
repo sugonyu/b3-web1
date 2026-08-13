@@ -1,21 +1,16 @@
 """BookLoop SQLite 내용을 안전하게 읽는 개발 전용 route.
 
-이 모듈은 제품용 Admin 기능이 아니다. GET 요청으로 허용된 model field만 읽으며,
-일반 database 변경 route는 제공하지 않는다. 로컬 demo BorrowRequest reset만
-명시적인 POST action으로 허용한다.
+이 모듈은 제품용 Admin 기능이 아니다. 허용된 model field만 읽으며, 테스트·데모
+중에는 누구나 demo BorrowRequest와 Report를 reset할 수 있다.
 
 Outline:
-1. db_inspector Blueprint and INTERNAL_NETWORKS allowlist
-2. request_address(), is_internal_address() — local access check
-3. protect_developer_tool() — development-only boundary
-4. index() — privacy-safe read-only table display
-5. reset_demo_requests() — local demo BorrowRequest and Report reset action
+1. db_inspector Blueprint
+2. protect_developer_tool() — temporary test/demo boundary
+3. index() — privacy-safe table display
+4. reset_demo_requests() — demo BorrowRequest and Report reset action
 """
 
-from ipaddress import ip_address, ip_network
-
-from flask import Blueprint, abort, current_app, redirect, render_template, request, url_for
-from flask_login import current_user
+from flask import Blueprint, redirect, render_template, url_for
 
 from ...db.models import BookListing, BorrowRequest, Report, User
 from ..bl_cli.seed.commands import reset_demo_requests
@@ -30,75 +25,15 @@ db_inspector = Blueprint(
 )
 
 
-INTERNAL_NETWORKS = tuple(
-    ip_network(network)
-    for network in (
-        "127.0.0.0/8",
-        "::1/128",
-        "10.0.0.0/8",
-        "172.16.0.0/12",
-        "192.168.0.0/16",
-        # ChromeOS Crostini port forwarding에서 보일 수 있는 shared address 범위.
-        "100.64.0.0/10",
-        "fc00::/7",
-        "fe80::/10",
-    )
-)
-
-
-def request_address():
-    """프록시 header를 신뢰하지 않고 직접 연결한 client IP만 해석한다."""
-
-    try:
-        return ip_address(request.remote_addr or "")
-    except ValueError:
-        return None
-
-
-def is_internal_address(address):
-    """loopback, 사설 LAN과 Crostini forwarding 범위만 허용한다."""
-
-    return address is not None and any(address in network for network in INTERNAL_NETWORKS)
-
-
 @db_inspector.before_request
 def protect_developer_tool():
-    """로컬 DEBUG 또는 보호된 LAN 관리자 요청만 허용한다.
+    """테스트·데모 기간의 임시 공개 boundary.
 
-    로컬 DEBUG 요청은 기존 개발 편의를 유지한다. DEBUG를 끈 LAN 데모에서는
-    두 feature flag, 내부 source IP와 관리자 session을 모두 검사한다. 전달받은
-    X-Forwarded-For는 신뢰하지 않고 Flask가 본 직접 연결 주소만 사용한다.
+    테스트·데모 기간에는 조회와 demo reset을 누구에게나 열어 둔다. 이 Blueprint는
+    운영 제품 기능이 아니며, reset은 BorrowRequest와 Report를 초기화한다.
 
-    비활성화 또는 외부 network에서는 404로 route 존재를 숨기고, 내부 network의
-    로그인 사용자에게만 403으로 관리자 권한 부족을 알린다.
+    설정이나 network와 관계없이 조회와 reset을 허용한다.
     """
-    inspector_enabled = current_app.config.get(
-        "ENABLE_DEV_DB_INSPECTOR",
-        False,
-    )
-
-    if not inspector_enabled:
-        abort(404)
-
-    address = request_address()
-
-    if current_app.debug and address is not None and address.is_loopback:
-        return None
-
-    lan_enabled = current_app.config.get(
-        "ENABLE_LAN_DEV_DB_INSPECTOR",
-        False,
-    )
-
-    if not lan_enabled or not is_internal_address(address):
-        abort(404)
-
-    if not current_user.is_authenticated:
-        return redirect(url_for("auth.login", next=request.path))
-
-    if not current_user.is_admin:
-        abort(403)
-
     return None
 
 
@@ -138,7 +73,7 @@ def index():
 
 @db_inspector.post("/reset")
 def reset():
-    """Inspector에서 demo BorrowRequest만 초기화하고 다시 조회한다."""
+    """테스트·데모용 BorrowRequest와 Report를 초기화하고 다시 조회한다."""
     result = reset_demo_requests()
     return redirect(
         url_for("db_inspector.index", reset_deleted=result["deleted_requests"])

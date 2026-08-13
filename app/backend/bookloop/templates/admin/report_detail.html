@@ -12,9 +12,10 @@
   <body>
     <main class="product-main">
       {% include "bookloop/_dev_user_switcher.html" %}
+      {% include "bookloop/_product_header.html" %}
       {% include "bookloop/_product_nav.html" %}
       <p class="eyebrow">Read-only moderation detail</p>
-      <h1>Report #{{ report.id }}</h1>
+      <h1 class="page-title">Report #{{ report.id }}</h1>
       <section class="report-detail-card" aria-labelledby="report-detail-heading">
         <h2 id="report-detail-heading">Case information</h2>
         <dl>

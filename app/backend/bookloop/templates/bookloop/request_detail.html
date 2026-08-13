@@ -12,9 +12,10 @@
   <body>
     <main class="product-main">
       {% include "bookloop/_dev_user_switcher.html" %}
+      {% include "bookloop/_product_header.html" %}
       {% include "bookloop/_product_nav.html" %}
       <p class="eyebrow">Saved in SQLite</p>
-      <h1>Request #{{ borrow_request.id }}</h1>
+      <h1 class="page-title">Request #{{ borrow_request.id }}</h1>
 
       <article class="request-card">
         <p class="status-pill status-{{ borrow_request.status }}">{{ borrow_request.status.replace('_', ' ')|title }}</p>

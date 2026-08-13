@@ -12,9 +12,9 @@
   <body>
     <main class="product-main">
       {% include "bookloop/_dev_user_switcher.html" %}
+      {% include "bookloop/_product_header.html" %}
       {% include "bookloop/_product_nav.html" %}
-      <p class="eyebrow">Signed in as {{ current_user.username }} {{ user_icon(current_user) }} · User #{{ current_user.id }}</p>
-      <h1>My borrowing requests</h1>
+      <h1 class="page-title">My borrowing requests</h1>
       <p>Only requests created by this account are shown.</p>
 
       {% with messages = get_flashed_messages(with_categories=true) %}

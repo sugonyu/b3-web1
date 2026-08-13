@@ -1,4 +1,5 @@
 <!doctype html>
+{% from "bookloop/_user_identity.html" import user_icon %}
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -10,8 +11,9 @@
   <body>
     <main class="product-main">
       {% include "bookloop/_dev_user_switcher.html" %}
+      {% include "bookloop/_product_header.html" %}
       {% include "bookloop/_product_nav.html" %}
-      <h1>Request result</h1>
+      <h1 class="page-title">Request result</h1>
       <section class="feedback feedback-{{ feedback.tone }}" role="alert">
         <h2>{{ feedback.icon }} {{ feedback.title }}</h2>
         <p><strong>{{ feedback.status_code }}</strong> · {{ feedback.message }}</p>

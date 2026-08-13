@@ -12,25 +12,7 @@
   <body>
     <main class="product-main">
       {% include "bookloop/_dev_user_switcher.html" %}
-      <header class="product-header">
-        <h1>BookLoop</h1>
-        {% if current_user.is_authenticated %}
-          <div class="product-account" aria-label="Signed-in user">
-            <span>Signed in as {{ current_user.username }} {{ user_icon(current_user) }} · User #{{ current_user.id }}</span>
-            <a href="{{ url_for('jinja_client.user_profile', user_id=current_user.id) }}">Profile</a>
-            <form action="{{ url_for('auth.logout') }}" method="post">
-              <button type="submit">Log out</button>
-            </form>
-          </div>
-        {% else %}
-          <div class="product-account" aria-label="Guest user">
-            <span>Guest</span>
-            <a href="{{ url_for('auth.login') }}">Log in</a>
-            <a href="{{ url_for('auth.register') }}">Register</a>
-          </div>
-        {% endif %}
-      </header>
-      <p class="client-type">Share Korean books with your local community.</p>
+      {% include "bookloop/_product_header.html" %}
       {% if current_user.is_authenticated %}
         {% include "bookloop/_product_nav.html" %}
       {% endif %}

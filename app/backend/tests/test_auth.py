@@ -55,10 +55,10 @@ class BrowserAuthenticationTest(unittest.TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Signed in as tony 👨".encode(), response.data)
+        self.assertIn("tony 👨".encode(), response.data)
 
         refreshed_response = self.client.get("/")
-        self.assertIn("Signed in as tony 👨".encode(), refreshed_response.data)
+        self.assertIn("tony 👨".encode(), refreshed_response.data)
 
     def test_invalid_password_returns_401_without_starting_a_session(self):
         response = self.client.post(
@@ -110,7 +110,7 @@ class BrowserAuthenticationTest(unittest.TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Signed in as new-reader 👤".encode(), response.data)
+        self.assertIn("new-reader 👤".encode(), response.data)
 
         with self.app.app_context():
             user = User.query.filter_by(username="new-reader").one()

@@ -46,15 +46,13 @@ def create_app(test_config=None):
             "sqlite:///bookloop.db",
         ),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
-        # 개발 DB Inspector는 명시적으로 true를 설정해야만 요청을 허용한다.
-        # DEBUG도 함께 검사하므로 운영 환경에서 실수로 내부 데이터가 노출되지 않는다.
+        # Legacy setting. 현재 테스트·데모에서는 Inspector 조회와 Reset이 공개된다.
         ENABLE_DEV_DB_INSPECTOR=os.getenv(
             "ENABLE_DEV_DB_INSPECTOR",
             "false",
         ).lower()
         in {"1", "true", "yes", "on"},
-        # DEBUG를 끈 LAN 데모에서 Inspector를 열 때 필요한 별도 opt-in이다.
-        # route는 이 설정 외에도 내부 IP와 관리자 session을 검사한다.
+        # Legacy setting. 현재 테스트·데모에서는 사용하지 않는다.
         ENABLE_LAN_DEV_DB_INSPECTOR=os.getenv(
             "ENABLE_LAN_DEV_DB_INSPECTOR",
             "false",

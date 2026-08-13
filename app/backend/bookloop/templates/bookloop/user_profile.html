@@ -12,10 +12,11 @@
   <body>
     <main class="product-main">
       {% include "bookloop/_dev_user_switcher.html" %}
+      {% include "bookloop/_product_header.html" %}
       {% include "bookloop/_product_nav.html" %}
 
       <p class="eyebrow">Privacy-safe member profile</p>
-      <h1>{{ profile.user.username }} {{ user_icon(profile.user) }}</h1>
+      <h1 class="page-title">{{ profile.user.username }} {{ user_icon(profile.user) }}</h1>
 
       <section class="profile-summary" aria-labelledby="profile-summary-heading">
         <h2 id="profile-summary-heading">Member summary</h2>
