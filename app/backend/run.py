@@ -10,6 +10,12 @@ AWP 참조:
 서버 프로필:
 - 기본 ``python run.py``: Main Crostini의 0.0.0.0:5000에서 안전한 LAN 데모 실행
 - 로컬 디버그: FLASK_RUN_HOST=127.0.0.1 FLASK_DEBUG=true python run.py
+
+Outline:
+1. imports and Flask application factory
+2. app — module-level Flask application
+3. env_flag() — environment variable boolean parser
+4. __main__ — local development server and database preparation
 """
 
 import os

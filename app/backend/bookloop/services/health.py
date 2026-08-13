@@ -3,6 +3,9 @@
 병렬공부 대응:
 - Express service: app/backend-express/src/services/health.js
 - 두 service 모두 HTTP request/response를 모르고 상태 dict/object만 반환한다.
+
+Outline:
+1. get_health_status_service() — shared status data for API and Jinja
 """
 
 

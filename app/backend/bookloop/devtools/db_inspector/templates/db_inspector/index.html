@@ -28,6 +28,27 @@
         white-space: nowrap;
       }
       .reload-link:hover, .reload-link:focus { background: #e4eee7; }
+      .inspector-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+      .reset-button {
+        display: inline-block;
+        padding: 0.45rem 0.75rem;
+        border: 1px solid #b42318;
+        border-radius: 999px;
+        color: #fff;
+        background: #b42318;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .reset-button:hover, .reset-button:focus { background: #7a271a; }
+      .confirm-dialog { width: min(calc(100% - 2rem), 30rem); padding: 0; border: 0; background: transparent; }
+      .confirm-dialog::backdrop { background: rgb(36 48 41 / 55%); }
+      .confirm-dialog-card { padding: 1.5rem; border: 1px solid #c9cbbf; background: #fff; box-shadow: 0 1rem 3rem rgb(36 48 41 / 25%); }
+      .confirm-dialog-card h2, .confirm-dialog-card p { margin: 0 0 0.75rem; }
+      .confirm-dialog-actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem; }
+      .confirm-dialog-actions button { padding: 0.45rem 0.75rem; border: 1px solid #315c43; font: inherit; font-weight: 700; cursor: pointer; }
+      .confirm-dialog-cancel { color: #315c43; background: #fff; }
+      .confirm-dialog-submit { color: #fff; background: #b42318; border-color: #b42318 !important; }
       .server-address {
         display: inline-block;
         margin: 0 0 1rem;
@@ -82,12 +103,17 @@
       <p><strong>BookLoop · Developer Tool</strong></p>
       <div class="title-row">
         <h1>Database Inspector</h1>
-        <a class="reload-link" href="{{ url_for('db_inspector.index') }}">↻ Reload</a>
+        <div class="inspector-actions">
+          <a class="reload-link" href="{{ url_for('db_inspector.index') }}">↻ Reload</a>
+          <form action="{{ url_for('db_inspector.reset') }}" method="post" data-confirm="Reset demo BorrowRequests and restore demo listing availability? Users and books will be preserved.">
+            <button class="reset-button" type="submit">Reset</button>
+          </form>
+        </div>
       </div>
       <p class="server-address">
         Server: <code>{{ request.host }}</code>
       </p>
-      <p class="warning">Read-only local debugging screen. Product Admin 기능이 아닙니다.</p>
+      <p class="warning">Read-only local debugging screen. Reset removes demo BorrowRequests and their Reports, then restores demo listing availability. Product Admin 기능이 아닙니다.</p>
     </header>
 
     <main>
@@ -129,8 +155,7 @@
       <section aria-labelledby="requests-heading">
         <h2 id="requests-heading">Borrow Requests <span class="count">{{ borrow_requests|length }} rows</span></h2>
         <p class="count">
-          Demo reset is CLI-only: <code>python3 bl_cli.py reset-demo-requests</code>
-          · Users and Book Listings are preserved.
+          Reset removes demo BorrowRequests and their Reports, then restores demo listing availability. Users and Book Listings are preserved.
         </p>
         <div class="status-legend" aria-label="Borrow request status legend">
           <span class="status-pill status-pending">Pending</span>
@@ -233,5 +258,17 @@
         </div>
       </section>
     </main>
+    <dialog class="confirm-dialog" id="bookloop-confirm-dialog" aria-labelledby="confirm-dialog-title">
+      <form method="dialog" class="confirm-dialog-card">
+        <p><strong>Confirm action</strong></p>
+        <h2 id="confirm-dialog-title">Reset demo data?</h2>
+        <p id="confirm-dialog-message"></p>
+        <div class="confirm-dialog-actions">
+          <button class="confirm-dialog-cancel" value="cancel" type="submit">Cancel</button>
+          <button class="confirm-dialog-submit" id="confirm-dialog-submit" value="confirm" type="submit">Reset</button>
+        </div>
+      </form>
+    </dialog>
+    <script src="{{ url_for('static', filename='bookloop/confirm-dialog.js') }}" defer></script>
   </body>
 </html>

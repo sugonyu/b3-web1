@@ -1,4 +1,11 @@
-"""UTC database timestamp를 BookLoop 화면용 Toronto 시간으로 변환한다."""
+"""UTC database timestamp를 BookLoop 화면용 Toronto 시간으로 변환한다.
+
+Outline:
+1. TORONTO_TIME_ZONE — display timezone constant
+2. to_toronto_time() — normalize naive/aware UTC values
+3. format_toronto_datetime(), format_toronto_date() — product display formats
+4. format_short_local_datetime() — compact Inspector/Admin format
+"""
 
 from datetime import timezone
 from zoneinfo import ZoneInfo

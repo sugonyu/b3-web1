@@ -83,9 +83,6 @@
                   <td data-label="Book">
                     <strong>{{ book_title(listing.title) }}</strong><br>
                     <small>{{ listing.author }} · Book #{{ listing.id }}</small>
-                    {% if current_user.is_authenticated and listing.owner_id == current_user.id %}
-                      <span class="listing-ownership-badge">Your book</span>
-                    {% endif %}
                   </td>
                   <td data-label="Owner · Area">
                     {% if current_user.is_authenticated and listing.owner_id == current_user.id %}

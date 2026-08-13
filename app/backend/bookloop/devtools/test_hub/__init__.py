@@ -1,4 +1,9 @@
-"""개발·학습용 Test Hub Blueprint."""
+"""개발·학습용 Test Hub Blueprint.
+
+Outline:
+1. routes.test_hub import
+2. application factory registration boundary
+"""
 
 from .routes import test_hub
 

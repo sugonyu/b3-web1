@@ -3,6 +3,13 @@
 이 명령은 Tony·Mina·Alex User 세 명과 BookListing 네 권을 준비한다. Alex는
 책 목록이 없는 유일한 관리자이자 신고 검토 전용 계정이다. 발표에서 생성 과정을
 증명해야 하는 BorrowRequest는 의도적으로 만들지 않는다.
+
+Outline:
+1. DEMO_USERS, DEMO_LISTINGS and legacy listing constants
+2. ensure_user_admin_column() — local schema compatibility
+3. seed_demo_data() — idempotent demo users and listings
+4. reset_demo_requests() — safe demo request cleanup
+5. register_seed_commands() — Flask CLI registration
 """
 
 import os
@@ -13,7 +20,7 @@ from sqlalchemy import inspect, text
 from werkzeug.security import generate_password_hash
 
 from ....db import db
-from ....db.models import BookListing, BorrowRequest, User
+from ....db.models import BookListing, BorrowRequest, Report, User
 
 
 DEMO_USERS = (
@@ -152,11 +159,15 @@ def seed_demo_data(password):
 
 
 def reset_demo_requests():
-    """네 demo listing에 연결된 BorrowRequest만 삭제한다."""
+    """네 demo listing에 연결된 BorrowRequest와 Report를 삭제한다."""
     mina = User.query.filter_by(username="mina").one_or_none()
     tony = User.query.filter_by(username="tony").one_or_none()
     if mina is None and tony is None:
-        return {"deleted_requests": 0, "remaining_requests": BorrowRequest.query.count()}
+        return {
+            "deleted_requests": 0,
+            "deleted_reports": 0,
+            "remaining_requests": BorrowRequest.query.count(),
+        }
 
     demo_listing_ids = []
     if mina is not None:
@@ -179,10 +190,29 @@ def reset_demo_requests():
         )
 
     if not demo_listing_ids:
-        return {"deleted_requests": 0, "remaining_requests": BorrowRequest.query.count()}
+        return {
+            "deleted_requests": 0,
+            "deleted_reports": 0,
+            "remaining_requests": BorrowRequest.query.count(),
+        }
 
+    demo_request_ids = [
+        request.id
+        for request in BorrowRequest.query.filter(
+            BorrowRequest.listing_id.in_(demo_listing_ids)
+        ).all()
+    ]
+    deleted_reports = 0
+    if demo_request_ids:
+        deleted_reports = Report.query.filter(
+            Report.borrow_request_id.in_(demo_request_ids)
+        ).delete(synchronize_session=False)
     deleted_requests = BorrowRequest.query.filter(
         BorrowRequest.listing_id.in_(demo_listing_ids)
+    ).delete(synchronize_session=False)
+    # 이전 reset 버전이 남긴 연결 대상 없는 Report도 함께 정리한다.
+    deleted_orphan_reports = Report.query.filter(
+        Report.borrow_request_id.notin_(db.session.query(BorrowRequest.id))
     ).delete(synchronize_session=False)
     # 승인 데모 뒤에도 다음 리허설이 같은 available 상태에서 시작되게 한다.
     BookListing.query.filter(BookListing.id.in_(demo_listing_ids)).update(
@@ -193,6 +223,7 @@ def reset_demo_requests():
 
     return {
         "deleted_requests": deleted_requests,
+        "deleted_reports": deleted_reports + deleted_orphan_reports,
         "remaining_requests": BorrowRequest.query.count(),
     }
 
@@ -228,5 +259,6 @@ def register_seed_commands(app: Flask):
         click.echo(
             "Demo BorrowRequest reset complete: "
             f"deleted={result['deleted_requests']}; "
+            f"Reports deleted={result['deleted_reports']}; "
             f"remaining BorrowRequests={result['remaining_requests']}."
         )

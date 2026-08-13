@@ -1,4 +1,9 @@
-"""viewer와 profile owner 관계에 맞는 읽기 전용 profile context를 만든다."""
+"""viewer와 profile owner 관계에 맞는 읽기 전용 profile context를 만든다.
+
+Outline:
+1. relationship query imports and privacy context
+2. get_public_user_profile_service() — safe profile and approved contact boundary
+"""
 
 from sqlalchemy import and_, or_
 

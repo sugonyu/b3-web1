@@ -2,6 +2,10 @@
 
 이 Blueprint는 제품 기능이나 자동 테스트 실행기가 아니다. 브라우저에서 Jinja,
 Flask가 제공하는 Vanilla UI, JSON API와 독립 Vanilla client의 실행 경계를 비교한다.
+
+Outline:
+1. test_hub Blueprint and template boundary
+2. index() — client comparison page
 """
 
 from flask import Blueprint, render_template

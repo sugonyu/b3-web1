@@ -9,6 +9,11 @@ Blueprint다. 독립 JS Vanilla client는 `app/frontend/js-vanilla/`에서
 Port 8080으로 실행한다.
 Jinja 렌더링과 JSON API 처리도 담당하지 않는다. 현재 JavaScript는
 `/api/health` 연결만 확인하며 제품 endpoint 소비는 미래 확장이다.
+
+Outline:
+1. FRONTEND_DIRECTORY — Flask Vanilla static source location
+2. vanilla_client Blueprint — `/vanilla/` boundary
+3. index() — static Vanilla client entry response
 """
 
 from pathlib import Path

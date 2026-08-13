@@ -9,6 +9,12 @@ AWP 참조:
 병렬공부 대응:
 - Express health Router: app/backend-express/src/routes/health.js
 - 현재 Express는 health route만 대응하며, 이 파일의 전체 제품 API를 복제하지 않는다.
+
+Outline:
+1. api Blueprint and JSON error boundary
+2. listing_to_dict(), borrow_request_to_dict() — privacy-safe serializers
+3. health() and listing routes — read/create/update/delete BookListing
+4. BorrowRequest routes — create, list, detail and status transitions
 """
 
 from flask import Blueprint, jsonify, request

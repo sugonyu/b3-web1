@@ -1,4 +1,10 @@
-"""BookLoop 개발·데모 관리 명령을 조립한다."""
+"""BookLoop 개발·데모 관리 명령을 조립한다.
+
+Outline:
+1. CREATED_AT_TABLES — safe schema-upgrade allowlist
+2. upgrade_created_at_columns() — non-destructive SQLite column check
+3. create_cli() — Click command group and Flask app wiring
+"""
 
 import os
 

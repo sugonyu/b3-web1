@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
   </head>
   <body>
-    <main>
+    <main class="auth-main">
       <a class="brand-badge" href="{{ url_for('jinja_client.product_home') }}">📚 BookLoop</a>
       <h1>Create an account</h1>
       <p class="client-type">D2 registration · Python / Jinja</p>
@@ -17,7 +17,7 @@
         <p class="error-message" role="alert">{{ error }}</p>
       {% endif %}
 
-      <form method="post">
+      <form class="form-stack" method="post">
         <p>
           <label for="username">Username</label><br>
           <input id="username" name="username" type="text" autocomplete="username" required>

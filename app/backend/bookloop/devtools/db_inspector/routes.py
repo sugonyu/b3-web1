@@ -1,7 +1,15 @@
 """BookLoop SQLite 내용을 안전하게 읽는 개발 전용 route.
 
 이 모듈은 제품용 Admin 기능이 아니다. GET 요청으로 허용된 model field만 읽으며,
-database를 변경하는 POST, PATCH, DELETE route를 의도적으로 제공하지 않는다.
+일반 database 변경 route는 제공하지 않는다. 로컬 demo BorrowRequest reset만
+명시적인 POST action으로 허용한다.
+
+Outline:
+1. db_inspector Blueprint and INTERNAL_NETWORKS allowlist
+2. request_address(), is_internal_address() — local access check
+3. protect_developer_tool() — development-only boundary
+4. index() — privacy-safe read-only table display
+5. reset_demo_requests() — local demo BorrowRequest and Report reset action
 """
 
 from ipaddress import ip_address, ip_network
@@ -10,6 +18,7 @@ from flask import Blueprint, abort, current_app, redirect, render_template, requ
 from flask_login import current_user
 
 from ...db.models import BookListing, BorrowRequest, Report, User
+from ..bl_cli.seed.commands import reset_demo_requests
 from ...services.time_display import format_short_local_datetime
 
 
@@ -124,4 +133,13 @@ def index():
         borrow_requests=borrow_requests,
         reports=reports,
         format_time=format_short_local_datetime,
+    )
+
+
+@db_inspector.post("/reset")
+def reset():
+    """Inspector에서 demo BorrowRequest만 초기화하고 다시 조회한다."""
+    result = reset_demo_requests()
+    return redirect(
+        url_for("db_inspector.index", reset_deleted=result["deleted_requests"])
     )

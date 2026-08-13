@@ -1,4 +1,11 @@
-"""BookLoop의 Flask-Login session authentication 설정과 browser route."""
+"""BookLoop의 Flask-Login session authentication 설정과 browser route.
+
+Outline:
+1. login_manager and auth Blueprint
+2. load_user(), unauthorized() — session restoration and 401/redirect split
+3. safe_next_url() — local redirect validation
+4. login(), register(), logout() — browser authentication routes
+"""
 
 from urllib.parse import urlsplit
 

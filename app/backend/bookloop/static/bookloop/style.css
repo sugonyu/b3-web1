@@ -1,15 +1,66 @@
+:root {
+  /* BookLoop Design System MVP v0.1: warm paper, clear surfaces, community green. */
+  --colour-ink: #243029;
+  --colour-muted: #596257;
+  --colour-paper: #f6f1e7;
+  --colour-surface: #ffffff;
+  --colour-border: #c9cbbf;
+  --colour-brand: #315c43;
+  --colour-brand-dark: #214331;
+  --colour-accent: #c66a2b;
+  --colour-soft-green: #e4efe7;
+  --colour-soft-amber: #fff0cc;
+  --colour-soft-red: #fbe5e1;
+  --colour-focus: #1a65c7;
+  --border: 1px solid var(--colour-border);
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  color: #222;
-  background: #f5f5f5;
-  font-family: Arial, sans-serif;
-  line-height: 1.5;
+  color: var(--colour-ink);
+  background: var(--colour-paper);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.55;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+h1,
+h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--colour-brand-dark);
+  line-height: 1.1;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--colour-focus);
+  outline-offset: 3px;
 }
 
 main {
+  width: min(calc(100% - 2rem), 72rem);
+  margin: 2.5rem auto;
+}
+
+.auth-main {
   max-width: 40rem;
-  margin: 4rem auto;
-  padding: 0 1rem;
+}
+
+.reference-main {
+  max-width: 48rem;
 }
 
 .product-main {
@@ -38,8 +89,8 @@ h1 {
   justify-content: flex-end;
   gap: 0.45rem 0.7rem;
   padding: 0.35rem 0.6rem;
-  border: 1px solid #bbb;
-  background: #fff;
+  border: var(--border);
+  background: var(--colour-surface);
   font-size: 0.9rem;
 }
 
@@ -55,8 +106,8 @@ h1 {
 .home-actions {
   margin: 1rem 0 1.5rem;
   padding: 0.75rem 1rem;
-  border-left: 4px solid #315c43;
-  background: #e4eee7;
+  border-left: 4px solid var(--colour-brand);
+  background: var(--colour-soft-green);
 }
 
 .home-actions p {
@@ -92,7 +143,54 @@ h1 {
 
 .client-type {
   margin-top: 0;
-  color: #555;
+  color: var(--colour-muted);
+}
+
+.form-stack {
+  display: grid;
+  gap: 0.35rem;
+  max-width: 36rem;
+}
+
+.form-stack p {
+  margin: 0 0 0.75rem;
+}
+
+.form-stack label {
+  font-weight: 700;
+}
+
+.form-stack input,
+.form-stack select,
+.form-stack textarea {
+  width: 100%;
+  padding: 0.55rem 0.65rem;
+  border: var(--border);
+  border-radius: 0;
+  color: var(--colour-ink);
+  background: var(--colour-surface);
+}
+
+.form-stack button {
+  justify-self: start;
+}
+
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  margin-top: 0.75rem;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid var(--colour-brand);
+  color: #fff;
+  background: var(--colour-brand);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.button-link:hover,
+.button-link:focus-visible {
+  background: var(--colour-brand-dark);
 }
 
 .toc-nav {
@@ -132,7 +230,8 @@ h1 {
 }
 
 a {
-  color: #2457a7;
+  color: var(--colour-brand-dark);
+  font-weight: 700;
 }
 
 .status-card {
@@ -159,8 +258,8 @@ a {
   gap: 0.5rem;
   margin: 1rem 0 1.5rem;
   padding: 0.5rem;
-  border: 1px solid #bbb;
-  background: #fff;
+  border: var(--border);
+  background: var(--colour-surface);
 }
 
 .product-nav a {
@@ -172,7 +271,7 @@ a {
 .product-nav a:focus-visible,
 .product-nav a[aria-current="page"] {
   color: #fff;
-  background: #2457a7;
+  background: var(--colour-brand);
 }
 
 .dev-user-switcher {
@@ -216,8 +315,8 @@ a {
 
 .data-table-wrap {
   overflow-x: auto;
-  border: 1px solid #bbb;
-  background: #fff;
+  border: var(--border);
+  background: var(--colour-surface);
 }
 
 .data-table {
@@ -226,23 +325,11 @@ a {
 }
 
 .own-listing-row {
-  background: #e4eee7;
+  background: var(--colour-surface);
 }
 
 .community-listing-row {
-  background: #fff;
-}
-
-.listing-ownership-badge {
-  display: inline-block;
-  margin-left: 0.35rem;
-  padding: 0.1rem 0.35rem;
-  border: 1px solid #315c43;
-  color: #14532d;
-  background: #f0fdf4;
-  font-size: 0.75rem;
-  font-weight: bold;
-  text-transform: uppercase;
+  background: var(--colour-surface);
 }
 
 .data-table th,
@@ -254,11 +341,98 @@ a {
 }
 
 .data-table th {
-  background: #eee;
+  color: var(--colour-brand-dark);
+  background: var(--colour-soft-green);
 }
 
 .data-table tbody tr:last-child td {
   border-bottom: 0;
+}
+
+.my-books-row {
+  background: var(--colour-surface);
+}
+
+.actions-cell {
+  display: flex !important;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.actions-cell form {
+  margin: 0;
+}
+
+.action-link,
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid var(--colour-brand);
+  text-decoration: none;
+}
+
+.action-link {
+  color: var(--colour-brand-dark);
+  background: var(--colour-surface);
+}
+
+.action-button {
+  color: #fff;
+  background: var(--colour-brand);
+}
+
+.action-button-danger {
+  border-color: #b42318;
+  background: #b42318;
+}
+
+.action-link:hover,
+.action-link:focus-visible,
+.action-button:hover,
+.action-button:focus-visible {
+  color: #fff;
+  background: var(--colour-brand-dark);
+}
+
+.action-button-danger:hover,
+.action-button-danger:focus-visible {
+  background: #7a271a;
+}
+
+.confirm-dialog {
+  width: min(calc(100% - 2rem), 30rem);
+  padding: 0;
+  border: 0;
+  color: var(--colour-ink);
+  background: transparent;
+}
+
+.confirm-dialog::backdrop {
+  background: rgb(36 48 41 / 55%);
+}
+
+.confirm-dialog-card {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  border: var(--border);
+  background: var(--colour-surface);
+  box-shadow: 0 1rem 3rem rgb(36 48 41 / 25%);
+}
+
+.confirm-dialog-card h2,
+.confirm-dialog-card p {
+  margin: 0;
+}
+
+.confirm-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
 }
 
 .data-table form {
@@ -651,9 +825,11 @@ a {
 
 button {
   padding: 0.5rem 0.75rem;
-  border: 1px solid #999;
+  border: 1px solid var(--colour-brand);
   border-radius: 0;
-  background: #fff;
+  color: #fff;
+  background: var(--colour-brand);
+  font-weight: 700;
   cursor: pointer;
 }
 
@@ -718,8 +894,8 @@ dd {
 
   .data-table tr {
     margin-bottom: 0.75rem;
-    border: 1px solid #bbb;
-    background: #fff;
+    border: var(--border);
+    background: var(--colour-surface);
   }
 
   .data-table td {

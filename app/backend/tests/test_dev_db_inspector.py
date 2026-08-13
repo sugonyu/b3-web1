@@ -144,6 +144,43 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
         self.assertIn(b"Borrow Requests", response.data)
         response.close()
 
+    def test_debug_admin_can_reset_demo_requests_from_inspector(self):
+        app = self.create_test_app(inspector_enabled=True, debug=True)
+        self.seed_database(app)
+        client = app.test_client()
+
+        response = client.post("/dev/db/reset")
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/dev/db", response.headers["Location"])
+        with app.app_context():
+            self.assertEqual(BorrowRequest.query.count(), 0)
+            self.assertEqual(Report.query.count(), 0)
+            self.assertEqual(BookListing.query.count(), 1)
+        response.close()
+
+    def test_reset_removes_orphan_report_left_by_older_reset(self):
+        app = self.create_test_app(inspector_enabled=True, debug=True)
+        self.seed_database(app)
+        with app.app_context():
+            db.session.add(
+                Report(
+                    reporter_id=1,
+                    reported_user_id=2,
+                    borrow_request_id=999,
+                    category="other",
+                    details="An orphan report from an older reset implementation.",
+                )
+            )
+            db.session.commit()
+
+        response = app.test_client().post("/dev/db/reset")
+
+        self.assertEqual(response.status_code, 302)
+        with app.app_context():
+            self.assertEqual(Report.query.count(), 0)
+        response.close()
+
     def test_lan_public_source_is_hidden_even_for_admin(self):
         app = self.create_test_app(
             inspector_enabled=True,
@@ -179,7 +216,9 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
         self.assertIn(b"localhost", response.data)
         self.assertIn(b"/static/bookloop/python-favicon.svg", response.data)
         self.assertIn(b"Course &amp; Presentation Resources", response.data)
-        self.assertIn(b"python3 bl_cli.py reset-demo-requests", response.data)
+        self.assertIn(b"Reset", response.data)
+        self.assertIn(b"data-confirm=", response.data)
+        self.assertNotIn(b"reset is CLI-only", response.data)
         self.assertIn(b"Users and Book Listings are preserved", response.data)
         self.assertIn(b"web1-schedule-summer-2026.html", response.data)
         self.assertIn(b"bookloop/README.html", response.data)

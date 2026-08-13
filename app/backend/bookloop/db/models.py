@@ -2,6 +2,13 @@
 
 AWP 참조:
 /home/sugonyu/jd/b2/test/test_py/b3-awp/classes/lia/models.py
+
+Outline:
+1. status/category constants and utc_now()
+2. User — authenticated member and Admin role
+3. BookListing — owner-scoped book data and availability
+4. BorrowRequest — exchange workflow and status
+5. Report — privacy workflow and review status
 """
 
 from datetime import datetime, timezone

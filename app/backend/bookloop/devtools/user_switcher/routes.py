@@ -2,6 +2,11 @@
 
 실제 인증을 대체하는 기능이 아니다. DEBUG와 명시적 설정이 모두 켜진 경우에만
 Tony, Mina, Alex demo 계정으로 Flask-Login session을 바꿔 권한별 화면을 점검한다.
+
+Outline:
+1. DEMO_USERNAMES and user_switcher Blueprint
+2. protect_developer_tool() — explicit local/debug access gate
+3. switch_user() — allowed demo session switch
 """
 
 from flask import Blueprint, abort, current_app, redirect, url_for

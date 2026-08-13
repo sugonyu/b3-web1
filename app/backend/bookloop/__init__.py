@@ -9,6 +9,12 @@ AWP 참조:
 병렬공부 대응:
 - Express app factory: app/backend-express/src/app.js의 createApp()
 - Flask는 extension과 Blueprint를, Express는 middleware와 Router를 조립한다.
+
+Outline:
+1. environment loading and Flask extension imports
+2. create_app() — configuration and extension setup
+3. Blueprint registration — auth, product clients, API, Admin and devtools
+4. local schema and CLI seed registration
 """
 
 import os

@@ -1,4 +1,13 @@
-"""현재 로그인 사용자의 BookListing 관리 service."""
+"""현재 로그인 사용자의 BookListing 관리 service.
+
+Outline:
+1. BookListingServiceError — expected listing errors and HTTP meanings
+2. list/get_owner_book_listing_service() — owner-scoped reads
+3. create/update_book_listing_service() — validated owner writes
+4. update_book_listing_availability_service() — availability change
+5. delete_book_listing_service() — safe owner deletion
+6. _required_text() — shared field validation helper
+"""
 
 from ..db import db
 from ..db.models import BookListing

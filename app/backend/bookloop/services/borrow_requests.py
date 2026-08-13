@@ -2,6 +2,14 @@
 
 JSON API와 Python/Jinja 화면은 응답 형식이 다르지만 같은 validation,
 authorization과 SQLAlchemy transaction 규칙을 사용한다.
+
+Outline:
+1. BorrowRequestServiceError — expected workflow errors
+2. create/get_authorized_borrow_request_service() — request creation and access
+3. list_borrower/list_listing_owner_requests_service() — scoped histories
+4. decision and contact context services — approval privacy boundary
+5. update_borrow_request_status_service() — owner decision transitions
+6. return and cancel services — exchange completion workflow
 """
 
 from ..db import db

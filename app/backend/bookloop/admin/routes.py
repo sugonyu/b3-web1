@@ -1,4 +1,11 @@
-"""일반 제품 화면과 개발 도구에서 분리된 보호된 Admin route."""
+"""일반 제품 화면과 개발 도구에서 분리된 보호된 Admin route.
+
+Outline:
+1. admin Blueprint — `/admin/` route boundary
+2. dashboard() — system, book-sharing and received-report overview
+3. report_detail() — one received Report detail
+4. update_report_status() — Admin status decision and redirect feedback
+"""
 
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
