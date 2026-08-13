@@ -62,12 +62,8 @@ class FlaskVanillaTest(unittest.TestCase):
             b"http://localhost:8080/pub/b3-web1/web1-schedule-summer-2026.html#schedule-title",
             response.data,
         )
-        self.assertIn(
-            b"http://localhost:8080/pub/b3-web1/app/backend/bookloop/README.html",
-            response.data,
-        )
-        self.assertEqual(response.data.count(b'target="_blank"'), 4)
-        self.assertEqual(response.data.count(b'rel="noopener noreferrer"'), 4)
+        self.assertEqual(response.data.count(b'target="_blank"'), 3)
+        self.assertEqual(response.data.count(b'rel="noopener noreferrer"'), 3)
         self.assertIn(b"http://127.0.0.1:5000/test/", response.data)
         response.close()
 

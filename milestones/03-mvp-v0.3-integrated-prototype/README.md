@@ -2,7 +2,7 @@
 
 Official checkpoint: 🔗 Deliverable 3 — Frontend and Backend Integration
 Review date: August 13, 2026
-Status: In progress
+Status: In progress — public D3 presentation linked; browser evidence remains
 
 ## Goal
 
@@ -31,8 +31,8 @@ validation, feedback, navigation, and responsive behavior.
 The Python/Jinja product uses shared application services and SQLAlchemy-backed
 SQLite data for borrower and owner request histories, request decisions,
 cancellation, approved contact exchange, user profiles, protected Admin views,
-and the two-step return workflow. JSON endpoints preserve the same service and
-authorization contracts for later React parity.
+user book management, Reports and the DB Inspector. JSON endpoints preserve the
+same service and authorization contracts for later React parity.
 
 The latest verified refactoring checkpoint aligns route and use-case names and
 adds the `_service` suffix to shared service functions without changing public
@@ -48,6 +48,7 @@ public/private information separation. React remains optional.
 - [August 7 route/service naming checkpoint](../../docs/journal/2026-08-07.md)
 - [August 11 recovery and evidence restart](../../docs/journal/2026-08-11.md)
 - [Current Week 3 Kanban](../../docs/project-weekly-kanban-board.html)
+- [Deliverable 3 presentation](../../docs/presentations/deliverable-03/presentation.html)
 - Application source: [`app/`](../../app/)
 
 ## Verification
@@ -56,16 +57,18 @@ Latest recorded backend regression result:
 
 ```text
 PYTHONPATH=. .venv/bin/pytest -q -p no:cacheprovider
-124 passed in 25.24s
+159 passed
 ```
 
-This is the August 7 verified checkpoint. It was not rerun during the August 11
-documentation recovery. W3-14 still requires Tony's browser confirmation.
+This is the latest Beta3 verification recorded from the lab baseline. W3-14 and
+the final D3 browser evidence still require Tony's confirmation.
 
 ## Known Issues
 
 - The W3-14 browser review remains pending.
 - D3 screenshots and the final presentation evidence sequence are not frozen.
+- The public presentation is intentionally a limited HTML copy; the private script
+  and presentation preparation notes remain in the lab archive.
 - Monday, August 10 has no journal by explicit recovery decision.
 - React parity is optional and must not delay the required D3 evidence.
 - Each representative frontend screen still needs a concise design rationale.
