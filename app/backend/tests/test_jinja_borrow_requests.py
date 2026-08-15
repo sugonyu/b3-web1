@@ -88,6 +88,7 @@ class JinjaBorrowRequestFlowTest(unittest.TestCase):
         self.assertIn("mina 👩".encode(), response.data)
         self.assertIn(b"Homer", response.data)
         self.assertIn(b"Request", response.data)
+        self.assertIn(b"Dark mode", response.data)
         self.assertIn("🙋 Sent requests (0)".encode(), response.data)
         self.assertIn("📬 Received requests (0)".encode(), response.data)
         self.assertNotIn(b"mina@example.com", response.data)

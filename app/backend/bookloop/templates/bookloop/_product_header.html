@@ -1,6 +1,7 @@
 <header class="product-header">
   <h1 class="product-logo">BookLoop</h1>
   <div class="product-account" aria-label="Signed-in user">
+    {% include "bookloop/_theme_toggle.html" %}
     {% if current_user.is_authenticated %}
       <span>{{ current_user.username }} {{ user_icon(current_user) }} · User #{{ current_user.id }}</span>
       <a href="{{ url_for('jinja_client.user_profile', user_id=current_user.id) }}">Profile</a>

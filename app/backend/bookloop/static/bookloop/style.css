@@ -105,6 +105,23 @@ h1 {
   margin: 0;
 }
 
+.theme-toggle {
+  padding: 0.2rem 0.45rem;
+  border: 1px solid var(--colour-brand);
+  border-radius: 999px;
+  color: var(--colour-brand-dark);
+  background: var(--colour-surface);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  color: var(--colour-ink);
+  background: var(--colour-soft-green);
+}
+
 .product-account button {
   padding: 0.2rem 0.45rem;
   font-size: 0.85rem;
@@ -795,6 +812,100 @@ a {
   }
 }
 
+/* Dark mode keeps the existing warm-green design tokens while reducing glare. */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --colour-ink: #edf4ef;
+  --colour-muted: #b8c3bc;
+  --colour-paper: #17201b;
+  --colour-surface: #223029;
+  --colour-border: #52635a;
+  --colour-brand: #8fc5a2;
+  --colour-brand-dark: #b9e2c5;
+  --colour-accent: #e69a68;
+  --colour-soft-green: #294337;
+  --colour-soft-amber: #4a3b1f;
+  --colour-soft-red: #4a2622;
+  --colour-focus: #82b9ff;
+}
+
+html[data-theme="dark"] .brand-badge,
+html[data-theme="dark"] .toc-nav,
+html[data-theme="dark"] .client-info,
+html[data-theme="dark"] .status-card,
+html[data-theme="dark"] .book-card,
+html[data-theme="dark"] .request-card,
+html[data-theme="dark"] .decision-context,
+html[data-theme="dark"] .report-detail-card,
+html[data-theme="dark"] .profile-summary,
+html[data-theme="dark"] .admin-metrics div,
+html[data-theme="dark"] .profile-metrics div,
+html[data-theme="dark"] .product-account {
+  border-color: var(--colour-border);
+  background: var(--colour-surface);
+}
+
+html[data-theme="dark"] .brand-badge,
+html[data-theme="dark"] .product-nav,
+html[data-theme="dark"] .toc-nav,
+html[data-theme="dark"] .data-table-wrap,
+html[data-theme="dark"] .data-table,
+html[data-theme="dark"] .data-table th,
+html[data-theme="dark"] .data-table td {
+  border-color: var(--colour-border);
+}
+
+html[data-theme="dark"] .data-table th {
+  color: var(--colour-brand-dark);
+  background: var(--colour-soft-green);
+}
+
+html[data-theme="dark"] .data-table td,
+html[data-theme="dark"] .data-table tr,
+html[data-theme="dark"] .data-table-wrap {
+  background: var(--colour-surface);
+}
+
+html[data-theme="dark"] .dev-user-switcher,
+html[data-theme="dark"] .request-report-action,
+html[data-theme="dark"] .context-note,
+html[data-theme="dark"] .feedback-warning {
+  border-color: #d7a83e;
+  background: #4a3b1f;
+  color: #ffe9a3;
+}
+
+html[data-theme="dark"] .approved-contact,
+html[data-theme="dark"] .feedback-success,
+html[data-theme="dark"] .privacy-note {
+  background: #294337;
+  color: #c4f1d0;
+}
+
+html[data-theme="dark"] .error-message,
+html[data-theme="dark"] .feedback-error {
+  background: #4a2622;
+  color: #ffc8c2;
+}
+
+html[data-theme="dark"] .request-report-action select,
+html[data-theme="dark"] .request-report-action textarea,
+html[data-theme="dark"] .decision-approve,
+html[data-theme="dark"] .decision-reject,
+html[data-theme="dark"] .request-cancel-button {
+  border-color: var(--colour-border);
+  color: var(--colour-ink);
+  background: var(--colour-surface);
+}
+
+html[data-theme="dark"] .product-nav a[aria-current="page"],
+html[data-theme="dark"] .product-nav a:hover,
+html[data-theme="dark"] .product-nav a:focus-visible,
+html[data-theme="dark"] .button-link,
+html[data-theme="dark"] button:not(.theme-toggle) {
+  color: #142019;
+}
+
 .feedback {
   margin: 1rem 0;
   padding: 1rem;
@@ -917,4 +1028,37 @@ dd {
     color: #555;
     font-weight: bold;
   }
+}
+
+/* These final overrides keep later component states readable in dark mode. */
+html[data-theme="dark"] .feedback-success {
+  border-color: #8fc5a2;
+  color: #c4f1d0;
+  background: #294337;
+}
+
+html[data-theme="dark"] .feedback-warning {
+  border-color: #d7a83e;
+  color: #ffe9a3;
+  background: #4a3b1f;
+}
+
+html[data-theme="dark"] .feedback-error,
+html[data-theme="dark"] .error-message {
+  border-color: #ef9a91;
+  color: #ffc8c2;
+  background: #4a2622;
+}
+
+html[data-theme="dark"] button:not(.theme-toggle) {
+  color: #142019;
+}
+
+html[data-theme="dark"] .data-table td {
+  border-color: var(--colour-border);
+}
+
+html[data-theme="dark"] .data-table td::before,
+html[data-theme="dark"] .eyebrow {
+  color: var(--colour-muted);
 }

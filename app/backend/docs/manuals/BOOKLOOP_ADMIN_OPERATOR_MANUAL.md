@@ -168,6 +168,17 @@ python3 bl_cli.py reset-demo-requests
 
 ## 6. DB Inspector read-only 원칙
 
+### Dark mode
+
+DB Inspector에도 `🌙 Dark mode` 토글이 제공된다. 선택은 browser의
+`localStorage`에 저장되며 Inspector 표·Report 상세·Reset 확인 화면의 대비를
+함께 변경한다. 테마 전환은 read-only 경계, Reset 권한과 database 내용을 변경하지
+않는다.
+
+검수 시에는 Light/Dark 양쪽에서 Report의 `Reporter`, `Reported user`, `Category`,
+`Details`, `Status` 열을 확인하고, 다크 테마에서도 private field가 추가로 노출되지
+않는지 확인한다.
+
 Main 로컬의 `http://127.0.0.1:5000/dev/db/`와 보호된 Rose LAN 주소
 `http://MAIN_LAN_IP:5000/dev/db/`는 데이터 확인 전용이다. LAN 접근은 두 feature
 flag, 내부 source IP와 Tony 관리자 session을 모두 요구한다.

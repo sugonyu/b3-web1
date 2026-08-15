@@ -6,6 +6,7 @@
     <meta name="robots" content="noindex, nofollow">
     <title>BookLoop · Developer Database Inspector</title>
     <link rel="icon" href="{{ url_for('static', filename='bookloop/python-favicon.svg') }}" type="image/svg+xml">
+    <script src="{{ url_for('static', filename='bookloop/theme.js') }}" defer></script>
     <style>
       :root {
         color-scheme: light;
@@ -96,6 +97,53 @@
       .resource-card p { margin-top: 0.35rem; }
       .resource-card a { color: #315c43; }
       code { font-size: 0.9em; }
+      .theme-toggle {
+        padding: 0.4rem 0.65rem;
+        border: 1px solid #315c43;
+        border-radius: 999px;
+        color: #315c43;
+        background: #fff;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .theme-toggle:hover, .theme-toggle:focus { background: #e4eee7; }
+      html[data-theme="dark"] {
+        color-scheme: dark;
+        color: #edf4ef;
+        background: #17201b;
+      }
+      html[data-theme="dark"] body { color: #edf4ef; background: #17201b; }
+      html[data-theme="dark"] header { border-color: #52635a; }
+      html[data-theme="dark"] table,
+      html[data-theme="dark"] .server-address,
+      html[data-theme="dark"] .empty,
+      html[data-theme="dark"] .resource-card,
+      html[data-theme="dark"] .confirm-dialog-card { background: #223029; }
+      html[data-theme="dark"] th { background: #294337; }
+      html[data-theme="dark"] th,
+      html[data-theme="dark"] td { border-color: #52635a; }
+      html[data-theme="dark"] .reload-link,
+      html[data-theme="dark"] .theme-toggle { color: #b9e2c5; background: #223029; border-color: #8fc5a2; }
+      html[data-theme="dark"] .reload-link:hover,
+      html[data-theme="dark"] .reload-link:focus,
+      html[data-theme="dark"] .theme-toggle:hover,
+      html[data-theme="dark"] .theme-toggle:focus { background: #294337; }
+      html[data-theme="dark"] .warning { background: #4a3b1f; color: #ffe9a3; }
+      html[data-theme="dark"] .count { color: #b8c3bc; }
+      html[data-theme="dark"] a,
+      html[data-theme="dark"] .resource-card a { color: #b9e2c5; }
+      html[data-theme="dark"] code { color: #f1c894; }
+      html[data-theme="dark"] .status-pending,
+      html[data-theme="dark"] .status-open { border-color: #d7a83e; color: #ffe9a3; background: #53451f; }
+      html[data-theme="dark"] .status-under_review,
+      html[data-theme="dark"] .status-return_pending,
+      html[data-theme="dark"] .status-returned { border-color: #82b9ff; color: #c5ddff; background: #263e5c; }
+      html[data-theme="dark"] .status-approved,
+      html[data-theme="dark"] .status-resolved { border-color: #8fc5a2; color: #c4f1d0; background: #294337; }
+      html[data-theme="dark"] .status-rejected { border-color: #ef9a91; color: #ffc8c2; background: #4a2622; }
+      html[data-theme="dark"] .status-cancelled,
+      html[data-theme="dark"] .status-dismissed { border-color: #aeb8b1; color: #e0e8e2; background: #38443d; }
     </style>
   </head>
   <body>
@@ -104,6 +152,7 @@
       <div class="title-row">
         <h1>Database Inspector</h1>
         <div class="inspector-actions">
+          <button class="theme-toggle" data-theme-toggle type="button" aria-pressed="false">🌙 Dark mode</button>
           <a class="reload-link" href="{{ url_for('db_inspector.index') }}">↻ Reload</a>
           <form action="{{ url_for('db_inspector.reset') }}" method="post" data-confirm="Reset demo BorrowRequests and Reports and restore demo listing availability? Users and books will be preserved.">
             <button class="reset-button" type="submit">Reset</button>

@@ -9,6 +9,7 @@
   </head>
   <body>
     <main class="auth-main">
+      {% include "bookloop/_theme_toggle.html" %}
       <a class="brand-badge" href="{{ url_for('jinja_client.product_home') }}">📚 BookLoop</a>
       <h1 class="page-title">Create an account</h1>
       {% include "bookloop/_product_subtitle.html" %}

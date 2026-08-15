@@ -81,6 +81,7 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
         response = app.test_client().get("/dev/db")
 
         self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Dark mode", response.data)
         response.close()
 
     def test_inspector_is_public_outside_debug_mode(self):
