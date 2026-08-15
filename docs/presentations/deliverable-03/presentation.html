@@ -7,11 +7,13 @@
   <title>BookLoop — Deliverable 3</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
   <style>
-    :root{--ink:#243029;--muted:#5d665f;--paper:#f6f1e7;--surface:#fff;--brand:#315c43;--soft:#e4eee7;--accent:#c66a2b;--warning:#fff1df;--danger:#9e3d32;--border:#b8b8ae}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--paper);font:18px/1.55 Arial,sans-serif}a{color:var(--brand)}.topbar{position:sticky;top:0;z-index:10;border-bottom:1px solid var(--border);background:rgba(246,241,231,.97)}.nav{display:flex;max-width:1120px;margin:auto;padding:.7rem 1rem;gap:1rem;overflow-x:auto;white-space:nowrap}.nav a{font-size:.85rem;text-decoration:none}.nav a.core-flow{padding:.35rem .65rem;border:2px solid var(--brand);border-radius:999px;background:var(--soft);font-weight:700}.nav a.report-flow{border-color:var(--accent);background:var(--warning);color:var(--danger)}main{display:flex;flex-direction:column;max-width:1120px;margin:auto;padding:0 1rem 4rem}#title{order:0}#progress{order:1}#updates{order:2}#data{order:3}#workflow{order:4}#reports{order:5}#privacy{order:6}#feedback{order:7}#responsive{order:8}#handoff{order:9}#close{order:10}.slide{min-height:76vh;padding:5rem 0 3rem;border-bottom:1px solid var(--border);scroll-margin-top:3rem}.title-slide{min-height:88vh;display:grid;align-content:center}.eyebrow{margin:0 0 .5rem;color:var(--brand);font-size:.85rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}h1{max-width:900px;margin:0;font-size:clamp(3rem,8vw,6.2rem);line-height:.98}h2{margin:0 0 1.5rem;font-size:clamp(2rem,5vw,3.5rem);line-height:1.08}h3{margin-top:0}.lede{max-width:880px;font-size:clamp(1.2rem,2.5vw,1.6rem)}.meta,.figure-label{color:var(--muted)}.figure-label{margin:.5rem 0;font-size:.85rem;font-weight:700}.flow,.grid{display:flex;flex-wrap:wrap;gap:.75rem;margin:1.5rem 0}.flow span,.card{flex:1 1 180px;padding:1rem;border:1px solid var(--border);background:var(--surface)}.flow span{border-color:var(--brand);text-align:center;font-weight:700}.flow .arrow{flex:0 0 auto;border:0;background:transparent;color:var(--accent)}.card{padding:1.25rem}.verified{border-top:5px solid var(--brand)}.pending{border-top:5px solid var(--accent)}.danger{border-top:5px solid var(--danger)}.slot{margin:1.5rem 0;padding:1.25rem;border:2px dashed var(--accent);background:var(--warning)}.status{display:inline-block;padding:.35rem .7rem;border:1px solid var(--accent);background:var(--surface);color:var(--accent);font-weight:700}.callout{padding:1.25rem;border-left:6px solid var(--brand);background:var(--surface);font-size:1.2rem}table{width:100%;border-collapse:collapse;background:var(--surface)}th,td{padding:.8rem;border:1px solid var(--border);text-align:left;vertical-align:top}th{background:var(--soft)}@media(max-width:700px){body{font-size:16px}.slide{min-height:auto;padding:4rem 0 2rem}.arrow{display:none}table{display:block;overflow-x:auto}}
+    :root{--ink:#243029;--muted:#5d665f;--paper:#f6f1e7;--surface:#fff;--brand:#315c43;--soft:#e4eee7;--accent:#c66a2b;--warning:#fff1df;--danger:#9e3d32;--border:#b8b8ae}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--paper);font:18px/1.55 Arial,sans-serif}a{color:var(--brand)}.topbar{position:sticky;top:0;z-index:10;border-bottom:1px solid var(--border);background:rgba(246,241,231,.97)}.nav{display:flex;max-width:1120px;margin:auto;padding:.7rem 1rem;gap:1rem;overflow-x:auto;white-space:nowrap}.nav a{font-size:.85rem;text-decoration:none}.nav a.core-flow{padding:.35rem .65rem;border:2px solid var(--brand);border-radius:999px;background:var(--soft);font-weight:700}.nav a.report-flow{border-color:var(--accent);background:var(--warning);color:var(--danger)}main{display:flex;flex-direction:column;max-width:1120px;margin:auto;padding:0 1rem 4rem}#title{order:0}#progress{order:1}#updates{order:2}#data{order:3}#workflow{order:4}#reports{order:5}#privacy{order:6}#feedback{order:7}#responsive{order:8}#handoff{order:9}#close{order:10}.slide{min-height:76vh;padding:5rem 0 3rem;border-bottom:1px solid var(--border);scroll-margin-top:3rem}.title-slide{min-height:88vh;display:grid;align-content:center}.eyebrow{margin:0 0 .5rem;color:var(--brand);font-size:.85rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}h1{max-width:900px;margin:0;font-size:clamp(3rem,8vw,6.2rem);line-height:.98}h2{margin:0 0 1.5rem;font-size:clamp(2rem,5vw,3.5rem);line-height:1.08}h3{margin-top:0}.lede{max-width:880px;font-size:clamp(1.2rem,2.5vw,1.6rem)}.meta,.figure-label{color:var(--muted)}.figure-label{margin:.5rem 0;font-size:.85rem;font-weight:700}.flow,.grid{display:flex;flex-wrap:wrap;gap:.75rem;margin:1.5rem 0}.flow span,.card{flex:1 1 180px;padding:1rem;border:1px solid var(--border);background:var(--surface)}.flow span{border-color:var(--brand);text-align:center;font-weight:700}.flow .arrow{flex:0 0 auto;border:0;background:transparent;color:var(--accent)}.card{padding:1.25rem}.verified{border-top:5px solid var(--brand)}.pending{border-top:5px solid var(--accent)}.danger{border-top:5px solid var(--danger)}.slot{margin:1.5rem 0;padding:1.25rem;border:2px dashed var(--accent);background:var(--warning)}.status{display:inline-block;padding:.35rem .7rem;border:1px solid var(--accent);background:var(--surface);color:var(--accent);font-weight:700}.callout{padding:1.25rem;border-left:6px solid var(--brand);background:var(--surface);font-size:1.2rem}table{width:100%;border-collapse:collapse;background:var(--surface)}th,td{padding:.8rem;border:1px solid var(--border);text-align:left;vertical-align:top}th{background:var(--soft)}.floating-section-nav{position:fixed;right:16px;bottom:16px;z-index:20;display:flex;align-items:center;gap:6px;padding:7px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.94);box-shadow:0 8px 24px rgba(32,40,35,.2);backdrop-filter:blur(8px)}.floating-section-nav button,.floating-section-nav a{display:grid;width:42px;height:42px;place-items:center;padding:0;border:1px solid var(--brand);border-radius:50%;color:var(--brand);background:var(--surface);font:inherit;font-size:1.2rem;font-weight:800;line-height:1;text-decoration:none;cursor:pointer}.floating-section-nav button:hover,.floating-section-nav button:focus-visible,.floating-section-nav a:hover,.floating-section-nav a:focus-visible{color:#fff;background:var(--brand);outline:3px solid var(--soft);outline-offset:2px}.floating-section-nav button:disabled{border-color:var(--border);color:var(--border);background:#f3f0e8;cursor:not-allowed;opacity:.65}.section-status{min-width:118px;padding:0 8px;color:var(--muted);font-size:.72rem;font-weight:700;text-align:center}@media(max-width:700px){body{font-size:16px}.slide{min-height:auto;padding:4rem 0 2rem}.arrow{display:none}.floating-section-nav{right:10px;bottom:10px}.floating-section-nav button,.floating-section-nav a{width:40px;height:40px}.section-status{display:none}}
+    main{display:flex;flex-direction:column}
+    #title{order:0}#progress{order:1}#updates{order:2}#data{order:3}#workflow{order:4}#reports{order:5}#privacy{order:6}#feedback{order:7}#responsive{order:8}#handoff{order:9}#close{order:10}
   </style>
 </head>
 <body>
-  <header class="topbar"><nav class="nav" aria-label="Presentation sections"><a href="#title">00 · Goal</a><a href="#progress">01 · D2 → D3</a><a href="#updates">02 · Updates</a><a href="#data">03 · Data</a><a class="core-flow" href="#workflow">📚 Borrow a book</a><a class="core-flow report-flow" href="#reports">🚩 Report an issue</a><a href="#privacy">06 · Privacy</a><a href="#feedback">07 · Feedback</a><a href="#responsive">08 · Responsive</a><a href="#handoff">09 · Evidence</a><a href="#close">10 · Close</a></nav></header>
+  <header class="topbar" id="top"><nav class="nav" aria-label="Presentation sections"><a href="#title">00 · Goal</a><a href="#progress">01 · D2 → D3</a><a href="#updates">02 · Updates</a><a href="#data">03 · Data</a><a class="core-flow" href="#workflow">📚 Borrow a book</a><a class="core-flow report-flow" href="#reports">🚩 Report an issue</a><a href="#privacy">06 · Privacy</a><a href="#feedback">07 · Feedback</a><a href="#responsive">08 · Responsive</a><a href="#handoff">09 · Evidence</a><a href="#close">10 · Close</a></nav></header>
   <main>
     <section class="slide title-slide" id="title"><p class="eyebrow">Deliverable 3 · Integrated Working Prototype</p><h1>BookLoop works from screen to database.</h1><p class="lede">Two connected product flows lead the demo: borrow a book from request to decision, then report an issue from submission to Admin review—with visible feedback, privacy-safe profiles, book management, status tracking and controlled contact.</p><p><span class="status">Beta v0.4.0-beta.3 · 159 automated tests passed · browser evidence pending</span></p><p class="meta">Tony Yu · Web Project 1 · Week 3</p></section>
 
@@ -47,18 +49,63 @@
     <section class="slide" id="close"><p class="eyebrow">09 · Conclusion</p><h2>BookLoop now connects a usable request flow with intentional privacy boundaries.</h2><p class="callout">The Beta persists decisions, manages user books, tracks Reports and separates Reporter, Admin and Inspector responsibilities. The next privacy step is automated notification, Block and moderation audit—not a payment system.</p><p class="figure-label">Fig 9-1 · Next verified step</p><div class="flow"><span>D3<br>Integrated Beta product</span><span class="arrow">→</span><span>D4<br>Automation and moderation operations</span></div></section>
     <section class="slide" id="reports"><p class="eyebrow">05 · Report workflow</p><h2>A report moves from a member's concern to an Admin decision</h2><p class="figure-label">Fig 5-1 · Live browser demonstration order</p><div class="flow"><span>👤 Member<br><small>Open report form</small></span><span class="arrow">→</span><span>🚩 Submit<br><small>Category + details</small></span><span class="arrow">→</span><span>🚩 My reports<br><small>Reporter tracks status</small></span><span class="arrow">→</span><span>🛡️ Received reports<br><small>Admin reviews</small></span><span class="arrow">→</span><span>Open → Under review<br><small>Resolved / Dismissed</small></span></div><p class="figure-label">Fig 5-2 · Same Report ID, different responsibilities</p><table><thead><tr><th>Screen</th><th>Who uses it</th><th>What is demonstrated</th></tr></thead><tbody><tr><td>Report form</td><td>Authenticated member</td><td>Category and details are validated and saved.</td></tr><tr><td>My reports</td><td>Reporter</td><td>Only the submitting member sees the report detail and current status.</td></tr><tr><td>Received reports</td><td>Admin</td><td>Reporter, reported user, category, details and status are visible for review.</td></tr><tr><td>Admin report detail</td><td>Admin</td><td>Status changes close the review step; contact is handled manually outside BookLoop.</td></tr></tbody></table><p class="callout">The reporter can follow progress, but cannot change the decision. The Admin can review and change status, but the current Beta does not send automatic email or create a moderation audit log.</p><div class="slot"><strong>EVIDENCE SLOT · Report review flow</strong><br>Use one real Report ID: submit → My reports → Received reports → Open/Under review/Resolved or Dismissed → manual follow-up boundary.</div></section>
   </main>
+  <nav class="floating-section-nav" aria-label="Presentation section controls">
+    <button type="button" data-section-nav="previous" aria-label="Previous section">←</button>
+    <button type="button" data-section-nav="top" aria-label="Back to top">↑</button>
+    <button type="button" data-section-nav="next" aria-label="Next section">→</button>
+  </nav>
   <script>
-    const sectionLabels = {
-      privacy: "06 · Privacy boundary",
-      feedback: "07 · Validation and feedback",
-      responsive: "08 · Navigation and responsive design",
-      handoff: "09 · Verification and handoff",
-      close: "10 · Conclusion",
-    };
-    Object.entries(sectionLabels).forEach(([id, label]) => {
-      const eyebrow = document.querySelector(`#${id} .eyebrow`);
-      if (eyebrow) eyebrow.textContent = label;
-    });
+    (() => {
+      const sections = ["title", "progress", "updates", "data", "workflow", "reports", "privacy", "feedback", "responsive", "handoff", "close"]
+        .map((id) => ({ id, element: document.getElementById(id) }))
+        .filter((section) => section.element);
+      const previousButton = document.querySelector('[data-section-nav="previous"]');
+      const nextButton = document.querySelector('[data-section-nav="next"]');
+      const topButton = document.querySelector('[data-section-nav="top"]');
+      if (!sections.length || !previousButton || !nextButton || !topButton) return;
+
+      let currentIndex = 0;
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      function detectCurrentIndex() {
+        const marker = window.scrollY + Math.min(window.innerHeight * 0.32, 220);
+        let detectedIndex = 0;
+        sections.forEach((section, index) => {
+          if (section.element.offsetTop <= marker) detectedIndex = index;
+        });
+        return window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4
+          ? sections.length - 1
+          : detectedIndex;
+      }
+
+      function updateControls() {
+        currentIndex = detectCurrentIndex();
+        previousButton.disabled = currentIndex === 0;
+        nextButton.disabled = currentIndex === sections.length - 1;
+      }
+
+      function moveSection(direction) {
+        updateControls();
+        const targetIndex = Math.max(0, Math.min(sections.length - 1, currentIndex + direction));
+        if (targetIndex === currentIndex) return;
+        const target = sections[targetIndex];
+        window.history.pushState(null, "", `#${target.id}`);
+        target.element.scrollIntoView({
+          behavior: reduceMotion.matches ? "auto" : "smooth",
+          block: "start",
+        });
+      }
+
+      previousButton.addEventListener("click", () => moveSection(-1));
+      nextButton.addEventListener("click", () => moveSection(1));
+      topButton.addEventListener("click", () => {
+        window.history.pushState(null, "", "#title");
+        window.scrollTo({ top: 0, behavior: reduceMotion.matches ? "auto" : "smooth" });
+      });
+      window.addEventListener("scroll", updateControls, { passive: true });
+      window.addEventListener("hashchange", updateControls);
+      updateControls();
+    })();
   </script>
 </body>
 </html>

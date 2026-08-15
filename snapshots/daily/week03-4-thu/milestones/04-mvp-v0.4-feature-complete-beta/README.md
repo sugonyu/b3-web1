@@ -1,8 +1,8 @@
 # MVP v0.4 — Feature-Complete Beta Candidate
 
 Official checkpoint: 🔗 Deliverable 4 — Feature-Complete Beta
-Review date: August 20, 2026
-Status: Week 4 planned — Beta v0.4.0-beta.3 evidence and release review pending
+Review date: August 13, 2026
+Status: Beta v0.4.0-beta.3 presentation-ready candidate — release review pending
 
 Roadmap: [BookLoop Web1 Roadmap](../../docs/bookloop-web1-roadmap.md)
 
@@ -34,10 +34,8 @@ state; no code snapshot is stored in the public repository.
 
 ## Remaining Beta work
 
-- [ ] Monday: complete remaining browser evidence and decide whether Beta is feature-complete.
-- [ ] Tuesday: audit authentication, authorization, forms, validation, major errors, responsive layouts, accessibility and the test checklist.
-- [ ] Wednesday: finish the README draft, setup instructions, known issues and D4 demonstration order.
-- [ ] Thursday: demonstrate all required workflows, record feedback and freeze major feature scope.
+- [ ] Complete remaining browser evidence and decide whether Beta is feature-complete.
+- [ ] Record the instructor's official grade and confirmed D4 scope.
 
 ## Explicitly out of current Beta scope
 
@@ -45,7 +43,6 @@ state; no code snapshot is stored in the public repository.
 - Moderation audit log.
 - Payment, card storage, deposits, refunds, or charging.
 - React parity before the required Flask/Jinja evidence is stable.
-- Unconfirmed post-presentation suggestions before the Deliverable 4 completion gates.
 
 ## Snapshot and evidence
 
