@@ -119,7 +119,8 @@ class AdminDashboardTest(unittest.TestCase):
         self.assertIn(b"Open", response.data)
         self.assertIn(b"Private moderation details must not appear in the queue.", response.data)
         self.assertNotIn(b"password", response.data.lower())
-        self.assertNotIn(b"<form", response.data.lower())
+        # 공통 헤더의 logout form은 허용하지만 queue 안의 moderation form은 금지한다.
+        self.assertNotIn(b'action="/admin/reports/', response.data.lower())
 
     def test_admin_can_review_report_and_change_status(self):
         self.login("tony")

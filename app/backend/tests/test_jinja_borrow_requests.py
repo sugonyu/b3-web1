@@ -297,6 +297,10 @@ class JinjaBorrowRequestFlowTest(unittest.TestCase):
         self.assertIn(b"Completed exchanges", response.data)
         self.assertIn(b"Active requests", response.data)
         self.assertIn(b"First-time borrower", response.data)
+        self.assertIn(b"Decision guide", response.data)
+        self.assertIn(b"Approve only when you can proceed", response.data)
+        self.assertIn(b"Admin review remains separate", response.data)
+        self.assertIn(b"No active Admin review notice", response.data)
         self.assertIn(b"Private contact details", response.data)
         self.assertIn(b"Approve", response.data)
         self.assertIn(b"Reject", response.data)
@@ -312,6 +316,56 @@ class JinjaBorrowRequestFlowTest(unittest.TestCase):
         self.assertNotIn(b"Mina's Decision Context", response.data)
         self.assertNotIn(b"decision-approve", response.data)
         self.assertNotIn(b"decision-reject", response.data)
+        self.assertNotIn(b"Decision guide", response.data)
+        self.assertNotIn(b"Admin review notice", response.data)
+
+    def test_open_report_does_not_notify_reported_owner_before_admin_triage(self):
+        self.login("tony")
+        self.client.post(f"/listings/{self.listing_id}/request")
+        self.client.post(
+            "/requests/1/report",
+            data={
+                "category": "no_show",
+                "details": "The arranged exchange did not happen.",
+            },
+        )
+        self.client.post("/logout")
+        self.login("mina")
+
+        response = self.client.get("/requests/1")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"No active Admin review notice", response.data)
+        self.assertNotIn(b"Admin review notice</h3>", response.data)
+        self.assertNotIn(b"The arranged exchange did not happen.", response.data)
+
+    def test_reported_owner_sees_notice_after_admin_starts_review(self):
+        self.login("tony")
+        self.client.post(f"/listings/{self.listing_id}/request")
+        self.client.post(
+            "/requests/1/report",
+            data={
+                "category": "no_show",
+                "details": "The arranged exchange did not happen.",
+            },
+        )
+        with self.app.app_context():
+            report = Report.query.one()
+            report.status = "under_review"
+            db.session.commit()
+        self.client.post("/logout")
+        self.login("mina")
+
+        response = self.client.get("/requests/1")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Admin review notice", response.data)
+        self.assertIn(b"1 Admin review is in progress for this exchange", response.data)
+        self.assertIn(b"Report details are visible only to Admin", response.data)
+        self.assertIn(b"Do not contact the other member about the report", response.data)
+        self.assertIn(b"does not automatically approve or reject", response.data)
+        self.assertNotIn(b"The arranged exchange did not happen.", response.data)
+        self.assertNotIn(b"tony@example.com", response.data)
 
     def test_request_parties_see_report_form(self):
         self.login("tony")

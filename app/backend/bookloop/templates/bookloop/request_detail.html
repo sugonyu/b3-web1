@@ -43,6 +43,23 @@
           {% if decision_context.is_first_time_borrower %}
             <p class="context-note">First-time borrower · No completed exchange history yet.</p>
           {% endif %}
+          <section aria-labelledby="decision-guide-heading">
+            <h3 id="decision-guide-heading">Decision guide</h3>
+            <ol>
+              <li>Review this request's status and the privacy-safe exchange history above.</li>
+              <li>Approve only when you can proceed with this exchange; reject when you cannot.</li>
+              <li>Use Report for a safety or conduct concern. Admin review remains separate from the borrowing decision.</li>
+            </ol>
+          </section>
+          {% if decision_context.admin_review_report_count %}
+            <section class="feedback feedback-warning" aria-labelledby="admin-review-notice-heading">
+              <h3 id="admin-review-notice-heading">Admin review notice</h3>
+              <p>{{ decision_context.admin_review_report_count }} Admin review{% if decision_context.admin_review_report_count != 1 %}s are{% else %} is{% endif %} in progress for this exchange.</p>
+              <p>Report details are visible only to Admin. Do not contact the other member about the report. This review does not automatically approve or reject the borrowing request.</p>
+            </section>
+          {% else %}
+            <p class="privacy-note">No active Admin review notice is currently connected to this request.</p>
+          {% endif %}
           {% if borrow_request.status == "approved" %}
             <p class="privacy-note">Approved contact details are shared separately below. Unrelated book activity remains private.</p>
           {% else %}

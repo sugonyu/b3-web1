@@ -13,7 +13,7 @@ Outline:
 """
 
 from ..db import db
-from ..db.models import BookListing, BorrowRequest, User
+from ..db.models import BookListing, BorrowRequest, Report, User
 
 
 class BorrowRequestServiceError(Exception):
@@ -117,6 +117,13 @@ def get_borrower_decision_context_service(borrow_request):
     active_requests = borrower_requests.filter(
         BorrowRequest.status.in_(("pending", "approved", "return_pending"))
     ).count()
+    # Open 단계에서는 Admin이 먼저 triage한다. under_review로 전환된 뒤에만
+    # 신고 대상 owner에게 공식 검토가 시작됐다는 최소 awareness를 제공한다.
+    admin_review_report_count = Report.query.filter_by(
+        borrow_request_id=borrow_request.id,
+        reported_user_id=borrow_request.listing.owner_id,
+        status="under_review",
+    ).count()
 
     return {
         "request_created_at": borrow_request.created_at,
@@ -124,6 +131,7 @@ def get_borrower_decision_context_service(borrow_request):
         "completed_exchanges": completed_exchanges,
         "active_requests": active_requests,
         "is_first_time_borrower": completed_exchanges == 0,
+        "admin_review_report_count": admin_review_report_count,
     }
 
 
