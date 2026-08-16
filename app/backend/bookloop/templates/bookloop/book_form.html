@@ -12,25 +12,25 @@
     <main class="product-main">
       {% include "bookloop/_dev_user_switcher.html" %}
       {% include "bookloop/_product_header.html" %}
-      <h1 class="page-title">{{ form_title }}</h1>
-      <p class="eyebrow">Book management · {{ current_user.username }}</p>
+      <h1 class="page-title" data-book-form-title>{{ form_title }}</h1>
+      <p class="eyebrow"><span data-i18n="bookManagement">Book management</span> · {{ current_user.username }}</p>
       {% include "bookloop/_product_nav.html" %}
 
       {% if error %}
-        <p class="error-message" role="alert">{{ error }}</p>
+        <p class="error-message" role="alert" data-book-form-error="{{ error }}">{{ error }}</p>
       {% endif %}
 
-      <form class="form-stack" method="post">
+      <form class="form-stack" method="post" data-book-form data-book-form-mode="{{ 'edit' if form_title == 'Edit your book' else 'add' }}">
         <p>
-          <label for="title">Book title</label><br>
-          <input id="title" name="title" type="text" value="{{ form_data.title }}" maxlength="150" required>
+          <label for="title" data-i18n="bookTitle">Book title</label><br>
+          <input id="title" name="title" type="text" value="{{ form_data.title }}" maxlength="150" required data-book-form-field data-i18n-placeholder="bookTitlePlaceholder">
         </p>
         <p>
-          <label for="author">Author</label><br>
-          <input id="author" name="author" type="text" value="{{ form_data.author }}" maxlength="120" required>
+          <label for="author" data-i18n="author">Author</label><br>
+          <input id="author" name="author" type="text" value="{{ form_data.author }}" maxlength="120" required data-book-form-field data-i18n-placeholder="authorPlaceholder">
         </p>
-        <button type="submit">{{ submit_label }}</button>
-        <a href="{{ url_for('jinja_client.my_books') }}">Cancel</a>
+        <button type="submit" data-book-submit>{{ submit_label }}</button>
+        <a href="{{ url_for('jinja_client.my_books') }}" data-i18n="cancel">Cancel</a>
       </form>
       {% include "bookloop/_product_footer.html" %}
     </main>

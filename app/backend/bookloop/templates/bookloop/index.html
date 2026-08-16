@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
   </head>
   <body>
-    <main class="product-main">
+    <main class="product-main" data-bookloop-page="books" data-bookloop-title-key="booksPageTitle">
       {% include "bookloop/_dev_user_switcher.html" %}
       {% include "bookloop/_product_header.html" %}
       {% if current_user.is_authenticated %}
@@ -19,17 +19,17 @@
 
       {% if current_user.is_authenticated %}
         <section class="home-actions">
-          <p>Choose an available book to create a borrowing request.</p>
-          <nav class="request-links" aria-label="Borrowing request views">
-            <a href="{{ url_for('jinja_client.borrower_request_history') }}">🙋 Sent requests ({{ borrower_request_count }})</a>
-            <a href="{{ url_for('jinja_client.listing_owner_request_history') }}">📬 Received requests ({{ owner_request_count }})</a>
-            <a href="{{ url_for('jinja_client.my_books') }}">📚 My books</a>
-            <a href="{{ url_for('jinja_client.new_book') }}">Add a book</a>
+          <p data-i18n="chooseAvailableBook">Choose an available book to create a borrowing request.</p>
+          <nav class="request-links" aria-label="Borrowing request views" data-i18n-aria-label="borrowingRequestViews">
+            <a href="{{ url_for('jinja_client.borrower_request_history') }}">🙋 <span data-i18n="sentRequests">Sent requests</span> ({{ borrower_request_count }})</a>
+            <a href="{{ url_for('jinja_client.listing_owner_request_history') }}">📬 <span data-i18n="receivedRequests">Received requests</span> ({{ owner_request_count }})</a>
+            <a href="{{ url_for('jinja_client.my_books') }}">📚 <span data-i18n="myBooks">My books</span></a>
+            <a href="{{ url_for('jinja_client.new_book') }}" data-i18n="addBook">Add a book</a>
           </nav>
         </section>
       {% else %}
         <section class="home-actions">
-          <p>Sign in before requesting a book.</p>
+          <p data-i18n="signInBeforeRequest">Sign in before requesting a book.</p>
         </section>
       {% endif %}
 
@@ -39,66 +39,66 @@
           <p><strong>{{ feedback.status_code }}</strong> · {{ feedback.message }}</p>
           {% if existing_request_id %}
             <a href="{{ url_for('jinja_client.request_detail', request_id=existing_request_id) }}">
-              View Request #{{ existing_request_id }}
+              <span data-i18n="viewRequest">View Request</span> #{{ existing_request_id }}
             </a>
           {% else %}
-            <a href="#books-title">Choose another book</a>
+            <a href="#books-title" data-i18n="chooseAnotherBook">Choose another book</a>
           {% endif %}
         </section>
       {% endif %}
 
       <section aria-labelledby="books-title">
-        <h2 id="books-title">Books</h2>
+        <h2 id="books-title" data-i18n="books">Books</h2>
         <div class="data-table-wrap">
           <table class="data-table">
             <thead>
               <tr>
-                <th scope="col">Book</th>
-                <th scope="col">Owner · Area</th>
-                <th scope="col">Status</th>
-                <th scope="col">Action</th>
+                <th scope="col" data-i18n="book">Book</th>
+                <th scope="col" data-i18n="ownerArea">Owner · Area</th>
+                <th scope="col" data-i18n="status">Status</th>
+                <th scope="col" data-i18n="action">Action</th>
               </tr>
             </thead>
             <tbody>
               {% for listing in listings %}
                 <tr class="{% if current_user.is_authenticated and listing.owner_id == current_user.id %}own-listing-row{% else %}community-listing-row{% endif %}">
-                  <td data-label="Book">
+                  <td data-label="Book" data-i18n-label="book">
                     <strong>{{ book_title(listing.title) }}</strong><br>
                     <small>{{ listing.author }} · Book #{{ listing.id }}</small>
                   </td>
-                  <td data-label="Owner · Area">
+                  <td data-label="Owner · Area" data-i18n-label="ownerArea">
                     {% if current_user.is_authenticated and listing.owner_id == current_user.id %}
-                      <strong>You</strong> · {{ listing.owner.general_area }}
+                      <strong data-i18n="you">You</strong> · {{ listing.owner.general_area }}
                     {% else %}
                       <a href="{{ url_for('jinja_client.user_profile', user_id=listing.owner.id) }}">{{ listing.owner.username }} {{ user_icon(listing.owner) }}</a> · {{ listing.owner.general_area }}
                     {% endif %}
                   </td>
-                  <td data-label="Status">
-                    {{ "Available" if listing.availability else "Unavailable" }}
+                  <td data-label="Status" data-i18n-label="status">
+                    <span data-i18n="{{ 'available' if listing.availability else 'unavailable' }}">{{ "Available" if listing.availability else "Unavailable" }}</span>
                   </td>
-                  <td data-label="Action">
+                  <td data-label="Action" data-i18n-label="action">
                     {% if current_user.is_authenticated %}
                       <form action="{{ url_for('jinja_client.request_book', listing_id=listing.id) }}" method="post">
                         <button type="submit"{% if not listing.availability or listing.owner_id == current_user.id or listing.id in active_request_listing_ids %} disabled{% endif %}>
                           {% if listing.owner_id == current_user.id %}
-                            Your book
+                            <span data-i18n="yourBook">Your book</span>
                           {% elif not listing.availability %}
-                            Unavailable
+                            <span data-i18n="unavailable">Unavailable</span>
                           {% elif listing.id in active_request_listing_ids %}
-                            Requested
+                            <span data-i18n="requested">Requested</span>
                           {% else %}
-                            Request
+                            <span data-i18n="request">Request</span>
                           {% endif %}
                         </button>
                       </form>
                     {% else %}
-                      <a href="{{ url_for('auth.login') }}">Log in to request</a>
+                      <a href="{{ url_for('auth.login') }}" data-i18n="loginToRequest">Log in to request</a>
                     {% endif %}
                   </td>
                 </tr>
               {% else %}
                 <tr>
-                  <td colspan="4">No books are available yet.</td>
+                  <td colspan="4" data-i18n="noBooksAvailable">No books are available yet.</td>
                 </tr>
               {% endfor %}
             </tbody>

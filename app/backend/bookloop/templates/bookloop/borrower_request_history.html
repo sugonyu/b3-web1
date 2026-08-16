@@ -10,17 +10,17 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
   </head>
   <body>
-    <main class="product-main">
+    <main class="product-main" data-bookloop-page="sent-requests" data-bookloop-title-key="sentRequestsPageTitle">
       {% include "bookloop/_dev_user_switcher.html" %}
       {% include "bookloop/_product_header.html" %}
       {% include "bookloop/_product_nav.html" %}
-      <h1 class="page-title">My borrowing requests</h1>
-      <p>Only requests created by this account are shown.</p>
+      <h1 class="page-title" data-i18n="myBorrowingRequests">My borrowing requests</h1>
+      <p data-i18n="onlyMyRequests">Only requests created by this account are shown.</p>
 
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% for category, message in messages %}
           <section class="feedback feedback-{{ category }}" role="status">
-            <h2>✅ Request updated</h2>
+            <h2>✅ <span data-i18n="requestUpdated">Request updated</span></h2>
             <p>{{ message }}</p>
           </section>
         {% endfor %}
@@ -30,41 +30,41 @@
         <table class="data-table request-table">
           <thead>
             <tr>
-              <th scope="col">Request</th>
-              <th scope="col">Book</th>
-              <th scope="col">Owner · Area</th>
-              <th scope="col">Status</th>
-              <th scope="col">Action</th>
+              <th scope="col" data-i18n="request">Request</th>
+              <th scope="col" data-i18n="book">Book</th>
+              <th scope="col" data-i18n="ownerArea">Owner · Area</th>
+              <th scope="col" data-i18n="status">Status</th>
+              <th scope="col" data-i18n="action">Action</th>
             </tr>
           </thead>
           <tbody>
             {% for borrow_request in borrow_requests %}
               <tr>
-                <td data-label="Request">
+                <td data-label="Request" data-i18n-label="request">
                   <a href="{{ url_for('jinja_client.request_detail', request_id=borrow_request.id) }}">#{{ borrow_request.id }}</a>
                 </td>
-                <td data-label="Book">
+                <td data-label="Book" data-i18n-label="book">
                   <strong>{{ book_title(borrow_request.listing.title) }}</strong><br>
                   <small>{{ borrow_request.listing.author }}</small>
                 </td>
-                <td data-label="Owner · Area"><a href="{{ url_for('jinja_client.user_profile', user_id=borrow_request.listing.owner.id) }}">{{ borrow_request.listing.owner.username }} {{ user_icon(borrow_request.listing.owner) }}</a> · {{ borrow_request.listing.owner.general_area }}</td>
-                <td data-label="Status"><span class="status-pill status-{{ borrow_request.status }}">{{ borrow_request.status.replace('_', ' ')|title }}</span></td>
-                <td data-label="Action">
+                <td data-label="Owner · Area" data-i18n-label="ownerArea"><a href="{{ url_for('jinja_client.user_profile', user_id=borrow_request.listing.owner.id) }}">{{ borrow_request.listing.owner.username }} {{ user_icon(borrow_request.listing.owner) }}</a> · {{ borrow_request.listing.owner.general_area }}</td>
+                <td data-label="Status" data-i18n-label="status"><span class="status-pill status-{{ borrow_request.status }}" data-i18n-status="{{ borrow_request.status }}">{{ borrow_request.status.replace('_', ' ')|title }}</span></td>
+                <td data-label="Action" data-i18n-label="action">
                   {% include "bookloop/_request_cancel_action.html" %}
                   {% include "bookloop/_request_return_actions.html" %}
-                  {% if borrow_request.status not in ("pending", "approved", "return_pending") %}<small>No pending action</small>{% endif %}
+                  {% if borrow_request.status not in ("pending", "approved", "return_pending") %}<small data-i18n="noPendingAction">No pending action</small>{% endif %}
                 </td>
               </tr>
             {% else %}
               <tr>
-                <td colspan="5">You have not requested a book yet.</td>
+                <td colspan="5" data-i18n="noRequestedBook">You have not requested a book yet.</td>
               </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
 
-      <a href="{{ url_for('jinja_client.product_home') }}">Back to books</a>
+      <a href="{{ url_for('jinja_client.product_home') }}" data-i18n="backToBooks">Back to books</a>
       {% include "bookloop/_product_footer.html" %}
     </main>
   </body>

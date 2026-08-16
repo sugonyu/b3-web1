@@ -9,51 +9,51 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
   </head>
   <body>
-    <main class="product-main">
+    <main class="product-main" data-bookloop-page="my-books" data-bookloop-title-key="myBooksTitle">
       {% include "bookloop/_dev_user_switcher.html" %}
       {% include "bookloop/_product_header.html" %}
       {% include "bookloop/_product_nav.html" %}
-      <h1 class="page-title">My books</h1>
+      <h1 class="page-title" data-i18n="myBooksTitle">My books</h1>
 
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% for category, message in messages %}
-          <p class="feedback feedback-{{ 'success' if category == 'success' else 'warning' }}" role="status">{{ message }}</p>
+          <p class="feedback feedback-{{ 'success' if category == 'success' else 'warning' }}" role="status" data-book-feedback="{{ message }}">{{ message }}</p>
         {% endfor %}
       {% endwith %}
 
       <section class="home-actions">
-        <p>Manage the books you own and choose whether each one is available to borrow.</p>
-        <a class="button-link" href="{{ url_for('jinja_client.new_book') }}">Add a book</a>
+        <p data-i18n="myBooksIntro">Manage the books you own and choose whether each one is available to borrow.</p>
+        <a class="button-link" href="{{ url_for('jinja_client.new_book') }}" data-i18n="addBook">Add a book</a>
       </section>
 
       <section aria-labelledby="my-books-title">
-        <h2 id="my-books-title">Your book listings</h2>
+        <h2 id="my-books-title" data-i18n="yourBookListings">Your book listings</h2>
         <div class="data-table-wrap">
           <table class="data-table">
             <thead>
               <tr>
-                <th scope="col">Book</th>
-                <th scope="col">Availability</th>
-                <th scope="col">Actions</th>
+                <th scope="col" data-i18n="book">Book</th>
+                <th scope="col" data-i18n="availability">Availability</th>
+                <th scope="col" data-i18n="actions">Actions</th>
               </tr>
             </thead>
             <tbody>
               {% for listing in listings %}
                 <tr class="my-books-row">
                   <td data-label="Book"><strong>{{ listing.title }}</strong><br><small>{{ listing.author }} · Book #{{ listing.id }}</small></td>
-                  <td data-label="Availability">{{ "Available" if listing.availability else "Unavailable" }}</td>
+                  <td data-label="Availability"><span data-i18n="{{ 'available' if listing.availability else 'unavailable' }}">{{ "Available" if listing.availability else "Unavailable" }}</span></td>
                   <td class="actions-cell" data-label="Actions">
-                    <a class="action-link" href="{{ url_for('jinja_client.edit_book', listing_id=listing.id) }}">Edit</a>
+                    <a class="action-link" href="{{ url_for('jinja_client.edit_book', listing_id=listing.id) }}" data-i18n="edit">Edit</a>
                     <form action="{{ url_for('jinja_client.change_book_availability', listing_id=listing.id) }}" method="post">
-                      <button class="action-button" type="submit">{{ "Make unavailable" if listing.availability else "Make available" }}</button>
+                      <button class="action-button" type="submit" data-i18n="{{ 'makeUnavailable' if listing.availability else 'makeAvailable' }}">{{ "Make unavailable" if listing.availability else "Make available" }}</button>
                     </form>
                     <form action="{{ url_for('jinja_client.delete_book', listing_id=listing.id) }}" method="post" data-confirm="Delete this book listing? This action cannot be undone.">
-                      <button class="action-button action-button-danger" type="submit">Delete</button>
+                      <button class="action-button action-button-danger" type="submit" data-i18n="delete">Delete</button>
                     </form>
                   </td>
                 </tr>
               {% else %}
-                <tr><td colspan="3">You have not added a book yet.</td></tr>
+                <tr><td colspan="3" data-i18n="noBooks">You have not added a book yet.</td></tr>
               {% endfor %}
             </tbody>
           </table>
@@ -62,12 +62,12 @@
 
       <dialog class="confirm-dialog" id="bookloop-confirm-dialog" aria-labelledby="confirm-dialog-title">
         <form method="dialog" class="confirm-dialog-card">
-          <p class="eyebrow">Confirm action</p>
-          <h2 id="confirm-dialog-title">Are you sure?</h2>
+          <p class="eyebrow" data-i18n="confirmAction">Confirm action</p>
+          <h2 id="confirm-dialog-title" data-i18n="areYouSure">Are you sure?</h2>
           <p id="confirm-dialog-message"></p>
           <div class="confirm-dialog-actions">
-            <button class="action-link" value="cancel" type="submit">Cancel</button>
-            <button class="action-button action-button-danger" id="confirm-dialog-submit" value="confirm" type="submit">Delete</button>
+            <button class="action-link" value="cancel" type="submit" data-i18n="cancel">Cancel</button>
+            <button class="action-button action-button-danger" id="confirm-dialog-submit" value="confirm" type="submit" data-i18n="delete">Delete</button>
           </div>
         </form>
       </dialog>

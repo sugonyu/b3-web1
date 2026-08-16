@@ -10,37 +10,37 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
   </head>
   <body>
-    <main class="product-main">
+    <main class="product-main" data-bookloop-page="reports" data-bookloop-title-key="reportsPageTitle">
       {% include "bookloop/_dev_user_switcher.html" %}
       {% include "bookloop/_product_header.html" %}
       {% include "bookloop/_product_nav.html" %}
-      <h1 class="page-title">My reports</h1>
-      <p>Only reports submitted by this account are shown. The status reflects the latest Admin review.</p>
+      <h1 class="page-title" data-i18n="myReports">My reports</h1>
+      <p data-i18n="onlyMyReports">Only reports submitted by this account are shown. The status reflects the latest Admin review.</p>
 
       <div class="data-table-wrap">
         <table class="data-table request-table">
           <thead>
             <tr>
-              <th scope="col">Report</th>
-              <th scope="col">Book</th>
-              <th scope="col">Reported user</th>
-              <th scope="col">Category</th>
-              <th scope="col">Created</th>
-              <th scope="col">Status</th>
+              <th scope="col" data-i18n="report">Report</th>
+              <th scope="col" data-i18n="book">Book</th>
+              <th scope="col" data-i18n="reportedUser">Reported user</th>
+              <th scope="col" data-i18n="category">Category</th>
+              <th scope="col" data-i18n="created">Created</th>
+              <th scope="col" data-i18n="status">Status</th>
             </tr>
           </thead>
           <tbody>
             {% for report in reports %}
               <tr>
-                <td data-label="Report"><a href="{{ url_for('jinja_client.report_detail', report_id=report.id) }}">#{{ report.id }}</a></td>
-                <td data-label="Book"><strong>{{ book_title(report.borrow_request.listing.title) }}</strong><br><small>Request #{{ report.borrow_request_id }}</small></td>
-                <td data-label="Reported user">{{ report.reported_user.username }} {{ user_icon(report.reported_user) }}</td>
-                <td data-label="Category">{{ report.category.replace('_', ' ')|title }}</td>
-                <td data-label="Created">{{ report.created_at.strftime("%Y-%m-%d") }}</td>
-                <td data-label="Status"><span class="status-pill status-{{ report.status }}">{{ report.status.replace('_', ' ')|title }}</span></td>
+                <td data-label="Report" data-i18n-label="report"><a href="{{ url_for('jinja_client.report_detail', report_id=report.id) }}">#{{ report.id }}</a></td>
+                <td data-label="Book" data-i18n-label="book"><strong>{{ book_title(report.borrow_request.listing.title) }}</strong><br><small>Request #{{ report.borrow_request_id }}</small></td>
+                <td data-label="Reported user" data-i18n-label="reportedUser">{{ report.reported_user.username }} {{ user_icon(report.reported_user) }}</td>
+                <td data-label="Category" data-i18n-label="category">{{ report.category.replace('_', ' ')|title }}</td>
+                <td data-label="Created" data-i18n-label="created">{{ report.created_at.strftime("%Y-%m-%d") }}</td>
+                <td data-label="Status" data-i18n-label="status"><span class="status-pill status-{{ report.status }}" data-i18n-status="{{ report.status }}">{{ report.status.replace('_', ' ')|title }}</span></td>
               </tr>
             {% else %}
-              <tr><td colspan="6">You have not submitted a report.</td></tr>
+              <tr><td colspan="6" data-i18n="noSubmittedReport">You have not submitted a report yet.</td></tr>
             {% endfor %}
           </tbody>
         </table>

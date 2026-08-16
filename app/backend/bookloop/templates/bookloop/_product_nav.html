@@ -1,29 +1,29 @@
-<nav class="product-nav" aria-label="BookLoop product navigation">
+<nav class="product-nav" aria-label="BookLoop product navigation" data-i18n-aria-label="productNavigation">
   <a
     href="{{ url_for('jinja_client.product_home') }}"
     {% if request.endpoint == 'jinja_client.product_home' %}aria-current="page"{% endif %}
-  >📚 Books</a>
+  ><span data-i18n="books">📚 Books</span></a>
   <a
     href="{{ url_for('jinja_client.borrower_request_history') }}"
     {% if request.endpoint == 'jinja_client.borrower_request_history' %}aria-current="page"{% endif %}
-  >🙋 Sent requests</a>
+  ><span data-i18n="sentRequests">🙋 Sent requests</span></a>
   <a
     href="{{ url_for('jinja_client.listing_owner_request_history') }}"
     {% if request.endpoint == 'jinja_client.listing_owner_request_history' %}aria-current="page"{% endif %}
-  >📬 Received requests</a>
+  ><span data-i18n="receivedRequests">📬 Received requests</span></a>
   <a
     href="{{ url_for('jinja_client.my_books') }}"
     {% if request.endpoint in ('jinja_client.my_books', 'jinja_client.new_book', 'jinja_client.edit_book') %}aria-current="page"{% endif %}
-  >📚 My books</a>
+  ><span data-i18n="myBooks">📚 My books</span></a>
   {% if current_user.is_authenticated and current_user.is_admin %}
     <a
       href="{{ url_for('admin.dashboard') }}"
       {% if request.blueprint == 'admin' %}aria-current="page"{% endif %}
-    >🚩 Received reports</a>
+    ><span data-i18n="receivedReports">🚩 Received reports</span></a>
   {% else %}
     <a
       href="{{ url_for('jinja_client.report_history') }}"
       {% if request.endpoint == 'jinja_client.report_history' %}aria-current="page"{% endif %}
-    >🚩 My reports</a>
+    ><span data-i18n="myReports">🚩 My reports</span></a>
   {% endif %}
 </nav>

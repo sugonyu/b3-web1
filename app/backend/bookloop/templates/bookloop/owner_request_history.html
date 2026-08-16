@@ -10,17 +10,17 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
   </head>
   <body>
-    <main class="product-main">
+    <main class="product-main" data-bookloop-page="received-requests" data-bookloop-title-key="receivedRequestsPageTitle">
       {% include "bookloop/_dev_user_switcher.html" %}
       {% include "bookloop/_product_header.html" %}
       {% include "bookloop/_product_nav.html" %}
-      <h1 class="page-title">Requests for my books</h1>
-      <p>Only requests for listings owned by this account are shown.</p>
+      <h1 class="page-title" data-i18n="requestsForMyBooks">Requests for my books</h1>
+      <p data-i18n="onlyOwnedRequests">Only requests for listings owned by this account are shown.</p>
 
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% for category, message in messages %}
           <section class="feedback feedback-{{ category }}" role="status">
-            <h2>✅ Decision saved</h2>
+            <h2>✅ <span data-i18n="decisionSaved">Decision saved</span></h2>
             <p>{{ message }}</p>
           </section>
         {% endfor %}
@@ -30,43 +30,43 @@
         <table class="data-table request-table">
           <thead>
             <tr>
-              <th scope="col">Request</th>
-              <th scope="col">Book</th>
-              <th scope="col">Borrower · Area</th>
-              <th scope="col">Status</th>
-              <th scope="col">Decision</th>
+              <th scope="col" data-i18n="request">Request</th>
+              <th scope="col" data-i18n="book">Book</th>
+              <th scope="col" data-i18n="borrowerArea">Borrower · Area</th>
+              <th scope="col" data-i18n="status">Status</th>
+              <th scope="col" data-i18n="decision">Decision</th>
             </tr>
           </thead>
           <tbody>
             {% for borrow_request in borrow_requests %}
               <tr>
-                <td data-label="Request">
+                <td data-label="Request" data-i18n-label="request">
                   <a href="{{ url_for('jinja_client.request_detail', request_id=borrow_request.id) }}">#{{ borrow_request.id }}</a>
                 </td>
-                <td data-label="Book">
+                <td data-label="Book" data-i18n-label="book">
                   <strong>{{ book_title(borrow_request.listing.title) }}</strong><br>
                   <small>{{ borrow_request.listing.author }}</small>
                 </td>
-                <td data-label="Borrower · Area"><a href="{{ url_for('jinja_client.user_profile', user_id=borrow_request.borrower.id) }}">{{ borrow_request.borrower.username }} {{ user_icon(borrow_request.borrower) }}</a> · {{ borrow_request.borrower.general_area }}</td>
-                <td data-label="Status"><span class="status-pill status-{{ borrow_request.status }}">{{ borrow_request.status.replace('_', ' ')|title }}</span></td>
-                <td data-label="Decision">
+                <td data-label="Borrower · Area" data-i18n-label="borrowerArea"><a href="{{ url_for('jinja_client.user_profile', user_id=borrow_request.borrower.id) }}">{{ borrow_request.borrower.username }} {{ user_icon(borrow_request.borrower) }}</a> · {{ borrow_request.borrower.general_area }}</td>
+                <td data-label="Status" data-i18n-label="status"><span class="status-pill status-{{ borrow_request.status }}" data-i18n-status="{{ borrow_request.status }}">{{ borrow_request.status.replace('_', ' ')|title }}</span></td>
+                <td data-label="Decision" data-i18n-label="decision">
                   <a href="{{ url_for('jinja_client.request_detail', request_id=borrow_request.id) }}">
-                    {{ "Review & decide" if borrow_request.status == "pending" else ("Confirm return" if borrow_request.status == "return_pending" else "View status") }}
+                    <span data-i18n="{{ 'reviewDecide' if borrow_request.status == 'pending' else ('confirmReturn' if borrow_request.status == 'return_pending' else 'viewStatus') }}">{{ "Review & decide" if borrow_request.status == "pending" else ("Confirm return" if borrow_request.status == "return_pending" else "View status") }}</span>
                   </a>
                 </td>
               </tr>
             {% else %}
               <tr>
-                <td colspan="5">No one has requested one of your books yet.</td>
+                <td colspan="5" data-i18n="noOneRequested">No one has requested one of your books yet.</td>
               </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
 
-      <a href="{{ url_for('jinja_client.borrower_request_history') }}">View my borrowing requests</a>
+      <a href="{{ url_for('jinja_client.borrower_request_history') }}" data-i18n="viewMyBorrowingRequests">View my borrowing requests</a>
       ·
-      <a href="{{ url_for('jinja_client.product_home') }}">Back to books</a>
+      <a href="{{ url_for('jinja_client.product_home') }}" data-i18n="backToBooks">Back to books</a>
       {% include "bookloop/_product_footer.html" %}
     </main>
   </body>

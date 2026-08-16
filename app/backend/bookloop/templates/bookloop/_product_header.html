@@ -1,17 +1,28 @@
+<script defer src="{{ url_for('static', filename='bookloop/language.js') }}"></script>
 <header class="product-header">
-  <h1 class="product-logo">BookLoop</h1>
-  <div class="product-account" aria-label="Signed-in user">
+  <div class="product-brand">
+    <h1>
+      <a
+        href="{{ url_for('jinja_client.product_home') }}"
+        class="product-logo"
+        aria-label="BookLoop home"
+        data-i18n-aria-label="bookLoopHome"
+      >BookLoop</a>
+    </h1>
+    {% include "bookloop/_language_picker.html" %}
+  </div>
+  <div class="product-account" aria-label="Signed-in user" data-i18n-aria-label="signedInUser">
     {% include "bookloop/_theme_toggle.html" %}
     {% if current_user.is_authenticated %}
       <span>{{ current_user.username }} {{ user_icon(current_user) }} · User #{{ current_user.id }}</span>
-      <a href="{{ url_for('jinja_client.user_profile', user_id=current_user.id) }}">Profile</a>
+      <a href="{{ url_for('jinja_client.user_profile', user_id=current_user.id) }}" data-i18n="profile">Profile</a>
       <form action="{{ url_for('auth.logout') }}" method="post">
-        <button type="submit">Log out</button>
+        <button type="submit" data-i18n="logout">Log out</button>
       </form>
     {% else %}
-      <span>Guest</span>
-      <a href="{{ url_for('auth.login') }}">Log in</a>
-      <a href="{{ url_for('auth.register') }}">Register</a>
+      <span data-i18n="guest">Guest</span>
+      <a href="{{ url_for('auth.login') }}" data-i18n="login">Log in</a>
+      <a href="{{ url_for('auth.register') }}" data-i18n="register">Register</a>
     {% endif %}
   </div>
 </header>
