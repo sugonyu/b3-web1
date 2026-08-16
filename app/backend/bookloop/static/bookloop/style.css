@@ -316,6 +316,42 @@ a {
   white-space: nowrap;
 }
 
+.request-action {
+  min-width: 12rem;
+}
+
+.request-action summary {
+  width: fit-content;
+  padding: 0.4rem 0.65rem;
+  color: #fff;
+  background: var(--colour-brand);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.request-action form {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  min-width: min(18rem, 70vw);
+}
+
+.request-action textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+.request-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.request-form-cancel {
+  color: var(--colour-brand-dark);
+  background: var(--colour-surface);
+}
+
 .product-nav {
   display: flex;
   flex-wrap: wrap;

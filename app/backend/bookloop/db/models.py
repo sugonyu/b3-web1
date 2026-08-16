@@ -97,7 +97,7 @@ class BookListing(db.Model):
 
 
 class BorrowRequest(db.Model):
-    """책 listing과 요청자를 연결하고 대여 상태 변화를 기록한다."""
+    """책 listing과 요청자를 연결하고 대여 상태·메시지를 기록한다."""
 
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(
@@ -105,6 +105,7 @@ class BorrowRequest(db.Model):
         nullable=False,
         default=DEFAULT_BORROW_REQUEST_STATUS,
     )
+    message = db.Column(db.String(500), nullable=False, default="")
     listing_id = db.Column(
         db.Integer,
         db.ForeignKey("book_listing.id"),

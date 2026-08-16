@@ -72,11 +72,30 @@ class BorrowRequestWorkflowEndpointTest(unittest.TestCase):
         self.login_as(self.borrower)
         response = self.client.post(
             f"/api/listings/{self.listing.id}/requests",
+            json={"message": "Could we arrange pickup this weekend?"},
         )
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.get_json()["request"]["status"], "pending")
+        self.assertEqual(
+            response.get_json()["request"]["message"],
+            "Could we arrange pickup this weekend?",
+        )
         self.assertEqual(BorrowRequest.query.count(), 1)
+
+    def test_post_request_rejects_message_over_500_characters(self):
+        self.login_as(self.borrower)
+        response = self.client.post(
+            f"/api/listings/{self.listing.id}/requests",
+            json={"message": "x" * 501},
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.get_json(),
+            {"error": "request message is too long"},
+        )
+        self.assertEqual(BorrowRequest.query.count(), 0)
 
     def test_post_request_rejects_listing_owner(self):
         self.login_as(self.owner)

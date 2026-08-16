@@ -27,6 +27,10 @@
           <dd><a href="{{ url_for('jinja_client.user_profile', user_id=borrow_request.listing.owner.id) }}">{{ borrow_request.listing.owner.username }} {{ user_icon(borrow_request.listing.owner) }}</a></dd>
           <dt>Borrower area</dt>
           <dd>{{ borrow_request.borrower.general_area }}</dd>
+          {% if borrow_request.message %}
+            <dt data-i18n="requestMessage">Message</dt>
+            <dd class="request-message">{{ borrow_request.message }}</dd>
+          {% endif %}
         </dl>
       </article>
 

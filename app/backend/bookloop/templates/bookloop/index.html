@@ -78,19 +78,45 @@
                   </td>
                   <td data-label="Action" data-i18n-label="action">
                     {% if current_user.is_authenticated %}
-                      <form action="{{ url_for('jinja_client.request_book', listing_id=listing.id) }}" method="post">
-                        <button type="submit"{% if not listing.availability or listing.owner_id == current_user.id or listing.id in active_request_listing_ids %} disabled{% endif %}>
-                          {% if listing.owner_id == current_user.id %}
+                      {% if listing.owner_id == current_user.id %}
+                        <form action="{{ url_for('jinja_client.request_book', listing_id=listing.id) }}" method="post">
+                          <button type="submit" disabled>
                             <span data-i18n="yourBook">Your book</span>
-                          {% elif not listing.availability %}
+                          </button>
+                        </form>
+                      {% elif not listing.availability %}
+                        <form action="{{ url_for('jinja_client.request_book', listing_id=listing.id) }}" method="post">
+                          <button type="submit" disabled>
                             <span data-i18n="unavailable">Unavailable</span>
-                          {% elif listing.id in active_request_listing_ids %}
+                          </button>
+                        </form>
+                      {% elif listing.id in active_request_listing_ids %}
+                        <form action="{{ url_for('jinja_client.request_book', listing_id=listing.id) }}" method="post">
+                          <button type="submit" disabled>
                             <span data-i18n="requested">Requested</span>
-                          {% else %}
-                            <span data-i18n="request">Request</span>
-                          {% endif %}
-                        </button>
-                      </form>
+                          </button>
+                        </form>
+                      {% else %}
+                        <details class="request-action">
+                          <summary data-i18n="request">Request</summary>
+                          <form action="{{ url_for('jinja_client.request_book', listing_id=listing.id) }}" method="post">
+                            <label for="request-message-{{ listing.id }}" data-i18n="requestMessageLabel">Message (optional)</label>
+                            <textarea
+                              id="request-message-{{ listing.id }}"
+                              name="message"
+                              rows="3"
+                              maxlength="500"
+                              data-i18n-placeholder="requestMessagePlaceholder"
+                              placeholder="Add a short message for the book owner."
+                            ></textarea>
+                            <small data-i18n="requestMessageHelp">Maximum 500 characters.</small>
+                            <div class="request-form-actions">
+                              <button type="submit" data-i18n="sendRequest">Send request</button>
+                              <button type="button" class="request-form-cancel" data-request-form-cancel data-i18n="cancel">Cancel</button>
+                            </div>
+                          </form>
+                        </details>
+                      {% endif %}
                     {% else %}
                       <a href="{{ url_for('auth.login') }}" data-i18n="loginToRequest">Log in to request</a>
                     {% endif %}

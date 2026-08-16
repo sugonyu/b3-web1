@@ -103,6 +103,14 @@ def get_request_feedback(error):
             "title": "Request cannot be cancelled",
             "message": "Only a pending request can be cancelled.",
         },
+        "request message is too long": {
+            "title": "Message too long",
+            "message": "The request message must be 500 characters or fewer.",
+        },
+        "request message must be a string": {
+            "title": "Message not valid",
+            "message": "The request message must be text.",
+        },
         "return cannot be requested": {
             "title": "Return request not available",
             "message": "Only an approved exchange can begin the return confirmation flow.",
@@ -351,7 +359,11 @@ def delete_book(listing_id):
 def create_borrow_request(listing_id):
     """현재 로그인 사용자의 요청을 공통 service로 생성한다."""
     try:
-        borrow_request = create_borrow_request_service(listing_id, current_user.id)
+        borrow_request = create_borrow_request_service(
+            listing_id,
+            current_user.id,
+            request.form.get("message", ""),
+        )
     except BorrowRequestServiceError as error:
         context = get_product_home_context()
         context.update(

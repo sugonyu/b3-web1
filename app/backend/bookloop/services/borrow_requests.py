@@ -15,6 +15,8 @@ Outline:
 from ..db import db
 from ..db.models import BookListing, BorrowRequest, Report, User
 
+MAX_BORROW_REQUEST_MESSAGE_LENGTH = 500
+
 
 class BorrowRequestServiceError(Exception):
     """route가 HTTP 응답으로 변환할 수 있는 예상된 application 오류."""
@@ -27,8 +29,8 @@ class BorrowRequestServiceError(Exception):
         self.request_id = request_id
 
 
-def create_borrow_request_service(listing_id, borrower_id):
-    """검증된 pending BorrowRequest를 저장하고 model 객체를 반환한다."""
+def create_borrow_request_service(listing_id, borrower_id, message=""):
+    """검증된 pending BorrowRequest와 선택 메시지를 저장한다."""
     listing = db.session.get(BookListing, listing_id)
 
     if listing is None:
@@ -36,6 +38,14 @@ def create_borrow_request_service(listing_id, borrower_id):
 
     if isinstance(borrower_id, bool) or not isinstance(borrower_id, int):
         raise BorrowRequestServiceError("borrower_id must be an integer", 400)
+
+    if message is None:
+        message = ""
+    if not isinstance(message, str):
+        raise BorrowRequestServiceError("request message must be a string", 400)
+    message = message.strip()
+    if len(message) > MAX_BORROW_REQUEST_MESSAGE_LENGTH:
+        raise BorrowRequestServiceError("request message is too long", 400)
 
     borrower = db.session.get(User, borrower_id)
 
@@ -61,7 +71,11 @@ def create_borrow_request_service(listing_id, borrower_id):
             request_id=active_request.id,
         )
 
-    borrow_request = BorrowRequest(listing=listing, borrower=borrower)
+    borrow_request = BorrowRequest(
+        listing=listing,
+        borrower=borrower,
+        message=message,
+    )
     db.session.add(borrow_request)
     db.session.commit()
 

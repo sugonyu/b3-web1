@@ -68,6 +68,7 @@ def borrow_request_to_dict(borrow_request):
     return {
         "id": borrow_request.id,
         "status": borrow_request.status,
+        "message": borrow_request.message,
         "listing_id": borrow_request.listing_id,
         "listing": listing_to_dict(borrow_request.listing),
         "borrower": {
@@ -221,10 +222,17 @@ def delete_listing(listing_id):
 @login_required
 def create_borrow_request(listing_id):
     """현재 로그인 사용자의 pending 요청을 생성한다."""
+    data = request.get_json(silent=True)
+    if data is None:
+        data = {}
+    if not isinstance(data, dict):
+        return jsonify({"error": "A JSON object is required"}), 400
+
     try:
         borrow_request = create_borrow_request_service(
             listing_id,
             current_user.id,
+            data.get("message", ""),
         )
     except BorrowRequestServiceError as error:
         return jsonify({"error": error.message}), error.status_code

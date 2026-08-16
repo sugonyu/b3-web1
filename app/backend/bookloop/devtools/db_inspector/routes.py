@@ -73,7 +73,7 @@ def index():
 
 @db_inspector.post("/reset")
 def reset():
-    """테스트·데모용 BorrowRequest와 Report를 초기화하고 다시 조회한다."""
+    """테스트·데모용 요청·신고를 초기화하고 원래 네 demo 책을 복원한다."""
     result = reset_demo_requests()
     return redirect(
         url_for("db_inspector.index", reset_deleted=result["deleted_requests"])

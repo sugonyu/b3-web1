@@ -204,7 +204,7 @@
       <section aria-labelledby="requests-heading">
         <h2 id="requests-heading">Borrow Requests <span class="count">{{ borrow_requests|length }} rows</span></h2>
         <p class="count">
-          Reset removes demo BorrowRequests and their Reports, then restores demo listing availability. Users and Book Listings are preserved.
+          Reset removes demo BorrowRequests and their Reports, then restores the original four demo listings. Users and non-demo Book Listings are preserved.
         </p>
         <div class="status-legend" aria-label="Borrow request status legend">
           <span class="status-pill status-pending">Pending</span>
@@ -215,7 +215,7 @@
         </div>
         {% if borrow_requests %}
           <table>
-            <thead><tr><th>ID</th><th>Status</th><th>Listing</th><th>Owner</th><th>Borrower</th><th>Created</th></tr></thead>
+            <thead><tr><th>ID</th><th>Status</th><th>Listing</th><th>Owner</th><th>Borrower</th><th>Message</th><th>Created</th></tr></thead>
             <tbody>
               {% for borrow_request in borrow_requests %}
                 <tr>
@@ -224,6 +224,7 @@
                   <td><code>#{{ borrow_request.listing_id }}</code> · {{ borrow_request.listing.title }}</td>
                   <td><code>#{{ borrow_request.listing.owner_id }}</code> · {{ borrow_request.listing.owner.username }}</td>
                   <td><code>#{{ borrow_request.borrower_id }}</code> · {{ borrow_request.borrower.username }}</td>
+                  <td>{{ borrow_request.message or "—" }}</td>
                   <td>{{ format_time(borrow_request.created_at) }}</td>
                 </tr>
               {% endfor %}

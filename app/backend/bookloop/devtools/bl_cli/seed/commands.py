@@ -8,7 +8,8 @@ Outline:
 1. DEMO_USERS, DEMO_LISTINGS and legacy listing constants
 2. ensure_user_admin_column() — local schema compatibility
 3. seed_demo_data() — idempotent demo users and listings
-4. reset_demo_requests() — safe demo request cleanup
+4. restore_demo_listings() — restore the original four demo books
+5. reset_demo_requests() — safe demo request cleanup
 5. register_seed_commands() — Flask CLI registration
 """
 
@@ -91,6 +92,56 @@ def ensure_user_admin_column():
     return True
 
 
+def restore_demo_listings(users_by_name=None):
+    """원래의 네 demo 책을 만들거나 이름·저자·availability를 복원한다."""
+    if users_by_name is None:
+        users_by_name = {
+            user.username: user
+            for user in User.query.filter(
+                User.username.in_(tuple(user["username"] for user in DEMO_USERS))
+            ).all()
+        }
+
+    restored_listings = []
+    created_listings = 0
+    for listing_data in DEMO_LISTINGS:
+        owner = users_by_name.get(listing_data["owner_username"])
+        if owner is None:
+            continue
+
+        listing = BookListing.query.filter_by(
+            title=listing_data["title"],
+            owner_id=owner.id,
+        ).one_or_none()
+
+        # 이전 Mina demo book row는 한강의 The Vegetarian으로 재사용한다.
+        if listing is None and listing_data["title"] == "The Vegetarian":
+            listing = BookListing.query.filter_by(owner_id=owner.id).filter(
+                BookListing.title.in_(
+                    ("The Odyssey", LEGACY_DEMO_LISTING_TITLE)
+                )
+            ).first()
+
+        if listing is None:
+            listing = BookListing(
+                title=listing_data["title"],
+                author=listing_data["author"],
+                availability=True,
+                owner=owner,
+            )
+            db.session.add(listing)
+            created_listings += 1
+        else:
+            listing.title = listing_data["title"]
+            listing.author = listing_data["author"]
+            listing.availability = True
+
+        restored_listings.append(listing)
+
+    db.session.flush()
+    return restored_listings, created_listings
+
+
 def seed_demo_data(password):
     """시작 데이터가 없을 때만 생성하고 생성·전체 개수를 반환한다."""
     ensure_user_admin_column()
@@ -117,35 +168,7 @@ def seed_demo_data(password):
 
     # owner ID가 listing 조회에 필요하므로 먼저 flush한다. 아직 commit은 하지 않는다.
     db.session.flush()
-    created_listings = 0
-    for listing_data in DEMO_LISTINGS:
-        owner = users_by_name[listing_data["owner_username"]]
-        listing = BookListing.query.filter_by(
-            title=listing_data["title"],
-            owner_id=owner.id,
-        ).one_or_none()
-
-        # 이전 Mina demo book row는 한강의 The Vegetarian으로 재사용한다.
-        if listing is None and listing_data["title"] == "The Vegetarian":
-            listing = BookListing.query.filter_by(
-                owner_id=owner.id,
-            ).filter(
-                BookListing.title.in_(("The Odyssey", LEGACY_DEMO_LISTING_TITLE))
-            ).first()
-
-        if listing is None:
-            listing = BookListing(
-                title=listing_data["title"],
-                author=listing_data["author"],
-                availability=True,
-                owner=owner,
-            )
-            db.session.add(listing)
-            created_listings += 1
-        else:
-            listing.title = listing_data["title"]
-            listing.author = listing_data["author"]
-            listing.availability = True
+    _, created_listings = restore_demo_listings(users_by_name)
 
     db.session.commit()
 
@@ -159,7 +182,7 @@ def seed_demo_data(password):
 
 
 def reset_demo_requests():
-    """네 demo listing에 연결된 BorrowRequest와 Report를 삭제한다."""
+    """요청·신고를 지우고 원래 네 demo 책을 다시 준비한다."""
     mina = User.query.filter_by(username="mina").one_or_none()
     tony = User.query.filter_by(username="tony").one_or_none()
     if mina is None and tony is None:
@@ -167,33 +190,18 @@ def reset_demo_requests():
             "deleted_requests": 0,
             "deleted_reports": 0,
             "remaining_requests": BorrowRequest.query.count(),
+            "restored_listings": 0,
         }
 
-    demo_listing_ids = []
-    if mina is not None:
-        demo_listing_ids.extend(
-            listing.id
-            for listing in BookListing.query.filter(
-                BookListing.owner_id == mina.id,
-                BookListing.title.in_(
-                    ("The Vegetarian", "Human Acts", "The Odyssey", LEGACY_DEMO_LISTING_TITLE)
-                ),
-            ).all()
-        )
-    if tony is not None:
-        demo_listing_ids.extend(
-            listing.id
-            for listing in BookListing.query.filter(
-                BookListing.owner_id == tony.id,
-                BookListing.title.in_(("The Odyssey", "The Iliad")),
-            ).all()
-        )
+    restored_listings, _ = restore_demo_listings()
+    demo_listing_ids = [listing.id for listing in restored_listings]
 
     if not demo_listing_ids:
         return {
             "deleted_requests": 0,
             "deleted_reports": 0,
             "remaining_requests": BorrowRequest.query.count(),
+            "restored_listings": len(restored_listings),
         }
 
     demo_request_ids = [
@@ -225,6 +233,7 @@ def reset_demo_requests():
         "deleted_requests": deleted_requests,
         "deleted_reports": deleted_reports + deleted_orphan_reports,
         "remaining_requests": BorrowRequest.query.count(),
+        "restored_listings": len(restored_listings),
     }
 
 
@@ -253,12 +262,13 @@ def register_seed_commands(app: Flask):
 
     @app.cli.command("reset-demo-requests")
     def reset_demo_requests_command():
-        """네 demo listing의 요청만 삭제하고 시작 상태로 되돌린다."""
+        """요청을 삭제하고 원래 네 demo listing을 시작 상태로 되돌린다."""
         db.create_all()
         result = reset_demo_requests()
         click.echo(
             "Demo BorrowRequest reset complete: "
             f"deleted={result['deleted_requests']}; "
             f"Reports deleted={result['deleted_reports']}; "
+            f"demo listings restored={result['restored_listings']}; "
             f"remaining BorrowRequests={result['remaining_requests']}."
         )

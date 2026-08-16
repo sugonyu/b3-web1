@@ -164,6 +164,11 @@
       yourBook: "Your book",
       requested: "Requested",
       request: "Request",
+      requestMessageLabel: "Message (optional)",
+      requestMessage: "Message",
+      requestMessagePlaceholder: "Add a short message for the book owner.",
+      requestMessageHelp: "Maximum 500 characters.",
+      sendRequest: "Send request",
       loginToRequest: "Log in to request",
       noBooksAvailable: "No books are available yet.",
       viewRequest: "View Request",
@@ -234,6 +239,11 @@
       yourBook: "내 책",
       requested: "요청됨",
       request: "요청",
+      requestMessageLabel: "메시지 (선택)",
+      requestMessage: "메시지",
+      requestMessagePlaceholder: "책 소유자에게 짧은 메시지를 남겨 보세요.",
+      requestMessageHelp: "최대 500자입니다.",
+      sendRequest: "요청 보내기",
       loginToRequest: "로그인 후 요청",
       noBooksAvailable: "아직 이용 가능한 책이 없습니다.",
       viewRequest: "요청 보기",
@@ -303,6 +313,11 @@
       yourBook: "Votre livre",
       requested: "Demandé",
       request: "Demander",
+      requestMessageLabel: "Message (facultatif)",
+      requestMessage: "Message",
+      requestMessagePlaceholder: "Ajoutez un court message au propriétaire.",
+      requestMessageHelp: "500 caractères maximum.",
+      sendRequest: "Envoyer la demande",
       loginToRequest: "Connectez-vous pour demander",
       noBooksAvailable: "Aucun livre n'est encore disponible.",
       viewRequest: "Voir la demande",
@@ -439,6 +454,17 @@
     });
   }
 
+  function bindRequestFormCancelButtons() {
+    document.querySelectorAll("[data-request-form-cancel]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        const details = button.closest("details");
+        const form = button.closest("form");
+        if (form) form.reset();
+        if (details) details.open = false;
+      });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll("[data-bookloop-language]").forEach(function (select) {
       select.addEventListener("change", function () {
@@ -446,6 +472,7 @@
       });
     });
     bindRequiredFieldMessages();
+    bindRequestFormCancelButtons();
     applyLanguage(getLanguage());
   });
 })();

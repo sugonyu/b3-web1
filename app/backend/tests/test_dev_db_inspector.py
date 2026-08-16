@@ -54,6 +54,7 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
             borrow_request = BorrowRequest(
                 listing=listing,
                 borrower=borrower,
+                message="Could we meet near the metro?",
             )
             report = Report(
                 reporter=borrower,
@@ -160,6 +161,7 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
         with app.app_context():
             self.assertEqual(BorrowRequest.query.count(), 0)
             self.assertEqual(Report.query.count(), 0)
+            self.assertEqual(BookListing.query.count(), 4)
         response.close()
 
     def test_debug_admin_can_reset_demo_requests_from_inspector(self):
@@ -172,7 +174,7 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
         with app.app_context():
             self.assertEqual(BorrowRequest.query.count(), 0)
             self.assertEqual(Report.query.count(), 0)
-            self.assertEqual(BookListing.query.count(), 1)
+            self.assertEqual(BookListing.query.count(), 4)
         response.close()
 
     def test_reset_removes_orphan_report_left_by_older_reset(self):
@@ -234,7 +236,7 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
         self.assertIn(b"Reset", response.data)
         self.assertIn(b"data-confirm=", response.data)
         self.assertNotIn(b"reset is CLI-only", response.data)
-        self.assertIn(b"Users and Book Listings are preserved", response.data)
+        self.assertIn(b"Users and non-demo Book Listings are preserved", response.data)
         self.assertIn(b"web1-schedule-summer-2026.html", response.data)
         self.assertIn(b"docs/presentations/", response.data)
         self.assertEqual(response.data.count(b'target="_blank"'), 2)
@@ -254,7 +256,8 @@ class DeveloperDatabaseInspectorTest(unittest.TestCase):
         self.assertIn(b'class="status-pill status-cancelled"', response.data)
         self.assertIn(b'class="status-pill status-returned"', response.data)
         self.assertIn(b'class="status-pill status-under_review"', response.data)
-        self.assertIn(b"<th>ID</th><th>Status</th><th>Listing</th><th>Owner</th><th>Borrower</th><th>Created</th>", response.data)
+        self.assertIn(b"<th>ID</th><th>Status</th><th>Listing</th><th>Owner</th><th>Borrower</th><th>Message</th><th>Created</th>", response.data)
+        self.assertIn(b"Could we meet near the metro?", response.data)
         self.assertNotIn(b"Created (Toronto)", response.data)
         self.assertIn(b"<th>ID</th><th>Reporter</th><th>Reported user</th><th>Category</th><th>Details</th><th>Status</th><th>Created</th>", response.data)
         self.assertIn(b"<th>ID</th><th>Title</th><th>Author</th><th>Available</th><th>Owner</th><th>Created</th>", response.data)

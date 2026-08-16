@@ -93,6 +93,33 @@ class JinjaBorrowRequestFlowTest(unittest.TestCase):
         self.assertIn("📬 Received requests (0)".encode(), response.data)
         self.assertNotIn(b"mina@example.com", response.data)
 
+    def test_request_message_is_visible_to_borrower_and_owner(self):
+        self.login("tony")
+        response = self.client.post(
+            f"/listings/{self.listing_id}/request",
+            data={"message": "Could we meet near the metro?"},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        detail_response = self.client.get(response.headers["Location"])
+        self.assertIn(b"Could we meet near the metro?", detail_response.data)
+
+        self.client.post("/logout")
+        self.login("mina")
+        owner_detail_response = self.client.get(response.headers["Location"])
+        self.assertIn(b"Could we meet near the metro?", owner_detail_response.data)
+
+    def test_request_message_form_has_cancel_control_before_sending(self):
+        self.login("tony")
+
+        response = self.client.get("/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"data-request-form-cancel", response.data)
+        self.assertIn(b'data-i18n="cancel"', response.data)
+        with self.app.app_context():
+            self.assertEqual(BorrowRequest.query.count(), 0)
+
     def test_home_distinguishes_my_book_from_community_book(self):
         self.login("mina")
 

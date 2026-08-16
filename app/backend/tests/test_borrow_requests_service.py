@@ -74,6 +74,26 @@ class BorrowRequestServiceTest(unittest.TestCase):
         self.assertEqual(borrow_request.listing, self.listing)
         self.assertEqual(borrow_request.borrower, self.borrower)
 
+    def test_create_strips_and_persists_optional_message(self):
+        borrow_request = create_borrow_request_service(
+            self.listing.id,
+            self.borrower.id,
+            "  Is pickup near NDG possible?  ",
+        )
+
+        self.assertEqual(borrow_request.message, "Is pickup near NDG possible?")
+
+    def test_create_rejects_message_over_500_characters(self):
+        with self.assertRaises(BorrowRequestServiceError) as context:
+            create_borrow_request_service(
+                self.listing.id,
+                self.borrower.id,
+                "x" * 501,
+            )
+
+        self.assertEqual(context.exception.status_code, 400)
+        self.assertEqual(context.exception.message, "request message is too long")
+
     def test_create_rejects_duplicate_active_request(self):
         create_borrow_request_service(self.listing.id, self.borrower.id)
 

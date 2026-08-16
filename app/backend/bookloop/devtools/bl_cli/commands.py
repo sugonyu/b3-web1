@@ -3,7 +3,8 @@
 Outline:
 1. CREATED_AT_TABLES — safe schema-upgrade allowlist
 2. upgrade_created_at_columns() — non-destructive SQLite column check
-3. create_cli() — Click command group and Flask app wiring
+3. upgrade_request_message_column() — BorrowRequest message compatibility
+4. create_cli() — Click command group and Flask app wiring
 """
 
 import os
@@ -44,6 +45,28 @@ def upgrade_created_at_columns():
     return upgraded_tables
 
 
+def upgrade_request_message_column():
+    """기존 SQLite BorrowRequest table에 선택 메시지 column을 추가한다."""
+    inspector = inspect(db.engine)
+    if "borrow_request" not in inspector.get_table_names():
+        return False
+
+    column_names = {
+        column["name"] for column in inspector.get_columns("borrow_request")
+    }
+    if "message" in column_names:
+        return False
+
+    with db.engine.begin() as connection:
+        connection.execute(
+            text(
+                'ALTER TABLE "borrow_request" ADD COLUMN '
+                "message VARCHAR(500) NOT NULL DEFAULT ''"
+            )
+        )
+    return True
+
+
 def create_cli(app_factory=create_app):
     """실행용 app factory를 받아 테스트 가능한 BL-CLI command group을 만든다."""
 
@@ -62,8 +85,9 @@ def create_cli(app_factory=create_app):
         click.echo()
         click.echo("Available commands:")
         click.echo("  seed-demo            Prepare demo roles and four classic books.")
-        click.echo("  reset-demo-requests  Remove requests for both demo books.")
+        click.echo("  reset-demo-requests  Reset requests and restore the four demo books.")
         click.echo("  upgrade-created-at   Add safe created_at columns to an existing DB.")
+        click.echo("  upgrade-request-message  Add request message support to an existing DB.")
         click.echo()
         click.echo("Run 'python3 bl_cli.py --help' for command details.")
 
@@ -92,7 +116,7 @@ def create_cli(app_factory=create_app):
 
     @cli.command("reset-demo-requests")
     def reset_demo_requests_command():
-        """네 demo listing의 BorrowRequest만 삭제한다."""
+        """요청을 삭제하고 원래 네 demo listing을 시작 상태로 되돌린다."""
         app = app_factory()
         with app.app_context():
             db.create_all()
@@ -101,6 +125,7 @@ def create_cli(app_factory=create_app):
         click.echo(
             "Demo BorrowRequest reset complete: "
             f"deleted={result['deleted_requests']}; "
+            f"demo listings restored={result['restored_listings']}; "
             f"remaining BorrowRequests={result['remaining_requests']}."
         )
 
@@ -120,5 +145,18 @@ def create_cli(app_factory=create_app):
             )
         else:
             click.echo("Created-at schema already current; no changes needed.")
+
+    @cli.command("upgrade-request-message")
+    def upgrade_request_message_command():
+        """기존 row를 삭제하지 않고 BorrowRequest message column을 준비한다."""
+        app = app_factory()
+        with app.app_context():
+            db.create_all()
+            upgraded = upgrade_request_message_column()
+
+        if upgraded:
+            click.echo("Request-message schema upgrade complete: borrow_request.")
+        else:
+            click.echo("Request-message schema already current; no changes needed.")
 
     return cli
