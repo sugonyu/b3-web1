@@ -2,7 +2,7 @@
 
 Outline:
 1. BookListingServiceError — expected listing errors and HTTP meanings
-2. list/get_owner_book_listing_service() — owner-scoped reads
+2. get_book_listing_service()/list_owner_book_listings_service() — public and owner-scoped reads
 3. create/update_book_listing_service() — validated owner writes
 4. update_book_listing_availability_service() — availability change
 5. delete_book_listing_service() — safe owner deletion
@@ -29,6 +29,16 @@ def list_owner_book_listings_service(owner_id):
         .order_by(BookListing.id.desc())
         .all()
     )
+
+
+def get_book_listing_service(listing_id):
+    """공개 책 상세 페이지에서 listing 하나를 읽는다."""
+    listing = db.session.get(BookListing, listing_id)
+
+    if listing is None:
+        raise BookListingServiceError("listing not found", 404)
+
+    return listing
 
 
 def get_owner_book_listing_service(listing_id, owner_id):

@@ -1,0 +1,103 @@
+<!doctype html>
+{% from "bookloop/_user_identity.html" import user_icon %}
+{% from "bookloop/_book_identity.html" import book_title %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLoop · Book details</title>
+    <link rel="icon" href="{{ url_for('static', filename='bookloop/python-favicon.svg') }}" type="image/svg+xml">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bookloop/style.css') }}">
+  </head>
+  <body>
+    <main class="product-main" data-bookloop-page="book-details" data-bookloop-title-key="bookDetailsPageTitle">
+      {% include "bookloop/_dev_user_switcher.html" %}
+      {% include "bookloop/_product_header.html" %}
+      {% if current_user.is_authenticated %}
+        {% include "bookloop/_product_nav.html" %}
+      {% endif %}
+
+      <p><a href="{{ url_for('jinja_client.product_home') }}" data-i18n="backToBooks">← Back to books</a></p>
+
+      <section class="profile-summary" aria-labelledby="book-details-title">
+        <p class="eyebrow" data-i18n="bookDetails">Book details</p>
+        <h2 class="page-title" id="book-details-title">{{ book_title(listing.title) }}</h2>
+        <p data-i18n="bookDetailsIntro">Review the listing before you decide whether to request this book.</p>
+
+        <dl class="decision-context-grid">
+          <div>
+            <dt data-i18n="bookTitle">Book title</dt>
+            <dd>{{ listing.title }}</dd>
+          </div>
+          <div>
+            <dt data-i18n="author">Author</dt>
+            <dd>{{ listing.author }}</dd>
+          </div>
+          <div>
+            <dt data-i18n="bookOwner">Owner</dt>
+            <dd>
+              {% if current_user.is_authenticated %}
+                <a href="{{ url_for('jinja_client.user_profile', user_id=listing.owner.id) }}">{{ listing.owner.username }} {{ user_icon(listing.owner) }}</a>
+              {% else %}
+                {{ listing.owner.username }} {{ user_icon(listing.owner) }}
+              {% endif %}
+            </dd>
+          </div>
+          <div>
+            <dt data-i18n="ownerArea">Owner · Area</dt>
+            <dd>{{ listing.owner.general_area }}</dd>
+          </div>
+          <div>
+            <dt data-i18n="status">Status</dt>
+            <dd><span data-i18n="{{ 'available' if listing.availability else 'unavailable' }}">{{ "Available" if listing.availability else "Unavailable" }}</span></dd>
+          </div>
+          <div>
+            <dt data-i18n="bookNumber">Book number</dt>
+            <dd>#{{ listing.id }}</dd>
+          </div>
+          <div>
+            <dt data-i18n="listed">Listed</dt>
+            <dd>{{ format_toronto_date(listing.created_at) }}</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="request-card" aria-labelledby="book-request-title">
+        <h2 id="book-request-title" data-i18n="requestThisBook">Request this book</h2>
+        {% if current_user.is_authenticated and listing.owner_id == current_user.id %}
+          <p data-i18n="yourBook">This is your book.</p>
+        {% elif existing_request %}
+          <p data-i18n="requested">You already requested this book.</p>
+          <a href="{{ url_for('jinja_client.request_detail', request_id=existing_request.id) }}" data-i18n="viewExistingRequest">View existing request</a>
+        {% elif current_user.is_authenticated and listing.availability %}
+          <details class="request-action" open>
+            <summary data-i18n="request">Request</summary>
+            <form action="{{ url_for('jinja_client.request_book', listing_id=listing.id) }}" method="post">
+              <label for="request-message" data-i18n="requestMessageLabel">Message (optional)</label>
+              <textarea
+                id="request-message"
+                name="message"
+                rows="4"
+                maxlength="500"
+                data-i18n-placeholder="requestMessagePlaceholder"
+                placeholder="Add a short message for the book owner."
+              ></textarea>
+              <small data-i18n="requestMessageHelp">Maximum 500 characters.</small>
+              <div class="request-form-actions">
+                <button type="submit" data-i18n="sendRequest">Send request</button>
+                <button type="button" class="request-form-cancel" data-request-form-cancel data-i18n="cancel">Cancel</button>
+              </div>
+            </form>
+          </details>
+        {% elif current_user.is_authenticated %}
+          <p data-i18n="unavailable">This book is unavailable.</p>
+        {% else %}
+          <p data-i18n="signInBeforeRequest">Sign in before requesting a book.</p>
+          <a href="{{ url_for('auth.login') }}" data-i18n="loginToRequest">Log in to request</a>
+        {% endif %}
+      </section>
+
+      {% include "bookloop/_product_footer.html" %}
+    </main>
+  </body>
+</html>

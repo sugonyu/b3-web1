@@ -63,8 +63,11 @@
               {% for listing in listings %}
                 <tr class="{% if current_user.is_authenticated and listing.owner_id == current_user.id %}own-listing-row{% else %}community-listing-row{% endif %}">
                   <td data-label="Book" data-i18n-label="book">
-                    <strong>{{ book_title(listing.title) }}</strong><br>
+                    <a href="{{ url_for('jinja_client.book_detail', listing_id=listing.id) }}">
+                      <strong>{{ book_title(listing.title) }}</strong>
+                    </a><br>
                     <small>{{ listing.author }} · Book #{{ listing.id }}</small>
+                    <br><a href="{{ url_for('jinja_client.book_detail', listing_id=listing.id) }}" data-i18n="viewBookDetails">View details</a>
                   </td>
                   <td data-label="Owner · Area" data-i18n-label="ownerArea">
                     {% if current_user.is_authenticated and listing.owner_id == current_user.id %}

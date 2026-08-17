@@ -46,6 +46,7 @@ from ..services.book_listings import (
     BookListingServiceError,
     create_book_listing_service,
     delete_book_listing_service,
+    get_book_listing_service,
     get_owner_book_listing_service,
     list_owner_book_listings_service,
     update_book_listing_availability_service,
@@ -192,6 +193,40 @@ def get_book_listing_form_feedback(error):
 def product_home():
     """로그인 상태와 공유 가능한 책 목록을 보여주는 D2 제품 홈."""
     return render_template("bookloop/index.html", **get_product_home_context())
+
+
+@jinja_client.get("/books/<int:listing_id>", endpoint="book_detail")
+def get_book_detail(listing_id):
+    """공개 가능한 책 정보와 요청 진입점을 독립 페이지로 보여준다."""
+    try:
+        listing = get_book_listing_service(listing_id)
+    except BookListingServiceError as error:
+        return (
+            render_template(
+                "bookloop/request_error.html",
+                feedback=get_request_feedback(error),
+            ),
+            error.status_code,
+        )
+
+    existing_request = None
+    if current_user.is_authenticated and listing.owner_id != current_user.id:
+        existing_request = next(
+            (
+                borrow_request
+                for borrow_request in list_borrower_requests_service(current_user.id)
+                if borrow_request.listing_id == listing.id
+                and borrow_request.status in ("pending", "approved", "return_pending")
+            ),
+            None,
+        )
+
+    return render_template(
+        "bookloop/book_detail.html",
+        listing=listing,
+        existing_request=existing_request,
+        format_toronto_date=format_toronto_date,
+    )
 
 
 @jinja_client.get("/my-books/", endpoint="my_books")
