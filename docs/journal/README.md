@@ -53,6 +53,17 @@ book is produced before the Kindle edition.
 
 ## Entries
 
+> Audit note: August 10 remains intentionally absent because the recovery entry
+> on August 11 records that no Web1 journal was produced that day. Weekend dates
+> without verifiable Web1 work were not fabricated.
+
+- [2026-08-20 (Thursday) — D4 presentation closeout](2026-08-20.md)
+- [2026-08-19 (Wednesday) — Bun/TypeScript parallel study lab](2026-08-19.md)
+- [2026-08-18 (Tuesday) — Java client comparison study](2026-08-18.md)
+- [2026-08-17 (Monday) — Book details and React data flow](2026-08-17.md)
+- [2026-08-16 (Sunday) — Web and mobile study boundary](2026-08-16.md)
+- [2026-08-15 (Saturday) — D4 beta snapshot and BookLoop follow-ups](2026-08-15.md)
+- [2026-08-14 (Friday) — D4 baseline and quality improvements](2026-08-14.md)
 - [2026-08-11 (Tuesday) — Week 3 recovery and D3 evidence restart](2026-08-11.md)
 - [2026-08-07 (Friday) — route and service naming checkpoint](2026-08-07.md)
 - [2026-08-06 (Thursday) — Deliverable 2 feedback and Week 2 closeout](2026-08-06.md) · [Thursday Kanban](../week02-4-thu-kanban.html) · [Week 2 final Kanban](../week02-kanban.html)

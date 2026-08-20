@@ -103,7 +103,7 @@ Kamyar-feedback response in this week:
 
 ### Week 3 · MVP v0.3 — Frontend and Backend Integration
 
-Status: **Planned**
+Status: **Presentation delivered — closeout in progress**
 
 Main integration:
 
@@ -129,7 +129,7 @@ feature as finished.
 
 ### Week 4 · MVP v0.4 — Feature-Complete Beta
 
-Status: **Planned**
+Status: **Next — Week 5 stabilization and final presentation**
 
 Kamyar-feedback MVP:
 
@@ -156,7 +156,7 @@ member submits report
 
 ### Week 5 · MVP v1.0 — Stable Release and Final Presentation
 
-Status: **Planned**
+Status: **Next — stabilization and final presentation preparation**
 
 Final privacy demonstration:
 

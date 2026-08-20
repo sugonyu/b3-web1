@@ -49,13 +49,15 @@
     <header>
       <h1>Web Project 1</h1>
       <p>Project dashboard for course 582-32W-VA.</p>
-      <p><strong>Current phase:</strong> Week 4 prepared · Deliverable 4 Feature-Complete Beta audit and scope freeze.</p>
+      <p><strong>Current phase:</strong> Week 5 transition · Deliverable 4 presentation completed; stabilization and documentation follow.</p>
+      <p><strong>Last updated:</strong> Thursday, August 20, 2026 · 9:49 AM EDT (Toronto)</p>
     </header>
 
     <nav aria-label="Project navigation">
       <a href="docs/project-weekly-kanban-board.html">Current project weekly Kanban board</a>
-      <a href="docs/journal/2026-08-13.md">Latest journal</a>
-      <a href="milestones/04-mvp-v0.4-feature-complete-beta/README.md">Next Beta milestone</a>
+      <a href="docs/journal/2026-08-20.md">Latest journal</a>
+      <a href="milestones/04-mvp-v0.4-feature-complete-beta/README.md">Milestone 4 · D4 Beta closeout</a>
+      <a href="docs/bookloop-web1-roadmap.md">Web1 roadmap · Week 5</a>
       <a href="docs/presentations/deliverable-02/presentation.html">Deliverable 2 presentation</a>
       <a href="docs/presentations/deliverable-03/presentation.html">Deliverable 3 presentation</a>
       <a href="app/README.md">Application source</a>
@@ -65,12 +67,23 @@
       <section>
         <h2>Current status</h2>
         <ul>
-          <li>Current phase: Week 4 · Feature-Complete Beta evidence, quality audit and scope freeze</li>
-          <li>Previous milestone: MVP v0.2 — Backend Foundation and First Vertical Slice</li>
-          <li>Completed milestone: MVP v0.3 — Integrated Prototype presentation delivered; remaining evidence rolls into the Week 4 opening gate</li>
-          <li>Current milestone: <a href="milestones/04-mvp-v0.4-feature-complete-beta/README.md">MVP v0.4 — Feature-Complete Beta Candidate</a></li>
-          <li>Status: Week 4 plan ready — Monday begins with browser evidence and the Beta release decision</li>
-          <li>Application baseline: BookLoop Beta v0.4.0-beta.4 post-presentation bugfix · pre-feedback D4 baseline</li>
+          <li>Current phase: Week 5 transition · stabilization, documentation and final presentation preparation</li>
+          <li>Previous milestone: MVP v0.3 — Integrated Prototype presentation delivered</li>
+          <li>Completed baseline: BookLoop request, reporting, privacy and Admin workflows are implemented and tested; remaining closeout proof is tracked in Milestone 4</li>
+          <li>Current milestone: <a href="milestones/04-mvp-v0.4-feature-complete-beta/README.md">MVP v0.4 — Feature-Complete Beta · D4 closeout</a></li>
+          <li>Status: Deliverable 4 presentation completed — remaining closeout evidence and release decision are tracked</li>
+          <li>Application baseline: BookLoop Beta v0.4.0-beta.4 + language, request-message and demo-reset refinements</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>D4 baseline implementation update</h2>
+        <ul>
+          <li>Added KOR / ENG / FR fixed-UI language selection with flags, translated product navigation and clickable BookLoop home logo.</li>
+          <li>Added optional book-request message support, 500-character validation, owner-visible Request detail, API output and pre-submit Cancel.</li>
+          <li>Updated DB Inspector to show request messages and reset the original four demo books while preserving non-demo books.</li>
+          <li>Focused service, API, CLI, Jinja and Inspector checks passed; remaining browser evidence is tracked in the D4 closeout.</li>
+          <li>Major feature scope remains frozen after D4; these review-driven refinements are now part of the Beta baseline.</li>
         </ul>
       </section>
 
@@ -96,14 +109,14 @@
       </section>
 
       <section>
-        <h2>Current — Week 4 / Deliverable 4 Feature-Complete Beta</h2>
+        <h2>Current — Week 5 / MVP v1.0 Stable Release</h2>
         <ol>
-          <li>Monday: close browser evidence and make the Beta release decision.</li>
-          <li>Tuesday: audit authentication, authorization, forms, errors, responsive behavior, accessibility and tests.</li>
-          <li>Wednesday: finish README, setup instructions, known issues and the D4 demonstration order.</li>
-          <li>Thursday: demonstrate Deliverable 4 and freeze major feature scope.</li>
+          <li>Reconcile the remaining D4 browser/evidence checklist with the presentation record.</li>
+          <li>Record official feedback and known limitations when available.</li>
+          <li>Stabilize the verified Flask/Jinja service and prepare final documentation.</li>
+          <li>Prepare the final presentation from verified browser and database behavior.</li>
         </ol>
-        <p>Keep the verified Flask/Jinja service and API contracts stable. Unofficial review suggestions remain backlog candidates until the required Beta evidence is complete and official feedback confirms scope. After Deliverable 4, use Week 5 for stabilization, documentation and presentation rather than major features.</p>
+        <p>Deliverable 4 was presented on August 20 and major feature scope is frozen. Keep the verified Flask/Jinja service and API contracts stable; Week 5 is for stabilization, documentation, known limitations and final presentation preparation.</p>
       </section>
 
       <section>
@@ -144,13 +157,13 @@
               <td>3</td>
               <td><a href="milestones/03-mvp-v0.3-integrated-prototype/README.md">v0.3</a> Integrated Prototype</td>
               <td><a href="docs/presentations/deliverable-03/presentation.html">🔗 Deliverable 3</a> — Frontend and Backend Integration</td>
-              <td>In progress · evidence preparation</td>
+              <td>Complete · presentation delivered; evidence carried to D4</td>
             </tr>
             <tr>
               <td>4</td>
-              <td>v0.4 Feature-Complete Beta</td>
-              <td>✅ Deliverable 4 — Feature-Complete Beta</td>
-              <td>Upcoming</td>
+              <td><a href="milestones/04-mvp-v0.4-feature-complete-beta/README.md">v0.4</a> Feature-Complete Beta</td>
+              <td><a href="milestones/04-mvp-v0.4-feature-complete-beta/README.md">✅ Deliverable 4 — Feature-Complete Beta</a></td>
+              <td>D4 presentation complete · Week 5 stabilization and closeout</td>
             </tr>
             <tr>
               <td>5</td>

@@ -2,7 +2,7 @@
 
 Official checkpoint: 🔗 Deliverable 4 — Feature-Complete Beta
 Review date: August 20, 2026
-Status: Week 4 planned — Beta v0.4.0-beta.4 development baseline active
+Status: D4 presentation delivered — Week 4 closeout and Week 5 stabilization pending
 
 Roadmap: [BookLoop Web1 Roadmap](../../docs/bookloop-web1-roadmap.md)
 
@@ -33,13 +33,13 @@ repository contains the selectively synchronized application source.
 - [x] Deliverable 3 presentation delivered and public closeout recorded.
 - [x] Unofficial post-presentation feedback recorded separately from official grading.
 - [x] Beta v0.4.0-beta.4 post-presentation bugfix snapshot selected as the D4 development baseline.
+- [x] Deliverable 4 presentation delivered and major feature scope frozen.
 
-## Remaining Beta work
+## Remaining closeout work
 
-- [ ] Monday: complete remaining browser evidence and decide whether Beta is feature-complete.
-- [ ] Tuesday: audit authentication, authorization, forms, validation, major errors, responsive layouts, accessibility and the test checklist.
-- [ ] Wednesday: finish the README draft, setup instructions, known issues and D4 demonstration order.
-- [ ] Thursday: demonstrate all required workflows, record feedback and freeze major feature scope.
+- [ ] Reconcile the remaining browser/evidence checklist with the presentation record.
+- [ ] Record official feedback and known limitations when available.
+- [ ] Use Week 5 for stabilization, documentation and final-presentation preparation.
 
 ## Explicitly out of current Beta scope
 
@@ -52,13 +52,14 @@ repository contains the selectively synchronized application source.
 ## Snapshot and evidence
 
 - Private lab Beta4 snapshot: frozen post-presentation bugfix and pre-feedback D4 baseline
-- Current journal: [August 13, 2026](../../docs/journal/2026-08-13.md)
+- Current journal: [August 20, 2026](../../docs/journal/2026-08-20.md)
 - Current board: [Project weekly Kanban](../../docs/project-weekly-kanban-board.html)
 - Application source: [`app/`](../../app/)
 
 ## Verification boundary
 
-The recorded backend suite and D3 presentation verify the integrated product;
-the Beta4 snapshot adds the post-presentation UI bugfix baseline. Browser
-evidence, the D4 quality audit, official feedback and the release decision remain
-before calling it a feature-complete public release.
+The recorded backend suite, D4 presentation and Beta4 snapshot verify the
+current development direction. Remaining browser evidence reconciliation, the
+official feedback record and the final release decision are still tracked as
+closeout work; they must be completed before calling this a feature-complete
+public release.
