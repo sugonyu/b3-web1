@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BookLoop Deliverable 5 final presentation and project defense">
+    <title>BookLoop — Deliverable 5</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+    <style>
+      :root{--ink:#243029;--muted:#5d665f;--paper:#f6f1e7;--surface:#fff;--brand:#315c43;--soft:#e4eee7;--accent:#c66a2b;--warning:#fff1df;--danger:#9e3d32;--border:#b8b8ae}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--paper);font:18px/1.55 Arial,sans-serif}a{color:var(--brand)}.topbar{position:sticky;top:0;z-index:10;border-bottom:1px solid var(--border);background:rgba(246,241,231,.97)}.nav{display:flex;max-width:1120px;margin:auto;padding:.7rem 1rem;gap:1rem;overflow-x:auto;white-space:nowrap}.nav a{font-size:.85rem;text-decoration:none}.nav a.feedback-link{padding:.35rem .65rem;border:2px solid var(--accent);border-radius:999px;background:var(--warning);color:var(--danger);font-weight:700}main{max-width:1120px;margin:auto;padding:0 1rem 4rem}.slide{min-height:76vh;padding:5rem 0 3rem;border-bottom:1px solid var(--border);scroll-margin-top:3rem}.title-slide{min-height:88vh;display:grid;align-content:center}.eyebrow{margin:0 0 .5rem;color:var(--brand);font-size:.85rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}h1{max-width:950px;margin:0;font-size:clamp(3rem,8vw,6.2rem);line-height:.98}h2{margin:0 0 1.5rem;font-size:clamp(2rem,5vw,3.5rem);line-height:1.08}h3{margin-top:0}.lede{max-width:900px;font-size:clamp(1.2rem,2.5vw,1.6rem)}.meta,.figure-label{color:var(--muted)}.figure-label{margin:.5rem 0;font-size:.85rem;font-weight:700}.flow,.grid{display:flex;flex-wrap:wrap;gap:.75rem;margin:1.5rem 0}.flow span,.card{flex:1 1 200px;padding:1.15rem;border:1px solid var(--border);background:var(--surface)}.flow span{text-align:center;border-color:var(--brand);font-weight:700}.flow .arrow{flex:0 0 auto;border:0;background:transparent;color:var(--accent)}.card{border-top:5px solid var(--brand)}.card.feedback{border-top-color:var(--accent)}.card.pending{border-top-color:var(--border)}.status{display:inline-block;padding:.4rem .7rem;border:1px solid var(--accent);background:var(--surface);color:var(--accent);font-weight:700}.callout{padding:1.25rem;border-left:6px solid var(--brand);background:var(--surface);font-size:1.2rem}table{width:100%;border-collapse:collapse;background:var(--surface)}th,td{padding:.8rem;border:1px solid var(--border);text-align:left;vertical-align:top}th{background:var(--soft)}.evidence-links{display:flex;flex-wrap:wrap;gap:.75rem}.evidence-links a{padding:.75rem 1rem;border:1px solid var(--brand);background:var(--surface);text-decoration:none}.floating-section-nav{position:fixed;right:16px;bottom:16px;z-index:20;display:flex;gap:6px;padding:7px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.94);box-shadow:0 8px 24px rgba(32,40,35,.2)}.floating-section-nav button{display:grid;width:42px;height:42px;place-items:center;padding:0;border:1px solid var(--brand);border-radius:50%;color:var(--brand);background:var(--surface);font:inherit;font-weight:800;cursor:pointer}.floating-section-nav button:hover,.floating-section-nav button:focus-visible{color:#fff;background:var(--brand);outline:3px solid var(--soft);outline-offset:2px}.floating-section-nav button:disabled{border-color:var(--border);color:var(--border);cursor:not-allowed;opacity:.65}@media(max-width:700px){body{font-size:16px}.slide{min-height:auto;padding:4rem 0 2rem}.arrow{display:none}}
+    </style>
+  </head>
+  <body>
+    <header class="topbar" id="top">
+      <nav class="nav" aria-label="Presentation sections">
+        <a href="#title">00 · Goal</a>
+        <a class="feedback-link" href="#feedback">01 · Feedback</a>
+        <a href="#walkthrough">02 · Walkthrough</a>
+        <a href="#evidence">03 · Evidence</a>
+        <a href="#defense">04 · Defense</a>
+        <a href="#handoff">05 · Handoff</a>
+        <a href="#close">06 · Close</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="slide title-slide" id="title">
+        <p class="eyebrow">Deliverable 5 · Final Presentation</p>
+        <h1>BookLoop is ready for a final client walkthrough.</h1>
+        <p class="lede">The final story is not another feature sprint. It is a clear demonstration of the working product, the privacy boundary, the confirmed Report UX improvement and the evidence behind the Beta.</p>
+        <p><span class="status">Presentation 5 · Wednesday, August 26, 2026 · 9:00 AM</span></p>
+        <p class="meta">Tony Yu · Web Project 1 · Week 5 · Final GitHub closeout: Friday, August 28 at 11:59 PM</p>
+      </section>
+
+      <section class="slide" id="feedback">
+        <p class="eyebrow">01 · Teacher feedback → final UX</p>
+        <h2>The normal request flow comes before the exceptional one.</h2>
+        <div class="grid">
+          <article class="card feedback"><h3>📋 Request summary</h3><p>Give the user the context needed to understand the exchange before taking action.</p></article>
+          <article class="card feedback"><h3>📌 Request status</h3><p>Show the current state immediately after the summary so the decision point is clear.</p></article>
+          <article class="card feedback"><h3>✉️ Contact Mina</h3><p>Keep the normal approved-contact action before the exceptional Report action.</p></article>
+          <article class="card feedback"><h3>🚩 Report this exchange</h3><p>Keep the Report form closed by default and reveal it only through a small button.</p></article>
+        </div>
+        <p class="callout">Report is progressive disclosure: available when needed, but not presented as the first or required action.</p>
+        <p class="figure-label">Fig 1-1 · Completed Report UX order: summary → status → Contact Mina → collapsed Report button</p>
+      </section>
+
+      <section class="slide" id="walkthrough">
+        <p class="eyebrow">02 · Client-facing live walkthrough</p>
+        <h2>Show the product as a usable story, not a list of isolated features.</h2>
+        <div class="flow"><span>Product value</span><span class="arrow">→</span><span>BorrowRequest flow</span><span class="arrow">→</span><span>Contact / Report boundary</span><span class="arrow">→</span><span>Database proof</span></div>
+        <div class="grid">
+          <article class="card"><h3>1 · Introduce</h3><p>Explain the book-sharing problem and propose BookLoop as a privacy-aware local solution.</p></article>
+          <article class="card"><h3>2 · Demonstrate</h3><p>Run the account, listing, request and request-detail flow with stable demo data.</p></article>
+          <article class="card"><h3>3 · Resolve</h3><p>Show status, Contact Mina, the collapsed Report button and the owner/Admin boundary.</p></article>
+          <article class="card"><h3>4 · Prove</h3><p>Show Edit/Delete persistence in the browser and explain the corresponding database result.</p></article>
+        </div>
+        <p class="figure-label">Fig 2-1 · Presentation order for August 26: value → working flow → privacy boundary → database-backed evidence</p>
+      </section>
+
+      <section class="slide" id="evidence">
+        <p class="eyebrow">03 · Evidence and scope</p>
+        <h2>Implementation evidence stays separate from what is promised.</h2>
+        <table>
+          <thead><tr><th>Area</th><th>Final walkthrough evidence</th><th>Boundary</th></tr></thead>
+          <tbody>
+            <tr><td>BorrowRequest</td><td>Accounts, books, request creation, status and request detail.</td><td>Use the stable Flask/Jinja Beta path; no React parity work.</td></tr>
+            <tr><td>Contact / Report</td><td>Contact Mina appears before the closed Report action.</td><td>Report is not required for normal borrowing and does not decide the request.</td></tr>
+            <tr><td>Edit / Delete</td><td>Browser result and real database-row change are demonstrated.</td><td>Do not claim a feature from a placeholder screen alone.</td></tr>
+            <tr><td>Privacy</td><td>Approved relationships control the visible contact boundary.</td><td>No promise of complete anonymity; no private credentials in the demo.</td></tr>
+          </tbody>
+        </table>
+        <p class="figure-label">Fig 3-1 · What the final demo proves and what remains outside the frozen Beta scope</p>
+      </section>
+
+      <section class="slide" id="defense">
+        <p class="eyebrow">04 · Project defense</p>
+        <h2>Two answers explain the development journey.</h2>
+        <div class="grid">
+          <article class="card"><h3>Challenge</h3><p>Connecting request status, approval, Contact and Report into one readable permission-aware flow without turning the product into a chat or moderation system.</p></article>
+          <article class="card"><h3>Surprise</h3><p>Edit/Delete initially looked disconnected during a slow presentation, but the live deletion demonstration showed that the database behavior was working.</p></article>
+          <article class="card pending"><h3>Presentation rule</h3><p>No separate PPT is required. Speak with the confidence of proposing the product to a real client and let the running system carry the proof.</p></article>
+        </div>
+        <p class="callout">The strongest defense is a short explanation followed by observable behavior: click it, see the result, then explain the boundary.</p>
+        <p class="figure-label">Fig 4-1 · Challenge → evidence → explanation → known limitation</p>
+      </section>
+
+      <section class="slide" id="handoff">
+        <p class="eyebrow">05 · Final handoff</p>
+        <h2>Friday is a developer-to-developer handoff.</h2>
+        <div class="flow"><span>Install</span><span class="arrow">→</span><span>Run</span><span class="arrow">→</span><span>Understand features</span><span class="arrow">→</span><span>Continue safely</span></div>
+        <div class="grid">
+          <article class="card"><h3>README</h3><p>Installation, running instructions, requirements and main features must be clear to a developer who receives the project next.</p></article>
+          <article class="card"><h3>Documentation</h3><p>Keep the development journal, final feedback, known limitations and current scope honest and traceable.</p></article>
+          <article class="card"><h3>Submission</h3><p>Complete the GitHub repository and documentation by Friday, August 28 at 11:59 PM.</p></article>
+        </div>
+        <p class="callout">Existing medium-fidelity wireframes are sufficient. The test checklist supports the live walkthrough and does not need a separate README section.</p>
+        <p class="figure-label">Fig 5-1 · Final handoff checklist: install · run · requirements · features · journals · limitations</p>
+      </section>
+
+      <section class="slide" id="close">
+        <p class="eyebrow">06 · Conclusion</p>
+        <h2>Feedback became a smaller, clearer and more trustworthy final flow.</h2>
+        <div class="flow"><span>Teacher feedback</span><span class="arrow">→</span><span>Report UX adjustment</span><span class="arrow">→</span><span>Live evidence</span><span class="arrow">→</span><span>Final handoff</span></div>
+        <p class="callout">The next step is not a major feature. It is a confident walkthrough on Wednesday and a complete, usable repository handoff on Friday.</p>
+        <div class="evidence-links">
+          <a href="http://localhost:3000/docs/project-weekly-kanban-board.html">Final-week Kanban</a>
+          <a href="http://localhost:3000/milestones/04-mvp-v0.4-feature-complete-beta/README.md">Beta milestone</a>
+          <a href="../../../docs/presentations/deliverable-04/presentation.html">Deliverable 4 record</a>
+          <a href="../../../app/">Application source</a>
+        </div>
+        <p class="meta">Prepared August 22, 2026 · Final walkthrough first, documentation closeout second.</p>
+      </section>
+    </main>
+
+    <nav class="floating-section-nav" aria-label="Presentation section controls">
+      <button type="button" data-section-nav="previous" aria-label="Previous section">←</button>
+      <button type="button" data-section-nav="top" aria-label="Back to top">↑</button>
+      <button type="button" data-section-nav="next" aria-label="Next section">→</button>
+    </nav>
+    <script>
+      (() => {
+        const sections = ["title", "feedback", "walkthrough", "evidence", "defense", "handoff", "close"]
+          .map((id) => document.getElementById(id)).filter(Boolean);
+        const previousButton = document.querySelector('[data-section-nav="previous"]');
+        const nextButton = document.querySelector('[data-section-nav="next"]');
+        const topButton = document.querySelector('[data-section-nav="top"]');
+        if (!sections.length || !previousButton || !nextButton || !topButton) return;
+        function currentIndex() {
+          const marker = window.scrollY + Math.min(window.innerHeight * 0.32, 220);
+          let detected = 0;
+          sections.forEach((section, index) => { if (section.offsetTop <= marker) detected = index; });
+          return window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4 ? sections.length - 1 : detected;
+        }
+        function updateControls() {
+          const index = currentIndex();
+          previousButton.disabled = index === 0;
+          nextButton.disabled = index === sections.length - 1;
+        }
+        function move(direction) {
+          const index = currentIndex();
+          const target = sections[Math.max(0, Math.min(sections.length - 1, index + direction))];
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        previousButton.addEventListener("click", () => move(-1));
+        nextButton.addEventListener("click", () => move(1));
+        topButton.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+        window.addEventListener("scroll", updateControls, { passive: true });
+        updateControls();
+      })();
+    </script>
+  </body>
+</html>
