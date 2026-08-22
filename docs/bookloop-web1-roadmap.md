@@ -1,8 +1,8 @@
 # BookLoop Web1 Roadmap
 
 > Course: 582-32W-VA — Web Project 1
-> Current milestone: Deliverable 2 · MVP v0.2
-> Roadmap status: active and iterative
+> Current milestone: Final demo · Presentation 5 / B3-Web1 closeout
+> Roadmap status: final-week closeout · walkthrough Aug 26 9:00 AM · GitHub deadline Aug 28 11:59 PM
 
 ## Product Direction
 
@@ -72,7 +72,7 @@ Feedback carried forward:
 
 ### Week 2 · MVP v0.2 — Backend and Database
 
-Status: **In progress**
+Status: **Complete — carried forward as the verified foundation**
 
 Primary vertical slice:
 
@@ -103,7 +103,7 @@ Kamyar-feedback response in this week:
 
 ### Week 3 · MVP v0.3 — Frontend and Backend Integration
 
-Status: **Presentation delivered — closeout in progress**
+Status: **Complete — presentation delivered and evidence carried forward**
 
 Main integration:
 
@@ -129,7 +129,7 @@ feature as finished.
 
 ### Week 4 · MVP v0.4 — Feature-Complete Beta
 
-Status: **Next — Week 5 stabilization and final presentation**
+Status: **Complete — D4 presentation delivered and Beta scope frozen**
 
 Kamyar-feedback MVP:
 
@@ -156,7 +156,7 @@ member submits report
 
 ### Week 5 · MVP v1.0 — Stable Release and Final Presentation
 
-Status: **Next — stabilization and final presentation preparation**
+Status: **Final checkpoint — Presentation 5 / final demo on August 26**
 
 Final privacy demonstration:
 
@@ -167,6 +167,24 @@ Final privacy demonstration:
 - show the protected Admin View and one accountable admin action;
 - run regression tests and document remaining limitations;
 - present only features verified in the browser and database.
+
+Final-week schedule:
+
+- Monday, August 24: confirm startup, accounts, demo data and routes.
+- Tuesday, August 25: rehearse the evidence order and known-limitations explanation.
+- Wednesday, August 26 at 9:00 AM: run the final client-facing walkthrough without a separate slide deck; explain the biggest Challenge and Surprise.
+- Friday, August 28 at 11:59 PM: submit the final GitHub repository and documentation. Changes after the deadline do not count for grading.
+
+Final handoff documentation:
+
+- README installation instructions
+- README run instructions
+- requirements
+- main features
+- maintained development journal
+
+A new high-fidelity wireframe is not required. The test checklist is used during
+the live walkthrough and does not need a separate README section.
 
 Final gate:
 
@@ -222,7 +240,7 @@ Must remain outside Web1 scope:
 
 ## Roadmap Update Rule
 
-At each weekly closeout:
+At each weekly closeout, including the final demo:
 
 1. record which privacy gate was actually verified;
 2. move unfinished feedback work to the next realistic milestone;

@@ -57,6 +57,7 @@ book is produced before the Kindle edition.
 > on August 11 records that no Web1 journal was produced that day. Weekend dates
 > without verifiable Web1 work were not fabricated.
 
+- [2026-08-22 (Saturday) — Teacher feedback and final-week plan](2026-08-22.md)
 - [2026-08-20 (Thursday) — D4 presentation closeout](2026-08-20.md)
 - [2026-08-19 (Wednesday) — Bun/TypeScript parallel study lab](2026-08-19.md)
 - [2026-08-18 (Tuesday) — Java client comparison study](2026-08-18.md)
