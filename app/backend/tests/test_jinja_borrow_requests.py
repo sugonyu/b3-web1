@@ -403,11 +403,15 @@ class JinjaBorrowRequestFlowTest(unittest.TestCase):
         self.assertEqual(borrower_response.status_code, 200)
         self.assertIn(b"Report this exchange", borrower_response.data)
         self.assertIn(b"/requests/1/report", borrower_response.data)
+        self.assertIn(b'<details class="report-disclosure">', borrower_response.data)
+        self.assertNotIn(b'<details class="report-disclosure" open>', borrower_response.data)
 
         self.client.post("/logout")
         self.login("mina")
         owner_response = self.client.get("/requests/1")
         self.assertIn(b"Report this exchange", owner_response.data)
+        self.assertIn(b'<details class="report-disclosure">', owner_response.data)
+        self.assertNotIn(b'<details class="report-disclosure" open>', owner_response.data)
 
     def test_report_form_creates_row_and_redirects_with_feedback(self):
         self.login("tony")
@@ -591,6 +595,14 @@ class JinjaBorrowRequestFlowTest(unittest.TestCase):
         self.assertIn(b"Approved contact exchange", borrower_detail.data)
         self.assertIn(b"Contact mina", borrower_detail.data)
         self.assertIn(b"mina@example.com", borrower_detail.data)
+        self.assertLess(
+            borrower_detail.data.index(b"Request status"),
+            borrower_detail.data.index(b"Contact mina"),
+        )
+        self.assertLess(
+            borrower_detail.data.index(b"Contact mina"),
+            borrower_detail.data.index(b"Report this exchange"),
+        )
         self.assertNotIn(b"tony@example.com", borrower_detail.data)
 
         self.client.post("/logout")

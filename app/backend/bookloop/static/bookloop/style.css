@@ -634,6 +634,33 @@ a {
   background: #fff7ed;
 }
 
+.report-toggle {
+  display: inline-block;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid #b45309;
+  background: #fff;
+  color: #7c2d12;
+  font-weight: bold;
+  cursor: pointer;
+  list-style: none;
+}
+
+.report-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.report-toggle::before {
+  content: "▸ ";
+}
+
+.report-disclosure[open] .report-toggle::before {
+  content: "▾ ";
+}
+
+.report-form-content {
+  margin-top: 1rem;
+}
+
 .request-report-action h2 {
   margin-top: 0.2rem;
 }

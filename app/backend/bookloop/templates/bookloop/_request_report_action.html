@@ -1,21 +1,26 @@
 {% if current_user.id == borrow_request.borrower_id or current_user.id == borrow_request.listing.owner_id %}
   <section class="request-report-action" aria-labelledby="report-request-heading">
-    <p class="eyebrow">Safety and privacy</p>
-    <h2 id="report-request-heading">Report this exchange</h2>
-    <p class="privacy-note">Only the borrower or book owner can submit a report for this request.</p>
-    <form action="{{ url_for('jinja_client.report_request', request_id=borrow_request.id) }}" method="post">
-      <label for="report-category">Category</label>
-      <select id="report-category" name="category" required>
-        <option value="">Choose a category</option>
-        <option value="unsafe_contact">Unsafe contact</option>
-        <option value="no_show">No-show</option>
-        <option value="harassment">Harassment</option>
-        <option value="book_condition">Book condition</option>
-        <option value="other">Other</option>
-      </select>
-      <label for="report-details">Details</label>
-      <textarea id="report-details" name="details" minlength="10" maxlength="500" required></textarea>
-      <button class="report-submit-button" type="submit">🚩 Submit report</button>
-    </form>
+    <details class="report-disclosure">
+      <summary class="report-toggle">🚩 Report this exchange</summary>
+      <div class="report-form-content">
+        <p class="eyebrow">Safety and privacy</p>
+        <h2 id="report-request-heading">Report this exchange</h2>
+        <p class="privacy-note">Only the borrower or book owner can submit a report for this request.</p>
+        <form action="{{ url_for('jinja_client.report_request', request_id=borrow_request.id) }}" method="post">
+          <label for="report-category">Category</label>
+          <select id="report-category" name="category" required>
+            <option value="">Choose a category</option>
+            <option value="unsafe_contact">Unsafe contact</option>
+            <option value="no_show">No-show</option>
+            <option value="harassment">Harassment</option>
+            <option value="book_condition">Book condition</option>
+            <option value="other">Other</option>
+          </select>
+          <label for="report-details">Details</label>
+          <textarea id="report-details" name="details" minlength="10" maxlength="500" required></textarea>
+          <button class="report-submit-button" type="submit">🚩 Submit report</button>
+        </form>
+      </div>
+    </details>
   </section>
 {% endif %}
